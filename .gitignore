@@ -1,0 +1,26 @@
+# secrets
+.env
+config.local.json
+
+# run artefacts (PixInsight job dirs, logs, locks)
+.runs/
+__pycache__/
+*.pyc
+
+# tutorial videos and material derived from them (copyrighted: keep local)
+reference_video/
+knowledge/videos/*/frames/
+knowledge/videos/*/sheets/
+knowledge/videos/*/keyframes/
+knowledge/videos/*/transcript.*
+knowledge/videos/*/audio.wav
+knowledge/videos/*/meta.json
+
+# reference thumbnails are other people's work: local comparison only (refs.json keeps title/author/link)
+knowledge/targets/*/refs/
+
+# editor / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

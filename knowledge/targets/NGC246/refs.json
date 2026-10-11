@@ -1,0 +1,618 @@
+{
+ "target": "NGC 246",
+ "aliases": [
+  "NGC 246",
+  "Skull Nebula"
+ ],
+ "fetched": "2026-10-10",
+ "peer_mode": "multiband",
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 167,
+ "candidates_on_target": 22,
+ "best": [
+  {
+   "title": "ngc246",
+   "author": "Philippe BERNHARD",
+   "url": "https://www.astrobin.com/iqq52n/",
+   "likes": 226,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 0.0,
+   "pixel_scale": 1.587,
+   "field_radius_deg": 1.264,
+   "thumb": "https://cdn.astrobin.com/thumbs/AD55a1bkV3XN_620x0__sPnTECk.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/AD55a1bkV3XN_1824x0_n1wMX-gx.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\best_00.jpg",
+    "shape": [
+     616,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09412,
+     "G": 0.09412,
+     "B": 0.09412
+    },
+    "p99_9": {
+     "R": 0.8118,
+     "G": 0.7961,
+     "B": 0.7843
+    },
+    "clip_low_pct": 0.002,
+    "clip_high_pct": 0.012,
+    "background_level": 0.0711,
+    "tile_spread_p90_p10": 0.06042,
+    "noise_hf": 0.008082,
+    "bg_snr_proxy": 8.8,
+    "background_rgb": [
+     0.07059,
+     0.07059,
+     0.07059
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.132,
+    "signal_saturation_p90": 0.29,
+    "signal_hue_mix": {
+     "red": 0.18,
+     "orange": 0.535,
+     "yellow": 0.035,
+     "cyan": 0.045,
+     "azure": 0.15,
+     "blue": 0.037
+    },
+    "background_saturation_mean": 0.059,
+    "contrast_p99_p10": 0.4189,
+    "lum_median": 0.0941
+   }
+  },
+  {
+   "title": "NGC 246 - The Skull Nebula",
+   "author": "Terry Robison",
+   "url": "https://www.astrobin.com/320945/",
+   "likes": 84,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Kodak / ON Semi KAI-11000M (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 27.8,
+   "pixel_scale": 0.803,
+   "field_radius_deg": 0.525,
+   "thumb": "https://cdn.astrobin.com/thumbs/J0_CsLDgCtxM_620x0_QmgwkQIu.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/J0_CsLDgCtxM_1824x0_QmgwkQIu.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\best_01.jpg",
+    "shape": [
+     413,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.07451,
+     "G": 0.07451,
+     "B": 0.07451
+    },
+    "p99_9": {
+     "R": 0.7569,
+     "G": 0.7057,
+     "B": 0.7412
+    },
+    "clip_low_pct": 0.046,
+    "clip_high_pct": 0.017,
+    "background_level": 0.07421,
+    "tile_spread_p90_p10": 0.00422,
+    "noise_hf": 0.002974,
+    "bg_snr_proxy": 24.96,
+    "background_rgb": [
+     0.07059,
+     0.07059,
+     0.07059
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.125,
+    "signal_saturation_p90": 0.273,
+    "signal_hue_mix": {
+     "red": 0.243,
+     "orange": 0.113,
+     "yellow": 0.071,
+     "green": 0.033,
+     "cyan": 0.179,
+     "azure": 0.13,
+     "blue": 0.072,
+     "violet": 0.06,
+     "rose": 0.063
+    },
+    "background_saturation_mean": 0.105,
+    "contrast_p99_p10": 0.2499,
+    "lum_median": 0.0759
+   }
+  },
+  {
+   "title": "NGC 246 Skull Nebula",
+   "author": "Fritz",
+   "url": "https://www.astrobin.com/rgtj2h/",
+   "likes": 275,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [
+    "Lacerta Fotonewton 200/800 (pre-2021)"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "OIII",
+    "R"
+   ],
+   "integration_h": 6.0,
+   "pixel_scale": 0.98,
+   "field_radius_deg": 0.747,
+   "thumb": "https://cdn.astrobin.com/thumbs/poqfcrxYmxos_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/poqfcrxYmxos_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\best_02.jpg",
+    "shape": [
+     429,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.07059,
+     "G": 0.07059,
+     "B": 0.07059
+    },
+    "p99_9": {
+     "R": 0.4157,
+     "G": 0.4745,
+     "B": 0.6549
+    },
+    "clip_low_pct": 0.032,
+    "clip_high_pct": 0.001,
+    "background_level": 0.06667,
+    "tile_spread_p90_p10": 0.00392,
+    "noise_hf": 0.0,
+    "bg_snr_proxy": null,
+    "background_rgb": [
+     0.06667,
+     0.06667,
+     0.06667
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.038,
+    "signal_saturation_p90": 0.143,
+    "signal_hue_mix": {
+     "red": 0.043,
+     "orange": 0.058,
+     "cyan": 0.162,
+     "azure": 0.487,
+     "blue": 0.183
+    },
+    "background_saturation_mean": 0.006,
+    "contrast_p99_p10": 0.0706,
+    "lum_median": 0.0706
+   }
+  },
+  {
+   "title": "NGC246 - The Skull Nebula",
+   "author": "equinoxx",
+   "url": "https://www.astrobin.com/236195/",
+   "likes": 262,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony ICX694 (mono)"
+   ],
+   "telescopes": [
+    "Celestron EdgeHD 11\""
+   ],
+   "filters": [],
+   "integration_h": 4.3,
+   "pixel_scale": 1.676,
+   "field_radius_deg": 0.792,
+   "thumb": "https://cdn.astrobin.com/thumbs/oLOpAw-6eE2K_620x0_N7CLqNBu.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/oLOpAw-6eE2K_1824x0_TsGERX8T.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\best_03.jpg",
+    "shape": [
+     508,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.05098,
+     "G": 0.05098,
+     "B": 0.05098
+    },
+    "p99_9": {
+     "R": 0.4431,
+     "G": 0.4824,
+     "B": 0.6825
+    },
+    "clip_low_pct": 0.003,
+    "clip_high_pct": 0.011,
+    "background_level": 0.04903,
+    "tile_spread_p90_p10": 0.00195,
+    "noise_hf": 0.002751,
+    "bg_snr_proxy": 17.82,
+    "background_rgb": [
+     0.04706,
+     0.04706,
+     0.04706
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.112,
+    "signal_saturation_p90": 0.333,
+    "signal_hue_mix": {
+     "red": 0.209,
+     "orange": 0.082,
+     "green": 0.046,
+     "cyan": 0.031,
+     "azure": 0.439,
+     "blue": 0.108,
+     "rose": 0.053
+    },
+    "background_saturation_mean": 0.01,
+    "contrast_p99_p10": 0.0462,
+    "lum_median": 0.051
+   }
+  },
+  {
+   "title": "NGC246 - The Skull Nebula",
+   "author": "equinoxx",
+   "url": "https://www.astrobin.com/267865/",
+   "likes": 208,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony ICX694 (mono)"
+   ],
+   "telescopes": [
+    "Celestron EdgeHD 11\""
+   ],
+   "filters": [],
+   "integration_h": 6.2,
+   "pixel_scale": 1.677,
+   "field_radius_deg": 0.783,
+   "thumb": "https://cdn.astrobin.com/thumbs/-EexhEbJauby_620x0_2rd5Bb-0.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/-EexhEbJauby_1824x0_bDnaVdxm.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\best_04.jpg",
+    "shape": [
+     450,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.05882,
+     "G": 0.05882,
+     "B": 0.05882
+    },
+    "p99_9": {
+     "R": 0.4588,
+     "G": 0.4039,
+     "B": 0.4431
+    },
+    "clip_low_pct": 0.095,
+    "clip_high_pct": 0.002,
+    "background_level": 0.05882,
+    "tile_spread_p90_p10": 0.00336,
+    "noise_hf": 0.002466,
+    "bg_snr_proxy": 23.86,
+    "background_rgb": [
+     0.05882,
+     0.05882,
+     0.05882
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.139,
+    "signal_saturation_p90": 0.25,
+    "signal_hue_mix": {
+     "red": 0.314,
+     "orange": 0.108,
+     "yellow": 0.032,
+     "chartreuse": 0.032,
+     "spring": 0.18,
+     "cyan": 0.048,
+     "azure": 0.165,
+     "blue": 0.065
+    },
+    "background_saturation_mean": 0.044,
+    "contrast_p99_p10": 0.0549,
+    "lum_median": 0.0588
+   }
+  },
+  {
+   "title": "Skull Nebula - NGC 246",
+   "author": "Jim Matzger",
+   "url": "https://www.astrobin.com/392564/",
+   "likes": 164,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 0.0,
+   "pixel_scale": null,
+   "field_radius_deg": null,
+   "thumb": "https://cdn.astrobin.com/thumbs/svo8efjivRiV_620x0_gdIzSeo5.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/svo8efjivRiV_1824x0_SitGuJkN.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\best_05.jpg",
+    "shape": [
+     622,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.01569,
+     "G": 0.04314,
+     "B": 0.04706
+    },
+    "p99_9": {
+     "R": 0.902,
+     "G": 0.7725,
+     "B": 0.7922
+    },
+    "clip_low_pct": 1.05,
+    "clip_high_pct": 0.046,
+    "background_level": 0.03535,
+    "tile_spread_p90_p10": 0.19078,
+    "noise_hf": 0.002838,
+    "bg_snr_proxy": 12.46,
+    "background_rgb": [
+     0.01569,
+     0.03922,
+     0.03922
+    ],
+    "background_cast": {
+     "R/G": 0.4,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.374,
+    "signal_saturation_p90": 0.634,
+    "signal_hue_mix": {
+     "cyan": 0.704,
+     "blue": 0.038,
+     "violet": 0.057,
+     "magenta": 0.052,
+     "rose": 0.093
+    },
+    "background_saturation_mean": 0.706,
+    "contrast_p99_p10": 0.4239,
+    "lum_median": 0.0381
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "NGC246 Skull Nebula",
+   "author": "Erik Frank",
+   "url": "https://www.astrobin.com/wov9wz/",
+   "likes": 82,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Sky-Watcher Explorer 130PDS"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 1.4,
+   "pixel_scale": 1.682,
+   "field_radius_deg": 0.56,
+   "thumb": "https://cdn.astrobin.com/thumbs/QCJT3IukWsGY_620x0__sPnTECk.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/QCJT3IukWsGY_1824x0_n1wMX-gx.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\peer_00.jpg",
+    "shape": [
+     470,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.04314,
+     "G": 0.02353,
+     "B": 0.07059
+    },
+    "p99_9": {
+     "R": 0.3686,
+     "G": 0.4157,
+     "B": 0.4141
+    },
+    "clip_low_pct": 0.189,
+    "clip_high_pct": 0.002,
+    "background_level": 0.02744,
+    "tile_spread_p90_p10": 0.00844,
+    "noise_hf": 0.002741,
+    "bg_snr_proxy": 10.01,
+    "background_rgb": [
+     0.03137,
+     0.01961,
+     0.06275
+    ],
+    "background_cast": {
+     "R/G": 1.6,
+     "B/G": 3.2
+    },
+    "signal_saturation_mean": 0.531,
+    "signal_saturation_p90": 0.636,
+    "signal_hue_mix": {
+     "spring": 0.03,
+     "blue": 0.462,
+     "violet": 0.441
+    },
+    "background_saturation_mean": 0.725,
+    "contrast_p99_p10": 0.0569,
+    "lum_median": 0.0319
+   }
+  },
+  {
+   "title": "Skull Nebula / NGC 246",
+   "author": "Dale Penkala",
+   "url": "https://www.astrobin.com/i4onvd/",
+   "likes": 76,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX071 (color)"
+   ],
+   "telescopes": [
+    "GSO 12\" f/5 Newtonian"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 4.5,
+   "pixel_scale": 0.653,
+   "field_radius_deg": 0.526,
+   "thumb": "https://cdn.astrobin.com/thumbs/DrJ-rtvUhV3m_620x0_lSeVV1JN.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/DrJ-rtvUhV3m_1824x0_lSeVV1JN.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\peer_01.jpg",
+    "shape": [
+     422,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09804,
+     "G": 0.09804,
+     "B": 0.09804
+    },
+    "p99_9": {
+     "R": 0.6706,
+     "G": 0.8118,
+     "B": 0.8667
+    },
+    "clip_low_pct": 0.01,
+    "clip_high_pct": 0.009,
+    "background_level": 0.09804,
+    "tile_spread_p90_p10": 0.0,
+    "noise_hf": 0.0,
+    "bg_snr_proxy": null,
+    "background_rgb": [
+     0.09804,
+     0.09804,
+     0.09804
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.23,
+    "signal_saturation_p90": 0.54,
+    "signal_hue_mix": {
+     "red": 0.252,
+     "cyan": 0.477,
+     "rose": 0.183
+    },
+    "background_saturation_mean": 0.001,
+    "contrast_p99_p10": 0.379,
+    "lum_median": 0.098
+   }
+  },
+  {
+   "title": "NGC 246",
+   "author": "FranckIM06",
+   "url": "https://www.astrobin.com/bbnm1o/",
+   "likes": 65,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Takahashi TSA-120"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 3.8,
+   "pixel_scale": 1.362,
+   "field_radius_deg": 0.908,
+   "thumb": "https://cdn.astrobin.com/thumbs/k7FiAh81IlWs_620x0_bVMOLioH.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/k7FiAh81IlWs_1824x0_bVMOLioH.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC246/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC246\\refs\\peer_02.jpg",
+    "shape": [
+     411,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09412,
+     "G": 0.09412,
+     "B": 0.09412
+    },
+    "p99_9": {
+     "R": 0.451,
+     "G": 0.487,
+     "B": 0.5176
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.001,
+    "background_level": 0.0902,
+    "tile_spread_p90_p10": 0.00784,
+    "noise_hf": 0.002056,
+    "bg_snr_proxy": 43.88,
+    "background_rgb": [
+     0.0902,
+     0.0902,
+     0.0902
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.014,
+    "signal_saturation_p90": 0.069,
+    "signal_hue_mix": {
+     "red": 0.316,
+     "orange": 0.063,
+     "cyan": 0.306,
+     "azure": 0.121,
+     "rose": 0.105
+    },
+    "background_saturation_mean": 0.001,
+    "contrast_p99_p10": 0.051,
+    "lum_median": 0.0941
+   }
+  }
+ ]
+}

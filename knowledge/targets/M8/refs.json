@@ -1,0 +1,823 @@
+{
+ "target": "M8",
+ "aliases": [
+  "M8",
+  "M 8",
+  "Lagoon Nebula"
+ ],
+ "fetched": "2026-10-10",
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 69,
+ "best": [
+  {
+   "title": "Messier 8 and SNR G007.5-01.7 - SHO + RGB",
+   "author": "Bray Falls",
+   "url": "https://www.astrobin.com/nu8p6d/",
+   "likes": 820,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Tele Vue TV-NP127is"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "OIII",
+    "R",
+    "SII"
+   ],
+   "integration_h": 57.5,
+   "pixel_scale": 1.169,
+   "field_radius_deg": 1.78,
+   "thumb": "https://cdn.astrobin.com/thumbs/Z-ZAepMRHDrF_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Z-ZAepMRHDrF_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\best_00.jpg",
+    "shape": [
+     415,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.24314,
+     "G": 0.13333,
+     "B": 0.19608
+    },
+    "p99_9": {
+     "R": 0.898,
+     "G": 0.7412,
+     "B": 0.8863
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.021,
+    "background_level": 0.10258,
+    "tile_spread_p90_p10": 0.34257,
+    "noise_hf": 0.006964,
+    "bg_snr_proxy": 14.73,
+    "background_rgb": [
+     0.12941,
+     0.08627,
+     0.12157
+    ],
+    "background_cast": {
+     "R/G": 1.5,
+     "B/G": 1.409
+    },
+    "signal_saturation_mean": 0.384,
+    "signal_saturation_p90": 0.588,
+    "signal_hue_mix": {
+     "red": 0.158,
+     "azure": 0.175,
+     "blue": 0.083,
+     "violet": 0.052,
+     "magenta": 0.075,
+     "rose": 0.439
+    },
+    "background_saturation_mean": 0.387,
+    "contrast_p99_p10": 0.57,
+    "lum_median": 0.1664
+   }
+  },
+  {
+   "title": "A deep look at the Milky Way Core | 135mm HaRGB Mosaic",
+   "author": "Jakob Sahner",
+   "url": "https://www.astrobin.com/kgjlxo/",
+   "likes": 746,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [],
+   "telescopes": [
+    "Samyang 135mm F2.0 ED UMC"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 103.3,
+   "pixel_scale": null,
+   "field_radius_deg": null,
+   "thumb": "https://cdn.astrobin.com/thumbs/50zamMQ9fet6_620x0_esdlMP5Y.jpg?v=1777861810",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/50zamMQ9fet6_1824x0_esdlMP5Y.jpg?v=1777861810",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\best_01.jpg",
+    "shape": [
+     515,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.29412,
+     "G": 0.19608,
+     "B": 0.2
+    },
+    "p99_9": {
+     "R": 0.9765,
+     "G": 0.749,
+     "B": 0.7137
+    },
+    "clip_low_pct": 0.028,
+    "clip_high_pct": 0.049,
+    "background_level": 0.11914,
+    "tile_spread_p90_p10": 0.30871,
+    "noise_hf": 0.009204,
+    "bg_snr_proxy": 12.94,
+    "background_rgb": [
+     0.13725,
+     0.10588,
+     0.12157
+    ],
+    "background_cast": {
+     "R/G": 1.296,
+     "B/G": 1.148
+    },
+    "signal_saturation_mean": 0.384,
+    "signal_saturation_p90": 0.581,
+    "signal_hue_mix": {
+     "red": 0.877,
+     "rose": 0.114
+    },
+    "background_saturation_mean": 0.295,
+    "contrast_p99_p10": 0.5713,
+    "lum_median": 0.2195
+   }
+  },
+  {
+   "title": "Trifid, Lagoon and the Supernova remnant - M20, M8 and SNR G007.5-01.7",
+   "author": "Massimo Di Fusco",
+   "url": "https://www.astrobin.com/426psk/",
+   "likes": 578,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Takahashi Epsilon-160ED"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "R",
+    "H_ALPHA",
+    "L",
+    "OIII"
+   ],
+   "integration_h": 81.9,
+   "pixel_scale": 1.449,
+   "field_radius_deg": 2.309,
+   "thumb": "https://cdn.astrobin.com/thumbs/7VPwpRihTGvp_620x0_esdlMP5Y.jpg?v=1777619619",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/7VPwpRihTGvp_1824x0_esdlMP5Y.jpg?v=1777619619",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\best_02.jpg",
+    "shape": [
+     414,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.19216,
+     "G": 0.16078,
+     "B": 0.16471
+    },
+    "p99_9": {
+     "R": 0.8588,
+     "G": 0.7608,
+     "B": 0.8314
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.005,
+    "background_level": 0.13774,
+    "tile_spread_p90_p10": 0.15673,
+    "noise_hf": 0.007196,
+    "bg_snr_proxy": 19.14,
+    "background_rgb": [
+     0.13333,
+     0.12941,
+     0.13333
+    ],
+    "background_cast": {
+     "R/G": 1.03,
+     "B/G": 1.03
+    },
+    "signal_saturation_mean": 0.359,
+    "signal_saturation_p90": 0.577,
+    "signal_hue_mix": {
+     "cyan": 0.041,
+     "magenta": 0.053,
+     "rose": 0.823
+    },
+    "background_saturation_mean": 0.136,
+    "contrast_p99_p10": 0.5077,
+    "lum_median": 0.1708
+   }
+  },
+  {
+   "title": "Shockwaves Between Star birth and Star death - The Sagittarius Complex",
+   "author": "Jason Wehbe",
+   "url": "https://www.astrobin.com/y1i382/",
+   "likes": 562,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Sky-Watcher Esprit 100ED"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII"
+   ],
+   "integration_h": 77.4,
+   "pixel_scale": 1.383,
+   "field_radius_deg": 2.087,
+   "thumb": "https://cdn.astrobin.com/thumbs/BCqA4QFSbmCk_620x0_xq_OIN2_.jpg?v=1791156777",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/BCqA4QFSbmCk_1824x0_waPIz9B3.jpg?v=1791156777",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\best_03.jpg",
+    "shape": [
+     470,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.34118,
+     "G": 0.13725,
+     "B": 0.15686
+    },
+    "p99_9": {
+     "R": 0.9882,
+     "G": 0.7843,
+     "B": 0.949
+    },
+    "clip_low_pct": 0.013,
+    "clip_high_pct": 0.095,
+    "background_level": 0.12727,
+    "tile_spread_p90_p10": 0.2905,
+    "noise_hf": 0.008578,
+    "bg_snr_proxy": 14.84,
+    "background_rgb": [
+     0.22745,
+     0.0902,
+     0.10588
+    ],
+    "background_cast": {
+     "R/G": 2.522,
+     "B/G": 1.174
+    },
+    "signal_saturation_mean": 0.433,
+    "signal_saturation_p90": 0.633,
+    "signal_hue_mix": {
+     "red": 0.17,
+     "azure": 0.062,
+     "blue": 0.122,
+     "violet": 0.091,
+     "magenta": 0.289,
+     "rose": 0.262
+    },
+    "background_saturation_mean": 0.602,
+    "contrast_p99_p10": 0.5992,
+    "lum_median": 0.1862
+   }
+  },
+  {
+   "title": "Lagoon (M8) | Trifid (M20) | Chinese Dragon | Sh2-34 | SNR G007.5-01.7",
+   "author": "Kay Ogetay",
+   "url": "https://www.astrobin.com/j2q291/",
+   "likes": 517,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (mono)"
+   ],
+   "telescopes": [
+    "William Optics Redcat / Cat 51 III WIFD"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII"
+   ],
+   "integration_h": 19.8,
+   "pixel_scale": 3.887,
+   "field_radius_deg": 3.246,
+   "thumb": "https://cdn.astrobin.com/thumbs/ukcYjhMq8OzB_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/ukcYjhMq8OzB_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\best_04.jpg",
+    "shape": [
+     414,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.23922,
+     "G": 0.12941,
+     "B": 0.1451
+    },
+    "p99_9": {
+     "R": 0.9922,
+     "G": 0.8235,
+     "B": 0.8314
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.076,
+    "background_level": 0.12089,
+    "tile_spread_p90_p10": 0.14976,
+    "noise_hf": 0.007836,
+    "bg_snr_proxy": 15.43,
+    "background_rgb": [
+     0.18431,
+     0.09804,
+     0.11765
+    ],
+    "background_cast": {
+     "R/G": 1.88,
+     "B/G": 1.2
+    },
+    "signal_saturation_mean": 0.421,
+    "signal_saturation_p90": 0.686,
+    "signal_hue_mix": {
+     "red": 0.645,
+     "azure": 0.061,
+     "rose": 0.253
+    },
+    "background_saturation_mean": 0.49,
+    "contrast_p99_p10": 0.5709,
+    "lum_median": 0.1559
+   }
+  },
+  {
+   "title": "The Lagoon and the Trifid",
+   "author": "Christoph Lichtblau",
+   "url": "https://www.astrobin.com/zw8osg/",
+   "likes": 440,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Celestron EdgeHD 11\""
+   ],
+   "filters": [
+    "UV_IR_CUT"
+   ],
+   "integration_h": 2.5,
+   "pixel_scale": 1.734,
+   "field_radius_deg": 1.841,
+   "thumb": "https://cdn.astrobin.com/thumbs/mOajva1qDp0I_620x0_1g3BC9VT.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/mOajva1qDp0I_1824x0__sPnTECk.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\best_05.jpg",
+    "shape": [
+     452,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.30196,
+     "G": 0.23137,
+     "B": 0.21569
+    },
+    "p99_9": {
+     "R": 0.8902,
+     "G": 0.7451,
+     "B": 0.8039
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.007,
+    "background_level": 0.19448,
+    "tile_spread_p90_p10": 0.13581,
+    "noise_hf": 0.021967,
+    "bg_snr_proxy": 8.85,
+    "background_rgb": [
+     0.20784,
+     0.17255,
+     0.16863
+    ],
+    "background_cast": {
+     "R/G": 1.205,
+     "B/G": 0.977
+    },
+    "signal_saturation_mean": 0.4,
+    "signal_saturation_p90": 0.559,
+    "signal_hue_mix": {
+     "red": 0.392,
+     "azure": 0.038,
+     "magenta": 0.046,
+     "rose": 0.495
+    },
+    "background_saturation_mean": 0.253,
+    "contrast_p99_p10": 0.3994,
+    "lum_median": 0.2467
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "M8 & M20 - Trifid & Lagoon Nebulas - 2600MC - Spacecat 51",
+   "author": "Itto Ogami",
+   "url": "https://www.astrobin.com/rz6ynj/",
+   "likes": 492,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "William Optics Redcat 51",
+    "William Optics SpaceCat 51"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 15.0,
+   "pixel_scale": 4.711,
+   "field_radius_deg": 3.131,
+   "thumb": "https://cdn.astrobin.com/thumbs/-vlNDgqIUo6-_620x0_esdlMP5Y.png?v=1777792650",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/-vlNDgqIUo6-_1824x0_esdlMP5Y.png?v=1777792650",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\peer_00.jpg",
+    "shape": [
+     407,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.22353,
+     "G": 0.2,
+     "B": 0.18431
+    },
+    "p99_9": {
+     "R": 0.8157,
+     "G": 0.749,
+     "B": 0.7725
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.001,
+    "background_level": 0.14465,
+    "tile_spread_p90_p10": 0.28622,
+    "noise_hf": 0.0106,
+    "bg_snr_proxy": 13.65,
+    "background_rgb": [
+     0.1451,
+     0.1451,
+     0.1451
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.396,
+    "signal_saturation_p90": 0.462,
+    "signal_hue_mix": {
+     "red": 0.835,
+     "rose": 0.153
+    },
+    "background_saturation_mean": 0.133,
+    "contrast_p99_p10": 0.4482,
+    "lum_median": 0.2041
+   }
+  },
+  {
+   "title": "The Lagoon nebula",
+   "author": "Christoph Lichtblau",
+   "url": "https://www.astrobin.com/g86elx/",
+   "likes": 414,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX410 (color)"
+   ],
+   "telescopes": [
+    "Celestron EdgeHD 11\""
+   ],
+   "filters": [
+    "UV_IR_CUT"
+   ],
+   "integration_h": 1.2,
+   "pixel_scale": 0.622,
+   "field_radius_deg": 0.62,
+   "thumb": "https://cdn.astrobin.com/thumbs/PVQjxu0yjEs2_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/PVQjxu0yjEs2_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\peer_01.jpg",
+    "shape": [
+     412,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.38824,
+     "G": 0.14902,
+     "B": 0.15686
+    },
+    "p99_9": {
+     "R": 0.9922,
+     "G": 0.6863,
+     "B": 0.7569
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.085,
+    "background_level": 0.1429,
+    "tile_spread_p90_p10": 0.17454,
+    "noise_hf": 0.006509,
+    "bg_snr_proxy": 21.95,
+    "background_rgb": [
+     0.23922,
+     0.11373,
+     0.11765
+    ],
+    "background_cast": {
+     "R/G": 2.103,
+     "B/G": 1.034
+    },
+    "signal_saturation_mean": 0.512,
+    "signal_saturation_p90": 0.655,
+    "signal_hue_mix": {
+     "red": 0.14,
+     "rose": 0.856
+    },
+    "background_saturation_mean": 0.542,
+    "contrast_p99_p10": 0.4114,
+    "lum_median": 0.2021
+   }
+  },
+  {
+   "title": "The Lagoon nebula with its dark clouds surrounding",
+   "author": "Christoph Lichtblau",
+   "url": "https://www.astrobin.com/5ikfgc/",
+   "likes": 400,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)",
+    "Sony IMX410 (color)"
+   ],
+   "telescopes": [
+    "Celestron EdgeHD 11\""
+   ],
+   "filters": [
+    "UV_IR_CUT"
+   ],
+   "integration_h": 3.7,
+   "pixel_scale": 1.974,
+   "field_radius_deg": 1.074,
+   "thumb": "https://cdn.astrobin.com/thumbs/YDyoj3Z96ZUV_620x0_esdlMP5Y.png?v=1787206385",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/YDyoj3Z96ZUV_1824x0_esdlMP5Y.png?v=1787206385",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\peer_02.jpg",
+    "shape": [
+     739,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.27059,
+     "G": 0.2,
+     "B": 0.21961
+    },
+    "p99_9": {
+     "R": 0.9961,
+     "G": 0.8118,
+     "B": 0.8588
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.099,
+    "background_level": 0.16087,
+    "tile_spread_p90_p10": 0.1979,
+    "noise_hf": 0.016637,
+    "bg_snr_proxy": 9.67,
+    "background_rgb": [
+     0.16863,
+     0.1451,
+     0.16863
+    ],
+    "background_cast": {
+     "R/G": 1.162,
+     "B/G": 1.162
+    },
+    "signal_saturation_mean": 0.409,
+    "signal_saturation_p90": 0.591,
+    "signal_hue_mix": {
+     "red": 0.069,
+     "magenta": 0.235,
+     "rose": 0.675
+    },
+    "background_saturation_mean": 0.232,
+    "contrast_p99_p10": 0.5216,
+    "lum_median": 0.2177
+   }
+  },
+  {
+   "title": "STARRY Version -  Lagoon And Trifid - SpaceCat51 & 2600MC",
+   "author": "Itto Ogami",
+   "url": "https://www.astrobin.com/jit318/",
+   "likes": 389,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "William Optics Redcat 51",
+    "William Optics SpaceCat 51"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 4.0,
+   "pixel_scale": 5.0,
+   "field_radius_deg": 2.959,
+   "thumb": "https://cdn.astrobin.com/thumbs/TIbOtgp07_Vy_620x0__sPnTECk.jpg?v=1784726235",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/TIbOtgp07_Vy_1824x0_n1wMX-gx.jpg?v=1784726235",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/peer_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\peer_03.jpg",
+    "shape": [
+     404,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.30196,
+     "G": 0.23922,
+     "B": 0.23922
+    },
+    "p99_9": {
+     "R": 0.9451,
+     "G": 0.7412,
+     "B": 0.8039
+    },
+    "clip_low_pct": 0.014,
+    "clip_high_pct": 0.032,
+    "background_level": 0.1955,
+    "tile_spread_p90_p10": 0.1455,
+    "noise_hf": 0.03371,
+    "bg_snr_proxy": 5.8,
+    "background_rgb": [
+     0.2,
+     0.16471,
+     0.17255
+    ],
+    "background_cast": {
+     "R/G": 1.214,
+     "B/G": 1.048
+    },
+    "signal_saturation_mean": 0.266,
+    "signal_saturation_p90": 0.425,
+    "signal_hue_mix": {
+     "red": 0.285,
+     "rose": 0.666
+    },
+    "background_saturation_mean": 0.207,
+    "contrast_p99_p10": 0.4042,
+    "lum_median": 0.2531
+   }
+  },
+  {
+   "title": "The Trifid (M20) and Lagoon (M8) Nebulas",
+   "author": "Michael Kalika",
+   "url": "https://www.astrobin.com/1mbsgg/",
+   "likes": 381,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Askar FRA600"
+   ],
+   "filters": [],
+   "integration_h": 4.1,
+   "pixel_scale": 1.839,
+   "field_radius_deg": 1.919,
+   "thumb": "https://cdn.astrobin.com/thumbs/876FjI7_Z5WE_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/876FjI7_Z5WE_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/peer_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\peer_04.jpg",
+    "shape": [
+     414,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.22353,
+     "G": 0.14902,
+     "B": 0.10588
+    },
+    "p99_9": {
+     "R": 0.902,
+     "G": 0.6941,
+     "B": 0.7804
+    },
+    "clip_low_pct": 0.034,
+    "clip_high_pct": 0.011,
+    "background_level": 0.12723,
+    "tile_spread_p90_p10": 0.13765,
+    "noise_hf": 0.012615,
+    "bg_snr_proxy": 10.09,
+    "background_rgb": [
+     0.1451,
+     0.10588,
+     0.08235
+    ],
+    "background_cast": {
+     "R/G": 1.37,
+     "B/G": 0.778
+    },
+    "signal_saturation_mean": 0.516,
+    "signal_saturation_p90": 0.707,
+    "signal_hue_mix": {
+     "red": 0.557,
+     "orange": 0.072,
+     "rose": 0.344
+    },
+    "background_saturation_mean": 0.422,
+    "contrast_p99_p10": 0.4724,
+    "lum_median": 0.1621
+   }
+  },
+  {
+   "title": "M8, M20",
+   "author": "wsg",
+   "url": "https://www.astrobin.com/l7at8j/",
+   "likes": 328,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Askar SQA106"
+   ],
+   "filters": [],
+   "integration_h": 15.4,
+   "pixel_scale": 1.537,
+   "field_radius_deg": 1.604,
+   "thumb": "https://cdn.astrobin.com/thumbs/5oeNGrjWhQFY_620x0_1g3BC9VT.jpg?v=1784058160",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/5oeNGrjWhQFY_1824x0__sPnTECk.jpg?v=1784058160",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M8/refs/peer_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M8\\refs\\peer_05.jpg",
+    "shape": [
+     463,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.27451,
+     "G": 0.20784,
+     "B": 0.17647
+    },
+    "p99_9": {
+     "R": 0.8471,
+     "G": 0.8078,
+     "B": 0.902
+    },
+    "clip_low_pct": 0.051,
+    "clip_high_pct": 0.013,
+    "background_level": 0.17067,
+    "tile_spread_p90_p10": 0.12245,
+    "noise_hf": 0.024664,
+    "bg_snr_proxy": 6.92,
+    "background_rgb": [
+     0.18039,
+     0.15686,
+     0.12157
+    ],
+    "background_cast": {
+     "R/G": 1.15,
+     "B/G": 0.775
+    },
+    "signal_saturation_mean": 0.361,
+    "signal_saturation_p90": 0.536,
+    "signal_hue_mix": {
+     "red": 0.477,
+     "blue": 0.042,
+     "violet": 0.043,
+     "magenta": 0.089,
+     "rose": 0.292
+    },
+    "background_saturation_mean": 0.371,
+    "contrast_p99_p10": 0.4466,
+    "lum_median": 0.2206
+   }
+  }
+ ]
+}

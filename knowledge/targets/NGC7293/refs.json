@@ -1,0 +1,804 @@
+{
+ "target": "NGC 7293",
+ "aliases": [
+  "NGC 7293",
+  "Helix Nebula"
+ ],
+ "fetched": "2026-10-10",
+ "peer_mode": "multiband",
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 101,
+ "candidates_on_target": 50,
+ "best": [
+  {
+   "title": "NGC 7293 (Helix Nebula / Caldwell 63)",
+   "author": "Alpha Zhang",
+   "url": "https://www.astrobin.com/r8bwte/",
+   "likes": 756,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Kodak / ON Semi KAF-16803 (mono)"
+   ],
+   "telescopes": [
+    "ASA N20 / 20N"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII"
+   ],
+   "integration_h": 33.0,
+   "pixel_scale": 0.482,
+   "field_radius_deg": 0.536,
+   "thumb": "https://cdn.astrobin.com/thumbs/709ALx0zypDQ_620x0_YW4Rz8qD.jpg?v=1777866113",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/709ALx0zypDQ_1824x0_YW4Rz8qD.jpg?v=1777866113",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\best_00.jpg",
+    "shape": [
+     465,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.15294,
+     "G": 0.1098,
+     "B": 0.12157
+    },
+    "p99_9": {
+     "R": 0.9922,
+     "G": 0.851,
+     "B": 0.9961
+    },
+    "clip_low_pct": 0.002,
+    "clip_high_pct": 0.157,
+    "background_level": 0.09463,
+    "tile_spread_p90_p10": 0.17135,
+    "noise_hf": 0.002686,
+    "bg_snr_proxy": 35.23,
+    "background_rgb": [
+     0.09804,
+     0.09804,
+     0.09804
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.521,
+    "signal_saturation_p90": 0.717,
+    "signal_hue_mix": {
+     "red": 0.22,
+     "azure": 0.166,
+     "rose": 0.578
+    },
+    "background_saturation_mean": 0.058,
+    "contrast_p99_p10": 0.6563,
+    "lum_median": 0.1201
+   }
+  },
+  {
+   "title": "NGC7293 the Eye of Sauron in H-SHO-RGB from Spain",
+   "author": "Nicola Beltraminelli",
+   "url": "https://www.astrobin.com/1c0tnf/",
+   "likes": 732,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Stellarvue SVX180T"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "OIII",
+    "R",
+    "SII"
+   ],
+   "integration_h": 44.9,
+   "pixel_scale": 0.603,
+   "field_radius_deg": 0.482,
+   "thumb": "https://cdn.astrobin.com/thumbs/f35hQvyiGWng_620x0_2sCytplD.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/f35hQvyiGWng_1824x0_2sCytplD.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\best_01.jpg",
+    "shape": [
+     414,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.06667,
+     "G": 0.04706,
+     "B": 0.05098
+    },
+    "p99_9": {
+     "R": 0.7973,
+     "G": 0.7059,
+     "B": 0.7843
+    },
+    "clip_low_pct": 0.162,
+    "clip_high_pct": 0.002,
+    "background_level": 0.03332,
+    "tile_spread_p90_p10": 0.22349,
+    "noise_hf": 0.002741,
+    "bg_snr_proxy": 12.16,
+    "background_rgb": [
+     0.04314,
+     0.03137,
+     0.03529
+    ],
+    "background_cast": {
+     "R/G": 1.375,
+     "B/G": 1.125
+    },
+    "signal_saturation_mean": 0.578,
+    "signal_saturation_p90": 0.795,
+    "signal_hue_mix": {
+     "red": 0.386,
+     "orange": 0.066,
+     "cyan": 0.059,
+     "azure": 0.119,
+     "rose": 0.347
+    },
+    "background_saturation_mean": 0.282,
+    "contrast_p99_p10": 0.5379,
+    "lum_median": 0.0507
+   }
+  },
+  {
+   "title": "Sauron is watching you : Helix Nebula",
+   "author": "Louis Leroux",
+   "url": "https://www.astrobin.com/hsvnn2/",
+   "likes": 607,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (mono)"
+   ],
+   "telescopes": [
+    "Takahashi FSQ-85EDX"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII",
+    "B",
+    "G",
+    "H_ALPHA",
+    "L",
+    "OIII",
+    "R",
+    "SII"
+   ],
+   "integration_h": 63.2,
+   "pixel_scale": 1.102,
+   "field_radius_deg": 0.937,
+   "thumb": "https://cdn.astrobin.com/thumbs/bpg6qCY1qb1b_620x0_esdlMP5Y.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/bpg6qCY1qb1b_1824x0_esdlMP5Y.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\best_02.jpg",
+    "shape": [
+     413,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09804,
+     "G": 0.09804,
+     "B": 0.10196
+    },
+    "p99_9": {
+     "R": 0.9294,
+     "G": 0.8118,
+     "B": 0.8863
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.0,
+    "background_level": 0.09637,
+    "tile_spread_p90_p10": 0.18745,
+    "noise_hf": 0.001863,
+    "bg_snr_proxy": 51.72,
+    "background_rgb": [
+     0.09412,
+     0.09804,
+     0.09804
+    ],
+    "background_cast": {
+     "R/G": 0.96,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.475,
+    "signal_saturation_p90": 0.699,
+    "signal_hue_mix": {
+     "red": 0.419,
+     "orange": 0.061,
+     "cyan": 0.067,
+     "azure": 0.103,
+     "rose": 0.346
+    },
+    "background_saturation_mean": 0.05,
+    "contrast_p99_p10": 0.6593,
+    "lum_median": 0.1003
+   }
+  },
+  {
+   "title": "The Helix Halo",
+   "author": "Mathew Ludgate",
+   "url": "https://www.astrobin.com/h8hnt0/",
+   "likes": 497,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "APM LZOS Apo 123/738 CNC LW II",
+    "Nikkor AF-S 400mm f/2.8E FL ED VR"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "OIII",
+    "R"
+   ],
+   "integration_h": 84.5,
+   "pixel_scale": 0.989,
+   "field_radius_deg": 0.671,
+   "thumb": "https://cdn.astrobin.com/thumbs/X9q16HjuAvDz_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/X9q16HjuAvDz_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\best_03.jpg",
+    "shape": [
+     437,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.07451,
+     "G": 0.07843,
+     "B": 0.0902
+    },
+    "p99_9": {
+     "R": 0.9216,
+     "G": 0.7608,
+     "B": 0.8549
+    },
+    "clip_low_pct": 0.032,
+    "clip_high_pct": 0.006,
+    "background_level": 0.06722,
+    "tile_spread_p90_p10": 0.1765,
+    "noise_hf": 0.003287,
+    "bg_snr_proxy": 20.45,
+    "background_rgb": [
+     0.05882,
+     0.06667,
+     0.08235
+    ],
+    "background_cast": {
+     "R/G": 0.882,
+     "B/G": 1.235
+    },
+    "signal_saturation_mean": 0.485,
+    "signal_saturation_p90": 0.685,
+    "signal_hue_mix": {
+     "red": 0.14,
+     "cyan": 0.161,
+     "rose": 0.642
+    },
+    "background_saturation_mean": 0.305,
+    "contrast_p99_p10": 0.6109,
+    "lum_median": 0.0787
+   }
+  },
+  {
+   "title": "The Eye of God: A Deep View into the Helix Nebula",
+   "author": "Jonathan Hill",
+   "url": "https://www.astrobin.com/ixz4v8/",
+   "likes": 490,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX492 (mono)",
+    "Sony IMX183 (mono)",
+    "Sony IMX533 (mono)",
+    "Sony IMX571 (mono)"
+   ],
+   "telescopes": [
+    "Apertura 75Q",
+    "Apertura 8\" f/8 Ritchey-Chretien Carbon Fiber",
+    "Askar 103APO",
+    "Askar 120APO",
+    "Askar FRA500",
+    "Askar SQA70",
+    "Astro-Tech AT115EDT",
+    "Celestron EdgeHD 9.25\"",
+    "Sky-Watcher Quattro 150P",
+    "William Optics Fluorostar 132 / FLT132",
+    "William Optics Fluorostar 91 / FLT91",
+    "William Optics Redcat 51",
+    "William Optics RedCat 91 WIFD",
+    "ZWO FF107 107mm f/7 Petzval Refractor"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII",
+    "B",
+    "G",
+    "R",
+    "B",
+    "G",
+    "R",
+    "H_ALPHA",
+    "OIII",
+    "SII"
+   ],
+   "integration_h": 670.8,
+   "pixel_scale": 0.93,
+   "field_radius_deg": 0.655,
+   "thumb": "https://cdn.astrobin.com/thumbs/pQDZ6dH_2r3h_620x0_YPn7GPUF.png?v=1778067055",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/pQDZ6dH_2r3h_1824x0_rIjNg32Z.png?v=1778067055",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\best_04.jpg",
+    "shape": [
+     439,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.06667,
+     "G": 0.05098,
+     "B": 0.05098
+    },
+    "p99_9": {
+     "R": 0.9882,
+     "G": 0.8353,
+     "B": 0.8902
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.059,
+    "background_level": 0.04706,
+    "tile_spread_p90_p10": 0.14092,
+    "noise_hf": 0.001526,
+    "bg_snr_proxy": 30.84,
+    "background_rgb": [
+     0.04706,
+     0.04706,
+     0.04706
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.616,
+    "signal_saturation_p90": 0.833,
+    "signal_hue_mix": {
+     "red": 0.415,
+     "orange": 0.049,
+     "azure": 0.056,
+     "rose": 0.466
+    },
+    "background_saturation_mean": 0.06,
+    "contrast_p99_p10": 0.695,
+    "lum_median": 0.0554
+   }
+  },
+  {
+   "title": "NGC 7293",
+   "author": "Daniel Nimmervoll",
+   "url": "https://www.astrobin.com/g43o1l/",
+   "likes": 455,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Lacerta 10\" f/4 Carbon Newton"
+   ],
+   "filters": [],
+   "integration_h": 12.7,
+   "pixel_scale": 1.833,
+   "field_radius_deg": 0.764,
+   "thumb": "https://cdn.astrobin.com/thumbs/Mt3wm9odmNXx_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Mt3wm9odmNXx_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\best_05.jpg",
+    "shape": [
+     418,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.06667,
+     "G": 0.06667,
+     "B": 0.06667
+    },
+    "p99_9": {
+     "R": 0.9053,
+     "G": 0.7882,
+     "B": 0.917
+    },
+    "clip_low_pct": 0.148,
+    "clip_high_pct": 0.012,
+    "background_level": 0.06275,
+    "tile_spread_p90_p10": 0.05864,
+    "noise_hf": 0.004502,
+    "bg_snr_proxy": 13.94,
+    "background_rgb": [
+     0.0549,
+     0.05882,
+     0.0549
+    ],
+    "background_cast": {
+     "R/G": 0.933,
+     "B/G": 0.933
+    },
+    "signal_saturation_mean": 0.302,
+    "signal_saturation_p90": 0.589,
+    "signal_hue_mix": {
+     "red": 0.08,
+     "cyan": 0.177,
+     "magenta": 0.034,
+     "rose": 0.661
+    },
+    "background_saturation_mean": 0.065,
+    "contrast_p99_p10": 0.5684,
+    "lum_median": 0.0667
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "Helix Nebula",
+   "author": "F. Londe",
+   "url": "https://www.astrobin.com/s1rfo1/",
+   "likes": 424,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "TS-Optics 300mm/12\" f/8 Ritchey-Chrétien Astrograph (truss)"
+   ],
+   "filters": [
+    "LP",
+    "MULTIBAND",
+    "MULTIBAND"
+   ],
+   "integration_h": 15.5,
+   "pixel_scale": 0.483,
+   "field_radius_deg": 0.52,
+   "thumb": "https://cdn.astrobin.com/thumbs/C9HQ9XBZP_On_620x0_esdlMP5Y.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/C9HQ9XBZP_On_1824x0_esdlMP5Y.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\peer_00.jpg",
+    "shape": [
+     384,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.03922,
+     "G": 0.0,
+     "B": 0.0
+    },
+    "p99_9": {
+     "R": 0.702,
+     "G": 0.8196,
+     "B": 0.7647
+    },
+    "clip_low_pct": 89.413,
+    "clip_high_pct": 0.002,
+    "background_level": 0.00167,
+    "tile_spread_p90_p10": 0.1083,
+    "noise_hf": 0.000583,
+    "bg_snr_proxy": 2.86,
+    "background_rgb": [
+     0.01176,
+     0.0,
+     0.0
+    ],
+    "background_cast": {
+     "R/G": 11764.706,
+     "B/G": 0.0
+    },
+    "signal_saturation_mean": 0.832,
+    "signal_saturation_p90": 1.0,
+    "signal_hue_mix": {
+     "red": 0.577,
+     "orange": 0.043,
+     "yellow": 0.03,
+     "chartreuse": 0.032,
+     "spring": 0.053,
+     "cyan": 0.096,
+     "azure": 0.148
+    },
+    "background_saturation_mean": 0.841,
+    "contrast_p99_p10": 0.643,
+    "lum_median": 0.0092
+   }
+  },
+  {
+   "title": "NGC7293, the Helix Nebula, HOO-RGB",
+   "author": "Markus A. R. Langlotz",
+   "url": "https://www.astrobin.com/xf4oec/",
+   "likes": 318,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX294 (color)"
+   ],
+   "telescopes": [
+    "Sky-Watcher Starlux 190MN / BK 190MN DS"
+   ],
+   "filters": [
+    "UV_IR_CUT",
+    "MULTIBAND"
+   ],
+   "integration_h": 5.5,
+   "pixel_scale": 0.957,
+   "field_radius_deg": 0.666,
+   "thumb": "https://cdn.astrobin.com/thumbs/yEw6-kLfKz_2_620x0_CvlzE9Ft.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/yEw6-kLfKz_2_1824x0_CvlzE9Ft.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\peer_01.jpg",
+    "shape": [
+     422,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.05882,
+     "G": 0.06275,
+     "B": 0.06667
+    },
+    "p99_9": {
+     "R": 0.8916,
+     "G": 0.9137,
+     "B": 0.8941
+    },
+    "clip_low_pct": 0.062,
+    "clip_high_pct": 0.007,
+    "background_level": 0.05463,
+    "tile_spread_p90_p10": 0.03031,
+    "noise_hf": 0.002741,
+    "bg_snr_proxy": 19.93,
+    "background_rgb": [
+     0.05098,
+     0.0549,
+     0.0549
+    ],
+    "background_cast": {
+     "R/G": 0.929,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.225,
+    "signal_saturation_p90": 0.472,
+    "signal_hue_mix": {
+     "red": 0.331,
+     "spring": 0.134,
+     "cyan": 0.433
+    },
+    "background_saturation_mean": 0.151,
+    "contrast_p99_p10": 0.6954,
+    "lum_median": 0.0625
+   }
+  },
+  {
+   "title": "Helix Nebula",
+   "author": "Elmiko",
+   "url": "https://www.astrobin.com/u85cag/",
+   "likes": 243,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX533 (color)"
+   ],
+   "telescopes": [
+    "Astro-Tech AT92"
+   ],
+   "filters": [
+    "MULTIBAND",
+    "L"
+   ],
+   "integration_h": 7.7,
+   "pixel_scale": 1.522,
+   "field_radius_deg": 0.686,
+   "thumb": "https://cdn.astrobin.com/thumbs/wYJzAHC10JGq_620x0_AZRv0Hc4.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/wYJzAHC10JGq_1824x0_-6Di4rhA.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\peer_02.jpg",
+    "shape": [
+     609,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.1098,
+     "G": 0.1098,
+     "B": 0.11373
+    },
+    "p99_9": {
+     "R": 0.8863,
+     "G": 0.749,
+     "B": 0.7882
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.002,
+    "background_level": 0.10588,
+    "tile_spread_p90_p10": 0.0322,
+    "noise_hf": 0.001667,
+    "bg_snr_proxy": 63.51,
+    "background_rgb": [
+     0.10588,
+     0.10588,
+     0.10588
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.268,
+    "signal_saturation_p90": 0.503,
+    "signal_hue_mix": {
+     "red": 0.622,
+     "cyan": 0.194,
+     "rose": 0.153
+    },
+    "background_saturation_mean": 0.03,
+    "contrast_p99_p10": 0.5411,
+    "lum_median": 0.1098
+   }
+  },
+  {
+   "title": "Helix Nebula...The eye in the sky",
+   "author": "Alicia Rossiter",
+   "url": "https://www.astrobin.com/zh1m46/",
+   "likes": 241,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Celestron C8 SC XLT"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 10.6,
+   "pixel_scale": 0.601,
+   "field_radius_deg": 0.481,
+   "thumb": "https://cdn.astrobin.com/thumbs/C30jTRksRJS8_620x0_dgX30xXG.jpg?v=1777705391",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/C30jTRksRJS8_1824x0_dgX30xXG.jpg?v=1777705391",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/peer_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\peer_03.jpg",
+    "shape": [
+     459,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.08235,
+     "G": 0.07843,
+     "B": 0.08627
+    },
+    "p99_9": {
+     "R": 0.9333,
+     "G": 0.8588,
+     "B": 0.9036
+    },
+    "clip_low_pct": 0.029,
+    "clip_high_pct": 0.021,
+    "background_level": 0.07039,
+    "tile_spread_p90_p10": 0.2341,
+    "noise_hf": 0.000887,
+    "bg_snr_proxy": 79.39,
+    "background_rgb": [
+     0.07059,
+     0.07059,
+     0.07843
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.111
+    },
+    "signal_saturation_mean": 0.516,
+    "signal_saturation_p90": 0.773,
+    "signal_hue_mix": {
+     "red": 0.11,
+     "cyan": 0.36,
+     "rose": 0.507
+    },
+    "background_saturation_mean": 0.09,
+    "contrast_p99_p10": 0.6204,
+    "lum_median": 0.0809
+   }
+  },
+  {
+   "title": "The Helix Nebula (NGC 7293)",
+   "author": "estabrook",
+   "url": "https://www.astrobin.com/gw43l8/",
+   "likes": 240,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX183 (color)"
+   ],
+   "telescopes": [
+    "Celestron C6"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 0.3,
+   "pixel_scale": 1.611,
+   "field_radius_deg": 0.759,
+   "thumb": "https://cdn.astrobin.com/thumbs/ELDGX2RROY_h_620x0__sPnTECk.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/ELDGX2RROY_h_1824x0_n1wMX-gx.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC7293/refs/peer_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC7293\\refs\\peer_04.jpg",
+    "shape": [
+     402,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.03922,
+     "G": 0.03922,
+     "B": 0.04314
+    },
+    "p99_9": {
+     "R": 0.7246,
+     "G": 0.45,
+     "B": 0.3569
+    },
+    "clip_low_pct": 0.032,
+    "clip_high_pct": 0.001,
+    "background_level": 0.03922,
+    "tile_spread_p90_p10": 0.00603,
+    "noise_hf": 0.001718,
+    "bg_snr_proxy": 22.83,
+    "background_rgb": [
+     0.03137,
+     0.03529,
+     0.03922
+    ],
+    "background_cast": {
+     "R/G": 0.889,
+     "B/G": 1.111
+    },
+    "signal_saturation_mean": 0.31,
+    "signal_saturation_p90": 0.66,
+    "signal_hue_mix": {
+     "red": 0.552,
+     "orange": 0.06,
+     "green": 0.043,
+     "spring": 0.108,
+     "rose": 0.115
+    },
+    "background_saturation_mean": 0.265,
+    "contrast_p99_p10": 0.2758,
+    "lum_median": 0.0407
+   }
+  }
+ ]
+}

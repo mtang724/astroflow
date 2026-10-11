@@ -1,0 +1,1 @@
+- 2026-10-11: 0.83h OSC 短积分：starless 阶段把 sat.boost 提到 0.82/0.76 且 passes=2（maskClip 0.08）+ 末尾轻度 SCNR 0.3，可将 combine 的 subject_chroma.ratio 从 0.32 拉到 0.89（目标 0.8–1.2），背景保持中性（R/G 1.009、B/G 1.038）。注意：saturation 步骤的 rgb 参数是全局作用且很粗（R+0.01/B-0.02 就把整图过冲到红/粉），不要用它做微调。背景仍偏亮（0.21 vs refs 0.09）是 stretch targetMedian 0.20 所致，若允许重拉用 0.10。内侧旋臂残余“电光青蓝”是短积分+强提饱和的固有代价，宁可接受也不要用全局 rgb 校正。

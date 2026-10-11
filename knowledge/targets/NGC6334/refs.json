@@ -1,0 +1,596 @@
+{
+ "target": "NGC 6334",
+ "aliases": [
+  "NGC 6334",
+  "Cat's Paw Nebula"
+ ],
+ "fetched": "2026-10-10",
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 68,
+ "best": [
+  {
+   "title": "From the North: Cat's Paw Nebula Wide-Field",
+   "author": "Min Xie",
+   "url": "https://www.astrobin.com/xz5ouc/",
+   "likes": 275,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 32.1,
+   "pixel_scale": 1.845,
+   "field_radius_deg": 1.208,
+   "thumb": "https://cdn.astrobin.com/thumbs/P83bwqo12Q7a_620x0_kWXURFLk.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/P83bwqo12Q7a_1824x0_kWXURFLk.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\best_00.jpg",
+    "shape": [
+     827,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.12157,
+     "G": 0.05098,
+     "B": 0.09412
+    },
+    "p99_9": {
+     "R": 0.8471,
+     "G": 0.7383,
+     "B": 0.9725
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.01,
+    "background_level": 0.06352,
+    "tile_spread_p90_p10": 0.04774,
+    "noise_hf": 0.001215,
+    "bg_snr_proxy": 52.28,
+    "background_rgb": [
+     0.10588,
+     0.04706,
+     0.08627
+    ],
+    "background_cast": {
+     "R/G": 2.25,
+     "B/G": 1.833
+    },
+    "signal_saturation_mean": 0.6,
+    "signal_saturation_p90": 0.709,
+    "signal_hue_mix": {
+     "blue": 0.068,
+     "violet": 0.054,
+     "magenta": 0.172,
+     "rose": 0.673
+    },
+    "background_saturation_mean": 0.539,
+    "contrast_p99_p10": 0.3562,
+    "lum_median": 0.0699
+   }
+  },
+  {
+   "title": "NGC 6334 (Cat's Paw Nebula, Bear Claw Nebula) SHO+RGB stars",
+   "author": "Jian Yuan Peng",
+   "url": "https://www.astrobin.com/dmkjve/",
+   "likes": 233,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 31.0,
+   "pixel_scale": 0.785,
+   "field_radius_deg": 0.738,
+   "thumb": "https://cdn.astrobin.com/thumbs/4W-WIitqSTcP_620x0__sPnTECk.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/4W-WIitqSTcP_1824x0_n1wMX-gx.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\best_01.jpg",
+    "shape": [
+     698,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09412,
+     "G": 0.06667,
+     "B": 0.07451
+    },
+    "p99_9": {
+     "R": 0.8627,
+     "G": 0.6009,
+     "B": 0.8
+    },
+    "clip_low_pct": 0.216,
+    "clip_high_pct": 0.005,
+    "background_level": 0.04567,
+    "tile_spread_p90_p10": 0.14458,
+    "noise_hf": 0.001667,
+    "bg_snr_proxy": 27.39,
+    "background_rgb": [
+     0.05098,
+     0.04706,
+     0.07059
+    ],
+    "background_cast": {
+     "R/G": 1.083,
+     "B/G": 1.5
+    },
+    "signal_saturation_mean": 0.636,
+    "signal_saturation_p90": 0.825,
+    "signal_hue_mix": {
+     "red": 0.926,
+     "orange": 0.038
+    },
+    "background_saturation_mean": 0.368,
+    "contrast_p99_p10": 0.3927,
+    "lum_median": 0.0725
+   }
+  },
+  {
+   "title": "NGC 6334 | Tyke's Paw Nebula",
+   "author": "Steeve Body",
+   "url": "https://www.astrobin.com/gqrovm/",
+   "likes": 221,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [
+    "Askar 107PHQ"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII",
+    "B",
+    "G",
+    "R"
+   ],
+   "integration_h": 37.0,
+   "pixel_scale": 1.045,
+   "field_radius_deg": 0.793,
+   "thumb": "https://cdn.astrobin.com/thumbs/3Je898WKqsav_620x0_esdlMP5Y.jpg?v=1777866269",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/3Je898WKqsav_1824x0_esdlMP5Y.jpg?v=1777866269",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\best_02.jpg",
+    "shape": [
+     868,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.30588,
+     "G": 0.15294,
+     "B": 0.14118
+    },
+    "p99_9": {
+     "R": 0.9647,
+     "G": 0.8706,
+     "B": 0.8667
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.021,
+    "background_level": 0.14514,
+    "tile_spread_p90_p10": 0.25843,
+    "noise_hf": 0.006326,
+    "bg_snr_proxy": 22.94,
+    "background_rgb": [
+     0.19608,
+     0.12549,
+     0.11373
+    ],
+    "background_cast": {
+     "R/G": 1.562,
+     "B/G": 0.906
+    },
+    "signal_saturation_mean": 0.461,
+    "signal_saturation_p90": 0.61,
+    "signal_hue_mix": {
+     "red": 0.869,
+     "orange": 0.089
+    },
+    "background_saturation_mean": 0.409,
+    "contrast_p99_p10": 0.569,
+    "lum_median": 0.1851
+   }
+  },
+  {
+   "title": "Cats Paw Nebula NGC 6334",
+   "author": "Maicon Germiniani",
+   "url": "https://www.astrobin.com/ycmuf0/",
+   "likes": 195,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 0.0,
+   "pixel_scale": 1.208,
+   "field_radius_deg": 0.801,
+   "thumb": "https://cdn.astrobin.com/thumbs/H6eHr-o2uIFN_620x0__sPnTECk.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/H6eHr-o2uIFN_1824x0_n1wMX-gx.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\best_03.jpg",
+    "shape": [
+     471,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.2,
+     "G": 0.14902,
+     "B": 0.14902
+    },
+    "p99_9": {
+     "R": 1.0,
+     "G": 0.7922,
+     "B": 0.9137
+    },
+    "clip_low_pct": 0.005,
+    "clip_high_pct": 0.202,
+    "background_level": 0.13065,
+    "tile_spread_p90_p10": 0.12614,
+    "noise_hf": 0.010493,
+    "bg_snr_proxy": 12.45,
+    "background_rgb": [
+     0.13725,
+     0.12549,
+     0.11765
+    ],
+    "background_cast": {
+     "R/G": 1.094,
+     "B/G": 0.937
+    },
+    "signal_saturation_mean": 0.536,
+    "signal_saturation_p90": 0.754,
+    "signal_hue_mix": {
+     "red": 0.096,
+     "rose": 0.833
+    },
+    "background_saturation_mean": 0.206,
+    "contrast_p99_p10": 0.4093,
+    "lum_median": 0.1649
+   }
+  },
+  {
+   "title": "The Cat's Paw Nebula",
+   "author": "Logan Carpenter",
+   "url": "https://www.astrobin.com/r6edlv/",
+   "likes": 194,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX571 (mono)"
+   ],
+   "telescopes": [
+    "Sky-Watcher Esprit 120ED"
+   ],
+   "filters": [
+    "H_ALPHA",
+    "OIII",
+    "SII"
+   ],
+   "integration_h": 13.6,
+   "pixel_scale": 0.899,
+   "field_radius_deg": 0.884,
+   "thumb": "https://cdn.astrobin.com/thumbs/Jx1P0OxcpjCi_620x0_esdlMP5Y.png?v=1780541089",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Jx1P0OxcpjCi_1824x0_esdlMP5Y.png?v=1780541089",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\best_04.jpg",
+    "shape": [
+     411,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.17255,
+     "G": 0.11373,
+     "B": 0.09804
+    },
+    "p99_9": {
+     "R": 0.949,
+     "G": 0.8,
+     "B": 0.8118
+    },
+    "clip_low_pct": 0.002,
+    "clip_high_pct": 0.007,
+    "background_level": 0.08792,
+    "tile_spread_p90_p10": 0.28219,
+    "noise_hf": 0.005337,
+    "bg_snr_proxy": 16.47,
+    "background_rgb": [
+     0.10196,
+     0.08235,
+     0.08627
+    ],
+    "background_cast": {
+     "R/G": 1.238,
+     "B/G": 1.048
+    },
+    "signal_saturation_mean": 0.447,
+    "signal_saturation_p90": 0.716,
+    "signal_hue_mix": {
+     "red": 0.923,
+     "azure": 0.051
+    },
+    "background_saturation_mean": 0.22,
+    "contrast_p99_p10": 0.581,
+    "lum_median": 0.1245
+   }
+  },
+  {
+   "title": "Cat's Paw Nebula - NGC 6334 - HSO-LRGB",
+   "author": "Claudio Ulloa Saavedra",
+   "url": "https://www.astrobin.com/ocostj/",
+   "likes": 190,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX571 (mono)"
+   ],
+   "telescopes": [
+    "Takahashi FSQ-106EDX4"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "OIII",
+    "R",
+    "SII",
+    "UV_IR_CUT"
+   ],
+   "integration_h": 63.3,
+   "pixel_scale": 1.465,
+   "field_radius_deg": 1.482,
+   "thumb": "https://cdn.astrobin.com/thumbs/znQ3-dAvBFlH_620x0_1g3BC9VT.jpg?v=1786148863",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/znQ3-dAvBFlH_1824x0__sPnTECk.jpg?v=1786148863",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\best_05.jpg",
+    "shape": [
+     405,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.23922,
+     "G": 0.1098,
+     "B": 0.10588
+    },
+    "p99_9": {
+     "R": 0.9094,
+     "G": 0.7882,
+     "B": 0.9765
+    },
+    "clip_low_pct": 0.004,
+    "clip_high_pct": 0.047,
+    "background_level": 0.10159,
+    "tile_spread_p90_p10": 0.16834,
+    "noise_hf": 0.01335,
+    "bg_snr_proxy": 7.61,
+    "background_rgb": [
+     0.16471,
+     0.07451,
+     0.07451
+    ],
+    "background_cast": {
+     "R/G": 2.211,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.439,
+    "signal_saturation_p90": 0.62,
+    "signal_hue_mix": {
+     "red": 0.228,
+     "azure": 0.053,
+     "blue": 0.082,
+     "violet": 0.131,
+     "magenta": 0.254,
+     "rose": 0.253
+    },
+    "background_saturation_mean": 0.561,
+    "contrast_p99_p10": 0.5432,
+    "lum_median": 0.137
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "NGC 6357 (Lobster Nebula), NGC 6334 (Cat's Paw Nebula)",
+   "author": "Nick Large",
+   "url": "https://www.astrobin.com/ttkfx0/",
+   "likes": 229,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX193 (color)"
+   ],
+   "telescopes": [
+    "William Optics ZenithStar 61ii / ZS61ii"
+   ],
+   "filters": [],
+   "integration_h": 4.2,
+   "pixel_scale": 2.178,
+   "field_radius_deg": 2.137,
+   "thumb": "https://cdn.astrobin.com/thumbs/h7n-ByQVMPwt_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/h7n-ByQVMPwt_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\peer_00.jpg",
+    "shape": [
+     408,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.19608,
+     "G": 0.19216,
+     "B": 0.18824
+    },
+    "p99_9": {
+     "R": 0.9765,
+     "G": 0.7294,
+     "B": 0.7216
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.072,
+    "background_level": 0.16863,
+    "tile_spread_p90_p10": 0.05341,
+    "noise_hf": 0.024527,
+    "bg_snr_proxy": 6.88,
+    "background_rgb": [
+     0.14902,
+     0.15294,
+     0.15294
+    ],
+    "background_cast": {
+     "R/G": 0.974,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.201,
+    "signal_saturation_p90": 0.503,
+    "signal_hue_mix": {
+     "red": 0.891,
+     "rose": 0.037
+    },
+    "background_saturation_mean": 0.097,
+    "contrast_p99_p10": 0.3579,
+    "lum_median": 0.1919
+   }
+  },
+  {
+   "title": "First try...Cats Paw Nebula - NGC 6334 - NB with QHY8L :-)",
+   "author": "Daniel Nobre",
+   "url": "https://www.astrobin.com/418543/",
+   "likes": 208,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony ICX413 (color)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 0.0,
+   "pixel_scale": 1.318,
+   "field_radius_deg": 0.635,
+   "thumb": "https://cdn.astrobin.com/thumbs/4v_FFK5ZCP1I_620x0_gvhTuSck.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/4v_FFK5ZCP1I_1824x0_gvhTuSck.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\peer_01.jpg",
+    "shape": [
+     850,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.12157,
+     "G": 0.11373,
+     "B": 0.12941
+    },
+    "p99_9": {
+     "R": 0.9137,
+     "G": 0.9333,
+     "B": 0.9922
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.12,
+    "background_level": 0.09049,
+    "tile_spread_p90_p10": 0.14545,
+    "noise_hf": 0.007143,
+    "bg_snr_proxy": 12.67,
+    "background_rgb": [
+     0.08235,
+     0.08627,
+     0.10196
+    ],
+    "background_cast": {
+     "R/G": 0.955,
+     "B/G": 1.182
+    },
+    "signal_saturation_mean": 0.437,
+    "signal_saturation_p90": 0.57,
+    "signal_hue_mix": {
+     "red": 0.145,
+     "rose": 0.791
+    },
+    "background_saturation_mean": 0.217,
+    "contrast_p99_p10": 0.438,
+    "lum_median": 0.1182
+   }
+  },
+  {
+   "title": "Paw and Claw !",
+   "author": "AstroRBA",
+   "url": "https://www.astrobin.com/4jjoek/",
+   "likes": 108,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Celestron RASA 8\""
+   ],
+   "filters": [],
+   "integration_h": 5.8,
+   "pixel_scale": 1.942,
+   "field_radius_deg": 1.785,
+   "thumb": "https://cdn.astrobin.com/thumbs/wQJJ3T8mXuTK_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/wQJJ3T8mXuTK_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/NGC6334/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\NGC6334\\refs\\peer_02.jpg",
+    "shape": [
+     416,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.2,
+     "G": 0.15294,
+     "B": 0.14118
+    },
+    "p99_9": {
+     "R": 0.9608,
+     "G": 0.6784,
+     "B": 0.6471
+    },
+    "clip_low_pct": 0.076,
+    "clip_high_pct": 0.05,
+    "background_level": 0.14264,
+    "tile_spread_p90_p10": 0.07616,
+    "noise_hf": 0.015226,
+    "bg_snr_proxy": 9.37,
+    "background_rgb": [
+     0.1451,
+     0.12157,
+     0.11373
+    ],
+    "background_cast": {
+     "R/G": 1.194,
+     "B/G": 0.935
+    },
+    "signal_saturation_mean": 0.461,
+    "signal_saturation_p90": 0.74,
+    "signal_hue_mix": {
+     "red": 0.935,
+     "rose": 0.059
+    },
+    "background_saturation_mean": 0.245,
+    "contrast_p99_p10": 0.372,
+    "lum_median": 0.1644
+   }
+  }
+ ]
+}

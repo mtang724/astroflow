@@ -1,0 +1,820 @@
+{
+ "target": "IC 1805",
+ "aliases": [
+  "IC 1805",
+  "Heart Nebula"
+ ],
+ "fetched": "2026-10-10",
+ "peer_mode": "multiband",
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 152,
+ "candidates_on_target": 106,
+ "best": [
+  {
+   "title": "Melotte 15 in HS-HSO with RGB stars",
+   "author": "Nicola Beltraminelli",
+   "url": "https://www.astrobin.com/nmjd33/",
+   "likes": 645,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Stellarvue SVX180T"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "OIII",
+    "R",
+    "SII"
+   ],
+   "integration_h": 39.8,
+   "pixel_scale": 0.603,
+   "field_radius_deg": 0.547,
+   "thumb": "https://cdn.astrobin.com/thumbs/s-tsWPUmClYK_620x0_2sCytplD.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/s-tsWPUmClYK_1824x0_2sCytplD.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\best_00.jpg",
+    "shape": [
+     414,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.24706,
+     "G": 0.21961,
+     "B": 0.21569
+    },
+    "p99_9": {
+     "R": 0.8745,
+     "G": 0.7373,
+     "B": 0.7608
+    },
+    "clip_low_pct": 0.003,
+    "clip_high_pct": 0.009,
+    "background_level": 0.14792,
+    "tile_spread_p90_p10": 0.21868,
+    "noise_hf": 0.005223,
+    "bg_snr_proxy": 28.32,
+    "background_rgb": [
+     0.16863,
+     0.13333,
+     0.15294
+    ],
+    "background_cast": {
+     "R/G": 1.265,
+     "B/G": 1.147
+    },
+    "signal_saturation_mean": 0.4,
+    "signal_saturation_p90": 0.675,
+    "signal_hue_mix": {
+     "red": 0.708,
+     "orange": 0.05,
+     "cyan": 0.196
+    },
+    "background_saturation_mean": 0.323,
+    "contrast_p99_p10": 0.4136,
+    "lum_median": 0.2329
+   }
+  },
+  {
+   "title": "The heart nebula IC 1805 + 3D stero picture of Steve Lantz vers. B",
+   "author": "Christoph Lichtblau",
+   "url": "https://www.astrobin.com/bftcvd/",
+   "likes": 403,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [
+    "H_ALPHA"
+   ],
+   "integration_h": 11.2,
+   "pixel_scale": 0.969,
+   "field_radius_deg": 1.163,
+   "thumb": "https://cdn.astrobin.com/thumbs/Hibn6HXb7-S__620x0_CvlzE9Ft.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Hibn6HXb7-S__1824x0_CvlzE9Ft.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\best_01.jpg",
+    "shape": [
+     820,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.23922,
+     "G": 0.21961,
+     "B": 0.15686
+    },
+    "p99_9": {
+     "R": 0.8706,
+     "G": 0.7373,
+     "B": 0.8863
+    },
+    "clip_low_pct": 1.612,
+    "clip_high_pct": 0.004,
+    "background_level": 0.11796,
+    "tile_spread_p90_p10": 0.24797,
+    "noise_hf": 0.007329,
+    "bg_snr_proxy": 16.1,
+    "background_rgb": [
+     0.1451,
+     0.1098,
+     0.11373
+    ],
+    "background_cast": {
+     "R/G": 1.321,
+     "B/G": 1.036
+    },
+    "signal_saturation_mean": 0.55,
+    "signal_saturation_p90": 0.955,
+    "signal_hue_mix": {
+     "red": 0.046,
+     "orange": 0.583,
+     "cyan": 0.306,
+     "azure": 0.036
+    },
+    "background_saturation_mean": 0.308,
+    "contrast_p99_p10": 0.4655,
+    "lum_median": 0.23
+   }
+  },
+  {
+   "title": "Melotte 15 - A Peek Inside The Heart",
+   "author": "Alan Pham",
+   "url": "https://www.astrobin.com/328006/",
+   "likes": 400,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 27.8,
+   "pixel_scale": 1.416,
+   "field_radius_deg": 0.569,
+   "thumb": "https://cdn.astrobin.com/thumbs/cCOEo3_kCBtz_620x0_cczXV3LN.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/cCOEo3_kCBtz_1824x0_cczXV3LN.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\best_02.jpg",
+    "shape": [
+     362,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.27059,
+     "G": 0.25098,
+     "B": 0.26667
+    },
+    "p99_9": {
+     "R": 0.8784,
+     "G": 0.8078,
+     "B": 0.9059
+    },
+    "clip_low_pct": 1.477,
+    "clip_high_pct": 0.009,
+    "background_level": 0.08563,
+    "tile_spread_p90_p10": 0.37251,
+    "noise_hf": 0.005278,
+    "bg_snr_proxy": 16.22,
+    "background_rgb": [
+     0.08627,
+     0.07059,
+     0.17647
+    ],
+    "background_cast": {
+     "R/G": 1.222,
+     "B/G": 2.5
+    },
+    "signal_saturation_mean": 0.294,
+    "signal_saturation_p90": 0.595,
+    "signal_hue_mix": {
+     "red": 0.057,
+     "orange": 0.607,
+     "cyan": 0.288,
+     "azure": 0.039
+    },
+    "background_saturation_mean": 0.697,
+    "contrast_p99_p10": 0.5731,
+    "lum_median": 0.2589
+   }
+  },
+  {
+   "title": "Melotte 15 - The Center of the Heart Nebula (Hubble Palette)",
+   "author": "Bogdan Jarzyna",
+   "url": "https://www.astrobin.com/ahf224/",
+   "likes": 391,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony ICX695 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 0.0,
+   "pixel_scale": 1.251,
+   "field_radius_deg": 0.605,
+   "thumb": "https://cdn.astrobin.com/thumbs/sMivhqXmsYXc_620x0_9lXNabGn.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/sMivhqXmsYXc_1824x0_lqXULnmP.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\best_03.jpg",
+    "shape": [
+     790,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.27843,
+     "G": 0.26275,
+     "B": 0.2549
+    },
+    "p99_9": {
+     "R": 0.9922,
+     "G": 0.8431,
+     "B": 0.8667
+    },
+    "clip_low_pct": 0.028,
+    "clip_high_pct": 0.089,
+    "background_level": 0.15838,
+    "tile_spread_p90_p10": 0.29685,
+    "noise_hf": 0.008166,
+    "bg_snr_proxy": 19.4,
+    "background_rgb": [
+     0.18824,
+     0.1451,
+     0.18431
+    ],
+    "background_cast": {
+     "R/G": 1.297,
+     "B/G": 1.27
+    },
+    "signal_saturation_mean": 0.469,
+    "signal_saturation_p90": 0.799,
+    "signal_hue_mix": {
+     "red": 0.422,
+     "orange": 0.332,
+     "cyan": 0.195
+    },
+    "background_saturation_mean": 0.378,
+    "contrast_p99_p10": 0.5256,
+    "lum_median": 0.2798
+   }
+  },
+  {
+   "title": "Heart Nebula and the Small Planetary Nebula PN G135.6+1.0 (SHO)",
+   "author": "Ruben Barbosa",
+   "url": "https://www.astrobin.com/hst1uf/",
+   "likes": 386,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Kodak / ON Semi KAF-16200 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 10.5,
+   "pixel_scale": 2.113,
+   "field_radius_deg": 1.664,
+   "thumb": "https://cdn.astrobin.com/thumbs/gBp7zIUsm4wC_620x0_ZBmvei_u.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/gBp7zIUsm4wC_1824x0_ZBmvei_u.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\best_04.jpg",
+    "shape": [
+     493,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.32157,
+     "G": 0.23137,
+     "B": 0.19216
+    },
+    "p99_9": {
+     "R": 0.8549,
+     "G": 0.7647,
+     "B": 0.7686
+    },
+    "clip_low_pct": 0.38,
+    "clip_high_pct": 0.001,
+    "background_level": 0.06715,
+    "tile_spread_p90_p10": 0.37107,
+    "noise_hf": 0.010523,
+    "bg_snr_proxy": 6.38,
+    "background_rgb": [
+     0.10196,
+     0.06667,
+     0.06667
+    ],
+    "background_cast": {
+     "R/G": 1.529,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.287,
+    "signal_saturation_p90": 0.543,
+    "signal_hue_mix": {
+     "red": 0.928,
+     "orange": 0.043
+    },
+    "background_saturation_mean": 0.422,
+    "contrast_p99_p10": 0.579,
+    "lum_median": 0.2504
+   }
+  },
+  {
+   "title": "Melotte 15 (Ha OIII with RGB Stars)",
+   "author": "Jan Schubert",
+   "url": "https://www.astrobin.com/ue4bzv/",
+   "likes": 382,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX492 (mono)",
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Lacerta Fotonewton 200/800 (pre-2021)",
+    "TS-Optics Photoline 115mm f/7"
+   ],
+   "filters": [
+    "UV_IR_CUT",
+    "H_ALPHA",
+    "OIII"
+   ],
+   "integration_h": 20.1,
+   "pixel_scale": 0.967,
+   "field_radius_deg": 0.739,
+   "thumb": "https://cdn.astrobin.com/thumbs/mYvwQOYXWxQV_620x0_roc4mvBL.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/mYvwQOYXWxQV_1824x0_5pyJjyjk.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\best_05.jpg",
+    "shape": [
+     469,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.33333,
+     "G": 0.19216,
+     "B": 0.23137
+    },
+    "p99_9": {
+     "R": 0.7098,
+     "G": 0.651,
+     "B": 0.7804
+    },
+    "clip_low_pct": 0.047,
+    "clip_high_pct": 0.003,
+    "background_level": 0.13268,
+    "tile_spread_p90_p10": 0.19182,
+    "noise_hf": 0.011786,
+    "bg_snr_proxy": 11.26,
+    "background_rgb": [
+     0.23137,
+     0.09412,
+     0.1098
+    ],
+    "background_cast": {
+     "R/G": 2.458,
+     "B/G": 1.167
+    },
+    "signal_saturation_mean": 0.349,
+    "signal_saturation_p90": 0.497,
+    "signal_hue_mix": {
+     "red": 0.353,
+     "azure": 0.043,
+     "blue": 0.16,
+     "violet": 0.072,
+     "magenta": 0.067,
+     "rose": 0.3
+    },
+    "background_saturation_mean": 0.569,
+    "contrast_p99_p10": 0.3778,
+    "lum_median": 0.2262
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "IC1805 Heart nebula core SHO w/ OSC stars",
+   "author": "Grégory Fabre",
+   "url": "https://www.astrobin.com/7pxq65/",
+   "likes": 805,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX294 (color)"
+   ],
+   "telescopes": [
+    "GSO 8\" f/8 Ritchey-Chretien Carbon Tube"
+   ],
+   "filters": [
+    "MULTIBAND",
+    "MULTIBAND",
+    "LP"
+   ],
+   "integration_h": 28.4,
+   "pixel_scale": 0.825,
+   "field_radius_deg": 0.55,
+   "thumb": "https://cdn.astrobin.com/thumbs/AUt26vm3oU0A_620x0_1g3BC9VT.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/AUt26vm3oU0A_1824x0__sPnTECk.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\peer_00.jpg",
+    "shape": [
+     416,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.23529,
+     "G": 0.22353,
+     "B": 0.26275
+    },
+    "p99_9": {
+     "R": 0.8157,
+     "G": 0.7765,
+     "B": 0.8474
+    },
+    "clip_low_pct": 0.975,
+    "clip_high_pct": 0.027,
+    "background_level": 0.17124,
+    "tile_spread_p90_p10": 0.15651,
+    "noise_hf": 0.005883,
+    "bg_snr_proxy": 29.1,
+    "background_rgb": [
+     0.21176,
+     0.15294,
+     0.19608
+    ],
+    "background_cast": {
+     "R/G": 1.385,
+     "B/G": 1.282
+    },
+    "signal_saturation_mean": 0.376,
+    "signal_saturation_p90": 0.696,
+    "signal_hue_mix": {
+     "red": 0.162,
+     "orange": 0.063,
+     "cyan": 0.572,
+     "azure": 0.097,
+     "rose": 0.046
+    },
+    "background_saturation_mean": 0.366,
+    "contrast_p99_p10": 0.4025,
+    "lum_median": 0.2303
+   }
+  },
+  {
+   "title": "IC1805 & 1848 - Heart and Soul Nebulas",
+   "author": "Itto Ogami",
+   "url": "https://www.astrobin.com/23vjj3/",
+   "likes": 518,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "William Optics Redcat 51",
+    "William Optics SpaceCat 51"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 57.5,
+   "pixel_scale": 4.869,
+   "field_radius_deg": 3.249,
+   "thumb": "https://cdn.astrobin.com/thumbs/iqGLLoWEh7Rv_620x0_esdlMP5Y.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/iqGLLoWEh7Rv_1824x0_esdlMP5Y.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\peer_01.jpg",
+    "shape": [
+     412,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.15686,
+     "G": 0.13333,
+     "B": 0.12941
+    },
+    "p99_9": {
+     "R": 0.8196,
+     "G": 0.6863,
+     "B": 0.6706
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.0,
+    "background_level": 0.11594,
+    "tile_spread_p90_p10": 0.19807,
+    "noise_hf": 0.008354,
+    "bg_snr_proxy": 13.88,
+    "background_rgb": [
+     0.12157,
+     0.11373,
+     0.1098
+    ],
+    "background_cast": {
+     "R/G": 1.069,
+     "B/G": 0.966
+    },
+    "signal_saturation_mean": 0.41,
+    "signal_saturation_p90": 0.606,
+    "signal_hue_mix": {
+     "red": 0.876,
+     "azure": 0.035,
+     "rose": 0.061
+    },
+    "background_saturation_mean": 0.09,
+    "contrast_p99_p10": 0.4497,
+    "lum_median": 0.1392
+   }
+  },
+  {
+   "title": "Heart & Fishhead Nebulas (IC1805, IC1795)",
+   "author": "kvastronomer",
+   "url": "https://www.astrobin.com/mqpx8h/",
+   "likes": 444,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX533 (color)"
+   ],
+   "telescopes": [
+    "Askar FRA400"
+   ],
+   "filters": [
+    "MULTIBAND",
+    "UV_IR_CUT",
+    "MULTIBAND"
+   ],
+   "integration_h": 42.0,
+   "pixel_scale": 2.778,
+   "field_radius_deg": 1.608,
+   "thumb": "https://cdn.astrobin.com/thumbs/SqJrjkDlewUb_620x0_esdlMP5Y.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/SqJrjkDlewUb_1824x0_esdlMP5Y.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\peer_02.jpg",
+    "shape": [
+     609,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.24314,
+     "G": 0.15686,
+     "B": 0.15686
+    },
+    "p99_9": {
+     "R": 0.9216,
+     "G": 0.8667,
+     "B": 0.949
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.023,
+    "background_level": 0.1271,
+    "tile_spread_p90_p10": 0.25799,
+    "noise_hf": 0.0089,
+    "bg_snr_proxy": 14.28,
+    "background_rgb": [
+     0.12549,
+     0.12157,
+     0.12549
+    ],
+    "background_cast": {
+     "R/G": 1.032,
+     "B/G": 1.032
+    },
+    "signal_saturation_mean": 0.327,
+    "signal_saturation_p90": 0.554,
+    "signal_hue_mix": {
+     "red": 0.667,
+     "cyan": 0.283,
+     "azure": 0.034
+    },
+    "background_saturation_mean": 0.14,
+    "contrast_p99_p10": 0.5809,
+    "lum_median": 0.1783
+   }
+  },
+  {
+   "title": "The Heart and the Soul nebula complex, three panel mosaic",
+   "author": "Roy Hagen",
+   "url": "https://www.astrobin.com/7iyfo2/",
+   "likes": 443,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Askar FRA400"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 38.6,
+   "pixel_scale": 2.785,
+   "field_radius_deg": 3.619,
+   "thumb": "https://cdn.astrobin.com/thumbs/FpdyGdVPiB6T_620x0_k0ORfym3.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/FpdyGdVPiB6T_1824x0_k0ORfym3.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/peer_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\peer_03.jpg",
+    "shape": [
+     1039,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.21569,
+     "G": 0.13333,
+     "B": 0.12157
+    },
+    "p99_9": {
+     "R": 0.7098,
+     "G": 0.6,
+     "B": 0.7137
+    },
+    "clip_low_pct": 0.003,
+    "clip_high_pct": 0.0,
+    "background_level": 0.11229,
+    "tile_spread_p90_p10": 0.23497,
+    "noise_hf": 0.008415,
+    "bg_snr_proxy": 13.34,
+    "background_rgb": [
+     0.12549,
+     0.10196,
+     0.09412
+    ],
+    "background_cast": {
+     "R/G": 1.231,
+     "B/G": 0.923
+    },
+    "signal_saturation_mean": 0.354,
+    "signal_saturation_p90": 0.529,
+    "signal_hue_mix": {
+     "red": 0.638,
+     "blue": 0.081,
+     "violet": 0.048,
+     "magenta": 0.045,
+     "rose": 0.185
+    },
+    "background_saturation_mean": 0.278,
+    "contrast_p99_p10": 0.4286,
+    "lum_median": 0.1499
+   }
+  },
+  {
+   "title": "Melotte 15 The Heart of the Heart",
+   "author": "Roy Hagen",
+   "url": "https://www.astrobin.com/579szd/",
+   "likes": 377,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "William Optics Fluorostar 132 / FLT132"
+   ],
+   "filters": [
+    "MULTIBAND"
+   ],
+   "integration_h": 18.1,
+   "pixel_scale": 0.532,
+   "field_radius_deg": 0.641,
+   "thumb": "https://cdn.astrobin.com/thumbs/0KJfRa-X5NAF_620x0_k0ORfym3.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/0KJfRa-X5NAF_1824x0_k0ORfym3.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/peer_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\peer_04.jpg",
+    "shape": [
+     799,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.23529,
+     "G": 0.14118,
+     "B": 0.13725
+    },
+    "p99_9": {
+     "R": 0.7922,
+     "G": 0.5451,
+     "B": 0.6392
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.01,
+    "background_level": 0.11445,
+    "tile_spread_p90_p10": 0.1392,
+    "noise_hf": 0.003287,
+    "bg_snr_proxy": 34.82,
+    "background_rgb": [
+     0.1451,
+     0.10588,
+     0.09804
+    ],
+    "background_cast": {
+     "R/G": 1.37,
+     "B/G": 0.926
+    },
+    "signal_saturation_mean": 0.392,
+    "signal_saturation_p90": 0.573,
+    "signal_hue_mix": {
+     "red": 0.211,
+     "magenta": 0.096,
+     "rose": 0.647
+    },
+    "background_saturation_mean": 0.303,
+    "contrast_p99_p10": 0.2961,
+    "lum_median": 0.1629
+   }
+  },
+  {
+   "title": "Soul and Heart (4-panel mosaic)",
+   "author": "Massimo Di Fusco",
+   "url": "https://www.astrobin.com/1q3z91/",
+   "likes": 311,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)",
+    "Sony IMX071 (color)"
+   ],
+   "telescopes": [
+    "Sky-Watcher Evostar 80ED / Black Diamond 80ED"
+   ],
+   "filters": [
+    "MULTIBAND",
+    "L"
+   ],
+   "integration_h": 44.0,
+   "pixel_scale": 1.593,
+   "field_radius_deg": 2.877,
+   "thumb": "https://cdn.astrobin.com/thumbs/SilYnJR52m6V_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/SilYnJR52m6V_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/IC1805/refs/peer_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\IC1805\\refs\\peer_05.jpg",
+    "shape": [
+     400,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.12941,
+     "G": 0.12549,
+     "B": 0.1451
+    },
+    "p99_9": {
+     "R": 0.9765,
+     "G": 0.6627,
+     "B": 0.8902
+    },
+    "clip_low_pct": 0.012,
+    "clip_high_pct": 0.088,
+    "background_level": 0.08504,
+    "tile_spread_p90_p10": 0.20609,
+    "noise_hf": 0.006953,
+    "bg_snr_proxy": 12.23,
+    "background_rgb": [
+     0.07451,
+     0.0902,
+     0.11373
+    ],
+    "background_cast": {
+     "R/G": 0.826,
+     "B/G": 1.261
+    },
+    "signal_saturation_mean": 0.405,
+    "signal_saturation_p90": 0.627,
+    "signal_hue_mix": {
+     "red": 0.18,
+     "azure": 0.088,
+     "blue": 0.042,
+     "magenta": 0.035,
+     "rose": 0.636
+    },
+    "background_saturation_mean": 0.347,
+    "contrast_p99_p10": 0.4104,
+    "lum_median": 0.1297
+   }
+  }
+ ]
+}

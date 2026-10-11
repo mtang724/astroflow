@@ -1,0 +1,16 @@
+# core (organise, pipeline, metrics, references, agent)
+astropy>=6
+numpy>=2
+scipy>=1.11
+pillow>=10
+tifffile>=2024.1
+requests>=2.31
+openai>=1.40            # DeepSeek's OpenAI-compatible API
+
+# optional: learning from tutorial videos (astroflow.video) on an NVIDIA GPU
+faster-whisper>=1.0
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==9.*
+
+# external tools (not pip): PixInsight 1.9.x with WBPP, RC Astro BlurXTerminator/NoiseXTerminator/StarXTerminator,
+# Gaia DR3/SP database for SPCC, EZ Processing Suite (algorithms ported), ffmpeg (video), node (optional: syntax checks)

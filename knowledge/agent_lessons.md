@@ -1,0 +1,2 @@
+- 2026-10-10: （已修复）crop 曾导致 PixInsight 挂起 3 小时：DynamicCrop 在无界面下会弹确认框（删除星图解析结果），参数不合法时还会弹错误框。现在 `crop` 设了 noGUIMessages，`rect` 接受 `{x0,y0,x1,y1}` 或 `[x0,y0,x1,y1]` 并校验；运行器有看门狗（CPU 空闲 10 分钟或超时即结束并报告当时打开的窗口）。构图裁切可以放在非线性阶段（combine 的 extra_steps），裁切会删除星图解析结果，所以必须在 SPCC 之后。
+- 2026-10-10: `dbe_auto` 的 `objectScale`、`degree` 等是步骤的顶层参数，不要放进 `params`（`params` 只写入 PixInsight 进程本身的参数）。

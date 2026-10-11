@@ -1,0 +1,840 @@
+{
+ "target": "M101",
+ "aliases": [
+  "M101",
+  "M 101",
+  "Pinwheel Galaxy"
+ ],
+ "fetched": "2026-10-10",
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 45,
+ "best": [
+  {
+   "title": "DSC2 Presents: M 101 and NGC 5474 in HOORGB (600+ hours)",
+   "author": "Mikołaj Wadowski",
+   "url": "https://www.astrobin.com/8hgecz/",
+   "likes": 444,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX533 (color)",
+    "Sony IMX492 (mono)",
+    "Sony IMX455 (mono)",
+    "Sony IMX571 (mono)",
+    "Sony IMX571 (color)",
+    "Panasonic MN34230 (mono)",
+    "Sony IMX533 (mono)"
+   ],
+   "telescopes": [
+    "Askar 107PHQ",
+    "Astro-Tech AT8RC",
+    "Bresser Messier NT-150/750",
+    "Celestron C6-N",
+    "Explore Scientific ED APO 102mm f/7 Alu FCD-100 HEX",
+    "GSO 12\" f/8 Ritchey-Chretien Truss Tube",
+    "GSO 8\" f/4 Imaging Newtonian",
+    "Sharpstar 94EDPH",
+    "Sky-Watcher Esprit 100ED",
+    "Sky-Watcher Esprit 150ED",
+    "Sky-Watcher Explorer 150PDS",
+    "Starfield Gear60Q",
+    "Stellarvue SVX102T",
+    "TS-Optics 200mm/8\" Ritchey-Chrétien",
+    "TS-Optics Photoline 80mm f/6 (TLAPO804)",
+    "William Optics Fluorostar 120 / FLT120",
+    "William Optics Gran Turismo 102 / GT102",
+    "William Optics Gran Turismo 71 / GT71"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "L",
+    "OIII",
+    "R"
+   ],
+   "integration_h": 610.3,
+   "pixel_scale": 1.309,
+   "field_radius_deg": 0.836,
+   "thumb": "https://cdn.astrobin.com/thumbs/Pmv03bCg9GPn_620x0_esdlMP5Y.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Pmv03bCg9GPn_1824x0_esdlMP5Y.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\best_00.jpg",
+    "shape": [
+     444,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.12549,
+     "G": 0.12157,
+     "B": 0.12549
+    },
+    "p99_9": {
+     "R": 0.9882,
+     "G": 0.8275,
+     "B": 0.9412
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.055,
+    "background_level": 0.10333,
+    "tile_spread_p90_p10": 0.16206,
+    "noise_hf": 0.011685,
+    "bg_snr_proxy": 8.84,
+    "background_rgb": [
+     0.09804,
+     0.09804,
+     0.10196
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.04
+    },
+    "signal_saturation_mean": 0.231,
+    "signal_saturation_p90": 0.414,
+    "signal_hue_mix": {
+     "red": 0.221,
+     "azure": 0.592,
+     "blue": 0.07,
+     "rose": 0.065
+    },
+    "background_saturation_mean": 0.054,
+    "contrast_p99_p10": 0.6089,
+    "lum_median": 0.1216
+   }
+  },
+  {
+   "title": "The Pinwheel Galaxy M101 ( Sb)",
+   "author": "Brian Diaz",
+   "url": "https://www.astrobin.com/ffl79g/",
+   "likes": 421,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX461 (mono)"
+   ],
+   "telescopes": [
+    "Planewave CDK14"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "H_ALPHA",
+    "L",
+    "R"
+   ],
+   "integration_h": 67.2,
+   "pixel_scale": 0.305,
+   "field_radius_deg": 0.544,
+   "thumb": "https://cdn.astrobin.com/thumbs/iVazvSx_CQvi_620x0_pljLK9Q-.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/iVazvSx_CQvi_1824x0_pljLK9Q-.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\best_01.jpg",
+    "shape": [
+     795,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.08627,
+     "G": 0.08627,
+     "B": 0.08627
+    },
+    "p99_9": {
+     "R": 0.8902,
+     "G": 0.8278,
+     "B": 0.8471
+    },
+    "clip_low_pct": 0.039,
+    "clip_high_pct": 0.048,
+    "background_level": 0.07451,
+    "tile_spread_p90_p10": 0.10796,
+    "noise_hf": 0.004796,
+    "bg_snr_proxy": 15.53,
+    "background_rgb": [
+     0.07451,
+     0.07451,
+     0.07451
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.122,
+    "signal_saturation_p90": 0.26,
+    "signal_hue_mix": {
+     "red": 0.388,
+     "orange": 0.085,
+     "azure": 0.163,
+     "blue": 0.15,
+     "violet": 0.053,
+     "magenta": 0.048,
+     "rose": 0.08
+    },
+    "background_saturation_mean": 0.04,
+    "contrast_p99_p10": 0.5438,
+    "lum_median": 0.0863
+   }
+  },
+  {
+   "title": "M101 LRGB by Insight Observatory - To my mom",
+   "author": "Daniel Nobre",
+   "url": "https://www.astrobin.com/khy0ff/",
+   "likes": 308,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 0.0,
+   "pixel_scale": 1.232,
+   "field_radius_deg": 0.884,
+   "thumb": "https://cdn.astrobin.com/thumbs/oKMry37QzJVx_620x0_IJIMUlJm.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/oKMry37QzJVx_1824x0_hqi7CjBH.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\best_02.jpg",
+    "shape": [
+     602,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.08627,
+     "G": 0.08627,
+     "B": 0.08627
+    },
+    "p99_9": {
+     "R": 0.902,
+     "G": 0.8039,
+     "B": 0.8588
+    },
+    "clip_low_pct": 0.011,
+    "clip_high_pct": 0.06,
+    "background_level": 0.07843,
+    "tile_spread_p90_p10": 0.03225,
+    "noise_hf": 0.005482,
+    "bg_snr_proxy": 14.31,
+    "background_rgb": [
+     0.07451,
+     0.07451,
+     0.07451
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.115,
+    "signal_saturation_p90": 0.277,
+    "signal_hue_mix": {
+     "red": 0.232,
+     "orange": 0.121,
+     "azure": 0.236,
+     "blue": 0.193,
+     "violet": 0.06,
+     "magenta": 0.044,
+     "rose": 0.082
+    },
+    "background_saturation_mean": 0.024,
+    "contrast_p99_p10": 0.477,
+    "lum_median": 0.0863
+   }
+  },
+  {
+   "title": "Messier 101",
+   "author": "Marc",
+   "url": "https://www.astrobin.com/pr2cup/",
+   "likes": 304,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [
+    "Lacerta Fotonewton 200/800 (pre-2021)"
+   ],
+   "filters": [],
+   "integration_h": 21.1,
+   "pixel_scale": 0.98,
+   "field_radius_deg": 0.763,
+   "thumb": "https://cdn.astrobin.com/thumbs/cX3i7Ru9HBFc_620x0_-obGKlkR.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/cX3i7Ru9HBFc_1824x0_NXla_2XR.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\best_03.jpg",
+    "shape": [
+     463,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09804,
+     "G": 0.09804,
+     "B": 0.09804
+    },
+    "p99_9": {
+     "R": 0.8468,
+     "G": 0.7961,
+     "B": 0.8078
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.021,
+    "background_level": 0.0804,
+    "tile_spread_p90_p10": 0.06132,
+    "noise_hf": 0.006658,
+    "bg_snr_proxy": 12.08,
+    "background_rgb": [
+     0.07843,
+     0.07843,
+     0.07843
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.156,
+    "signal_saturation_p90": 0.303,
+    "signal_hue_mix": {
+     "red": 0.178,
+     "orange": 0.196,
+     "cyan": 0.334,
+     "azure": 0.257
+    },
+    "background_saturation_mean": 0.087,
+    "contrast_p99_p10": 0.46,
+    "lum_median": 0.0978
+   }
+  },
+  {
+   "title": "M 101",
+   "author": "Jens Zippel",
+   "url": "https://www.astrobin.com/347019/",
+   "likes": 288,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 9.5,
+   "pixel_scale": 0.783,
+   "field_radius_deg": 0.53,
+   "thumb": "https://cdn.astrobin.com/thumbs/joznRDAjNAaM_620x0_ZP7uYPx8.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/joznRDAjNAaM_1824x0_181lOePC.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\best_04.jpg",
+    "shape": [
+     484,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.10588,
+     "G": 0.10196,
+     "B": 0.10588
+    },
+    "p99_9": {
+     "R": 0.8471,
+     "G": 0.8311,
+     "B": 0.8588
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.041,
+    "background_level": 0.09804,
+    "tile_spread_p90_p10": 0.06587,
+    "noise_hf": 0.003613,
+    "bg_snr_proxy": 27.13,
+    "background_rgb": [
+     0.09804,
+     0.09412,
+     0.09804
+    ],
+    "background_cast": {
+     "R/G": 1.042,
+     "B/G": 1.042
+    },
+    "signal_saturation_mean": 0.183,
+    "signal_saturation_p90": 0.31,
+    "signal_hue_mix": {
+     "red": 0.074,
+     "orange": 0.053,
+     "azure": 0.613,
+     "blue": 0.214
+    },
+    "background_saturation_mean": 0.046,
+    "contrast_p99_p10": 0.4266,
+    "lum_median": 0.1039
+   }
+  },
+  {
+   "title": "M101 the Pinwheel Galaxy",
+   "author": "tommy_nawratil",
+   "url": "https://www.astrobin.com/347204/",
+   "likes": 263,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Panasonic MN34230 (mono)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 10.6,
+   "pixel_scale": 0.981,
+   "field_radius_deg": 0.624,
+   "thumb": "https://cdn.astrobin.com/thumbs/IlF4X88TYuEI_620x0_kWXURFLk.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/IlF4X88TYuEI_1824x0_kWXURFLk.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\best_05.jpg",
+    "shape": [
+     467,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.0902,
+     "G": 0.08627,
+     "B": 0.08627
+    },
+    "p99_9": {
+     "R": 0.8039,
+     "G": 0.749,
+     "B": 0.8
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.009,
+    "background_level": 0.08235,
+    "tile_spread_p90_p10": 0.07115,
+    "noise_hf": 0.004154,
+    "bg_snr_proxy": 19.82,
+    "background_rgb": [
+     0.08235,
+     0.08235,
+     0.08235
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.12,
+    "signal_saturation_p90": 0.241,
+    "signal_hue_mix": {
+     "red": 0.134,
+     "orange": 0.036,
+     "azure": 0.467,
+     "blue": 0.278,
+     "violet": 0.04,
+     "rose": 0.031
+    },
+    "background_saturation_mean": 0.017,
+    "contrast_p99_p10": 0.5001,
+    "lum_median": 0.0863
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "NGC 5457 (M101) in RGB",
+   "author": "Armin Unterwandling",
+   "url": "https://www.astrobin.com/cen7y3/",
+   "likes": 551,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX533 (color)"
+   ],
+   "telescopes": [
+    "TS-Optics CF-APO 102mm f/7"
+   ],
+   "filters": [
+    "UV_IR_CUT"
+   ],
+   "integration_h": 15.0,
+   "pixel_scale": 1.379,
+   "field_radius_deg": 0.51,
+   "thumb": "https://cdn.astrobin.com/thumbs/8LjWMdc63tBS_620x0_FJTz6Ez6.jpg?v=1777801225",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/8LjWMdc63tBS_1824x0_FJTz6Ez6.jpg?v=1777801225",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\peer_00.jpg",
+    "shape": [
+     643,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.07843,
+     "G": 0.06275,
+     "B": 0.07451
+    },
+    "p99_9": {
+     "R": 0.9333,
+     "G": 0.9176,
+     "B": 0.9373
+    },
+    "clip_low_pct": 0.048,
+    "clip_high_pct": 0.076,
+    "background_level": 0.0602,
+    "tile_spread_p90_p10": 0.0676,
+    "noise_hf": 0.001667,
+    "bg_snr_proxy": 36.11,
+    "background_rgb": [
+     0.07451,
+     0.0549,
+     0.07059
+    ],
+    "background_cast": {
+     "R/G": 1.357,
+     "B/G": 1.286
+    },
+    "signal_saturation_mean": 0.211,
+    "signal_saturation_p90": 0.338,
+    "signal_hue_mix": {
+     "cyan": 0.121,
+     "azure": 0.648,
+     "blue": 0.124
+    },
+    "background_saturation_mean": 0.277,
+    "contrast_p99_p10": 0.5628,
+    "lum_median": 0.0653
+   }
+  },
+  {
+   "title": "M101 and Friends - Ultracat 108 - Mark 3",
+   "author": "Itto Ogami",
+   "url": "https://www.astrobin.com/uyy7rl/",
+   "likes": 505,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "William Optics Ultra-Cat 108"
+   ],
+   "filters": [],
+   "integration_h": 17.0,
+   "pixel_scale": 1.489,
+   "field_radius_deg": 1.004,
+   "thumb": "https://cdn.astrobin.com/thumbs/n5DJnUeTrkah_620x0_1g3BC9VT.png?v=1779154731",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/n5DJnUeTrkah_1824x0__sPnTECk.png?v=1779154731",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\peer_01.jpg",
+    "shape": [
+     393,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.12157,
+     "G": 0.12157,
+     "B": 0.12549
+    },
+    "p99_9": {
+     "R": 0.8706,
+     "G": 0.7765,
+     "B": 0.9137
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.017,
+    "background_level": 0.11793,
+    "tile_spread_p90_p10": 0.01977,
+    "noise_hf": 0.00404,
+    "bg_snr_proxy": 29.19,
+    "background_rgb": [
+     0.11373,
+     0.11765,
+     0.11765
+    ],
+    "background_cast": {
+     "R/G": 0.967,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.159,
+    "signal_saturation_p90": 0.307,
+    "signal_hue_mix": {
+     "red": 0.163,
+     "azure": 0.662,
+     "blue": 0.067
+    },
+    "background_saturation_mean": 0.059,
+    "contrast_p99_p10": 0.4805,
+    "lum_median": 0.1224
+   }
+  },
+  {
+   "title": "M101",
+   "author": "Armin Unterwandling",
+   "url": "https://www.astrobin.com/pfv71x/",
+   "likes": 455,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX533 (color)"
+   ],
+   "telescopes": [
+    "TS-Optics CF-APO 102mm f/7"
+   ],
+   "filters": [
+    "LP"
+   ],
+   "integration_h": 3.0,
+   "pixel_scale": 1.379,
+   "field_radius_deg": 0.811,
+   "thumb": "https://cdn.astrobin.com/thumbs/UNAT6wYEoxuj_620x0_FJTz6Ez6.jpg?v=1777703333",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/UNAT6wYEoxuj_1824x0_FJTz6Ez6.jpg?v=1777703333",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\peer_02.jpg",
+    "shape": [
+     617,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.1098,
+     "G": 0.1098,
+     "B": 0.1098
+    },
+    "p99_9": {
+     "R": 0.6235,
+     "G": 0.6,
+     "B": 0.5882
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.006,
+    "background_level": 0.10588,
+    "tile_spread_p90_p10": 0.00419,
+    "noise_hf": 0.0,
+    "bg_snr_proxy": null,
+    "background_rgb": [
+     0.10588,
+     0.10588,
+     0.10588
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.039,
+    "signal_saturation_p90": 0.104,
+    "signal_hue_mix": {
+     "red": 0.208,
+     "orange": 0.126,
+     "yellow": 0.04,
+     "cyan": 0.164,
+     "azure": 0.33,
+     "blue": 0.032,
+     "rose": 0.064
+    },
+    "background_saturation_mean": 0.01,
+    "contrast_p99_p10": 0.2188,
+    "lum_median": 0.1098
+   }
+  },
+  {
+   "title": "NGC5457",
+   "author": "Armin Unterwandling",
+   "url": "https://www.astrobin.com/ys2yx9/",
+   "likes": 435,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX533 (color)"
+   ],
+   "telescopes": [],
+   "filters": [],
+   "integration_h": 11.2,
+   "pixel_scale": 1.38,
+   "field_radius_deg": 0.605,
+   "thumb": "https://cdn.astrobin.com/thumbs/dKBPuBI8Tmul_620x0_FJTz6Ez6.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/dKBPuBI8Tmul_1824x0_FJTz6Ez6.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/peer_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\peer_03.jpg",
+    "shape": [
+     656,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09412,
+     "G": 0.09412,
+     "B": 0.0902
+    },
+    "p99_9": {
+     "R": 0.8118,
+     "G": 0.8039,
+     "B": 0.7922
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.036,
+    "background_level": 0.08963,
+    "tile_spread_p90_p10": 0.0323,
+    "noise_hf": 0.000234,
+    "bg_snr_proxy": 383.58,
+    "background_rgb": [
+     0.0902,
+     0.0902,
+     0.08235
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 0.913
+    },
+    "signal_saturation_mean": 0.124,
+    "signal_saturation_p90": 0.255,
+    "signal_hue_mix": {
+     "red": 0.054,
+     "orange": 0.076,
+     "yellow": 0.037,
+     "cyan": 0.269,
+     "azure": 0.501
+    },
+    "background_saturation_mean": 0.089,
+    "contrast_p99_p10": 0.3294,
+    "lum_median": 0.0941
+   }
+  },
+  {
+   "title": "Pinwheel Galaxy in Ursa Major",
+   "author": "Theodore Arampatzoglou",
+   "url": "https://www.astrobin.com/1j2b8x/",
+   "likes": 413,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony ICX694 / ICX695 (mono)",
+    "Sony IMX533 (color)"
+   ],
+   "telescopes": [
+    "Askar 107PHQ",
+    "William Optics Fluorostar 110 / FLT110"
+   ],
+   "filters": [
+    "UV_IR_CUT"
+   ],
+   "integration_h": 13.9,
+   "pixel_scale": 1.009,
+   "field_radius_deg": 0.563,
+   "thumb": "https://cdn.astrobin.com/thumbs/zab83GzzQed8_620x0_esdlMP5Y.png",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/zab83GzzQed8_1824x0_esdlMP5Y.png",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/peer_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\peer_04.jpg",
+    "shape": [
+     692,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.07059,
+     "G": 0.06275,
+     "B": 0.06275
+    },
+    "p99_9": {
+     "R": 0.7137,
+     "G": 0.6863,
+     "B": 0.8627
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.015,
+    "background_level": 0.05875,
+    "tile_spread_p90_p10": 0.07618,
+    "noise_hf": 0.002797,
+    "bg_snr_proxy": 21.01,
+    "background_rgb": [
+     0.05882,
+     0.0549,
+     0.05098
+    ],
+    "background_cast": {
+     "R/G": 1.071,
+     "B/G": 0.929
+    },
+    "signal_saturation_mean": 0.215,
+    "signal_saturation_p90": 0.336,
+    "signal_hue_mix": {
+     "red": 0.062,
+     "azure": 0.525,
+     "blue": 0.232,
+     "violet": 0.073,
+     "magenta": 0.037,
+     "rose": 0.041
+    },
+    "background_saturation_mean": 0.235,
+    "contrast_p99_p10": 0.4659,
+    "lum_median": 0.0622
+   }
+  },
+  {
+   "title": "M101 & Friends Mark 2 - 130mm Stellarvue f/5 - 2600MC",
+   "author": "Itto Ogami",
+   "url": "https://www.astrobin.com/x2ca98/",
+   "likes": 394,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Stellarvue SVX130T"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 5.2,
+   "pixel_scale": 1.646,
+   "field_radius_deg": 1.105,
+   "thumb": "https://cdn.astrobin.com/thumbs/dWJX8BZtrrXC_620x0_esdlMP5Y.jpg",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/dWJX8BZtrrXC_1824x0_esdlMP5Y.jpg",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/M101/refs/peer_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\M101\\refs\\peer_05.jpg",
+    "shape": [
+     418,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.08627,
+     "G": 0.0902,
+     "B": 0.10588
+    },
+    "p99_9": {
+     "R": 0.4817,
+     "G": 0.451,
+     "B": 0.5098
+    },
+    "clip_low_pct": 0.006,
+    "clip_high_pct": 0.0,
+    "background_level": 0.09049,
+    "tile_spread_p90_p10": 0.00392,
+    "noise_hf": 0.0,
+    "bg_snr_proxy": null,
+    "background_rgb": [
+     0.08627,
+     0.0902,
+     0.10588
+    ],
+    "background_cast": {
+     "R/G": 0.957,
+     "B/G": 1.174
+    },
+    "signal_saturation_mean": 0.169,
+    "signal_saturation_p90": 0.216,
+    "signal_hue_mix": {
+     "cyan": 0.035,
+     "azure": 0.891,
+     "blue": 0.055
+    },
+    "background_saturation_mean": 0.188,
+    "contrast_p99_p10": 0.1681,
+    "lum_median": 0.0905
+   }
+  }
+ ]
+}
