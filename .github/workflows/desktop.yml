@@ -47,9 +47,12 @@ jobs:
 
       - name: Desktop app
         working-directory: desktop
+        shell: bash
         run: |
           npm ci
           npm run build
+          # an empty CSC_LINK (secret not configured) makes electron-builder look for a certificate file: unset it
+          if [ -z "$CSC_LINK" ]; then unset CSC_LINK CSC_KEY_PASSWORD; fi
           # no Developer ID certificate configured: ad-hoc sign on macOS (required to run on Apple Silicon)
           npx electron-builder ${{ matrix.builder }} ${{ runner.os == 'macOS' && secrets.CSC_LINK == '' && '-c.mac.identity=-' || '' }} --publish never
         env:
