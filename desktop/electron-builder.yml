@@ -3,7 +3,7 @@
 # The installed app starts resources/backend/astroflow-backend, which also serves resources/renderer.
 appId: io.github.astroflow.desktop
 productName: astroflow
-copyright: astroflow contributors
+copyright: Copyright © 2026 Ming. All rights reserved.
 directories:
   output: dist
   buildResources: build

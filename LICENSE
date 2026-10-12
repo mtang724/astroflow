@@ -1,0 +1,33 @@
+astroflow
+Copyright (c) 2026 Ming. All rights reserved.
+
+本仓库的源代码、文档、配方和资料库内容保留所有权利。
+
+可以：
+- 在 GitHub 上查看源代码；
+- 下载发布页（Releases）的安装包，个人、非商业地使用。
+
+未经书面许可，不可以：
+- 复制、修改、合并、发布、再分发、再授权或出售本仓库的任何部分；
+- 将本软件或其任何部分用于商业目的，包括商业产品、付费服务、有偿的后期处理服务。
+
+需要授权请在 GitHub Issues 里联系。
+
+例外：
+- desktop/src/renderer/src/components/ui/ 下的界面组件来自 shadcn/ui，遵循其 MIT 许可证。
+- knowledge/videos/ 下的笔记整理自 B 站《PixInsight 进阶教程》，相关内容的权利属于原作者。
+- 安装包里附带的第三方软件（Electron、Python 及其依赖等）遵循各自的许可证。
+- PixInsight、RC Astro 插件和 AstroBin 上的作品不属于本项目。
+
+---
+
+All rights reserved. You may view the source code on GitHub and download the released installers for personal,
+non-commercial use. Without prior written permission you may not copy, modify, merge, publish, distribute,
+sublicense or sell any part of this repository, or use the software or any part of it for commercial purposes,
+including commercial products, paid services and paid image-processing services. To ask for permission, open an
+issue on GitHub.
+
+Exceptions: the UI components in desktop/src/renderer/src/components/ui/ come from shadcn/ui and keep its MIT
+license; the notes in knowledge/videos/ summarise the Bilibili "PixInsight 进阶教程" series, whose rights belong to
+its author; third-party software bundled with the installers keeps its own licenses; PixInsight, the RC Astro tools
+and the works on AstroBin are not part of this project.
