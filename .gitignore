@@ -24,3 +24,15 @@ knowledge/targets/*/refs/
 .idea/
 Thumbs.db
 desktop.ini
+
+# packaging output (PyInstaller at the repository root; electron-builder / electron-vite in desktop/)
+/build/
+/dist/
+desktop/node_modules/
+desktop/out/
+desktop/dist/
+desktop/openapi.json
+*.tsbuildinfo
+
+# UI test artefacts (Playwright screenshots / snapshots)
+.playwright-mcp/

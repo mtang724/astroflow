@@ -17,7 +17,7 @@ from pathlib import Path
 
 import requests
 
-from . import config, metrics
+from . import config, jobctx, jsonfile, metrics
 
 API = "https://www.astrobin.com/api/v2/images/image-search/"
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -30,6 +30,7 @@ ALIASES = {
     "NGC 6334": ["NGC 6334", "Cat's Paw Nebula"], "IC 1805": ["IC 1805", "Heart Nebula"],
     "NGC 246": ["NGC 246", "Skull Nebula"], "NGC 7293": ["NGC 7293", "Helix Nebula"],
     "M42": ["M42", "M 42", "Orion Nebula"], "IC 434": ["IC 434", "Horsehead Nebula"],
+    "C/2025 R3": ["C/2025 R3", "C/2025 R3 (PanSTARRS)"],
 }
 
 
@@ -42,7 +43,7 @@ def _get(params, tries=3):
         r = requests.get(API, params=params, headers={"User-Agent": UA, "Accept": "application/json"}, timeout=40)
         if r.status_code == 200:
             return r.json()
-        time.sleep(3 * (i + 1))
+        jobctx.sleep(3 * (i + 1))
     r.raise_for_status()
 
 
@@ -107,9 +108,18 @@ def _fov_ok(r, fov_radius):
     return fov_radius is None or fr is None or fov_radius / 3 <= fr <= fov_radius * 3
 
 
-def fetch(target, n=8, out_root=None, fov_radius=None, peer="broadband"):
+def _in_window(r, window):
+    if not window:
+        return True
+    day = (r.get("published") or "")[:10]
+    return bool(day) and window[0] <= day <= window[1]
+
+
+def fetch(target, n=8, out_root=None, fov_radius=None, peer="broadband", published=None):
     """fov_radius (deg): our field radius; references framed very differently (mosaics, close-ups) are skipped.
-    peer: "broadband" or "multiband" - which colour-sensor images count as peers (match the night's filter)."""
+    peer: "broadband" or "multiband" - which colour-sensor images count as peers (match the night's filter).
+    published: (first, last) ISO dates - for comets, whose tail changes within days; without a catalogue
+    position the title has to name the comet."""
     out = Path(out_root or config.KNOWLEDGE / "targets") / slug(target)
     (out / "refs").mkdir(parents=True, exist_ok=True)
     for f in (out / "refs").glob("*.jpg"):   # a refetch may reorder/replace images: never reuse old best_NN/peer_NN files
@@ -117,7 +127,7 @@ def fetch(target, n=8, out_root=None, fov_radius=None, peer="broadband"):
     from . import objects
     cat = objects.lookup(target)
     raw = search(target)
-    results = [r for r in raw if _fov_ok(r, fov_radius) and _on_target(r, cat, target)]
+    results = [r for r in raw if _fov_ok(r, fov_radius) and _on_target(r, cat, target) and _in_window(r, published)]
     def award(r):
         return bool(r.get("isIotd")) or bool(r.get("isTopPick")), r.get("likes") or 0
 
@@ -141,10 +151,10 @@ def fetch(target, n=8, out_root=None, fov_radius=None, peer="broadband"):
             except Exception as ex:   # corrupt/animated thumbnails
                 e["fingerprint_error"] = str(ex)
     doc = {"target": target, "aliases": ALIASES.get(target, [target]), "fetched": time.strftime("%Y-%m-%d"),
-           "peer_mode": peer_mode,
+           "peer_mode": peer_mode, "published_window": published,
            "source": "AstroBin image search, ordered by likes", "candidates_seen": len(raw),
            "candidates_on_target": len(results), **groups}
-    (out / "refs.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+    jsonfile.write(out / "refs.json", doc)
     return doc
 
 
@@ -165,8 +175,9 @@ if __name__ == "__main__":
     ap.add_argument("--n", type=int, default=8)
     ap.add_argument("--fov", type=float, help="our field radius in degrees (filters out very different framings)")
     ap.add_argument("--peer", choices=["broadband", "multiband"], default="broadband")
+    ap.add_argument("--published", nargs=2, metavar=("FIRST", "LAST"), help="ISO dates (comets)")
     a = ap.parse_args()
-    d = fetch(a.target, a.n, fov_radius=a.fov, peer=a.peer)
+    d = fetch(a.target, a.n, fov_radius=a.fov, peer=a.peer, published=a.published)
     for g in ("best", "peer"):
         print(g)
         for e in d[g]:

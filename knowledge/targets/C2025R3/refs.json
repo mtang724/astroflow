@@ -1,0 +1,821 @@
+{
+ "target": "C/2025 R3",
+ "aliases": [
+  "C/2025 R3",
+  "C/2025 R3 (PanSTARRS)"
+ ],
+ "fetched": "2026-10-11",
+ "peer_mode": "broadband",
+ "published_window": [
+  "2026-04-08",
+  "2026-04-30"
+ ],
+ "source": "AstroBin image search, ordered by likes",
+ "candidates_seen": 111,
+ "candidates_on_target": 47,
+ "best": [
+  {
+   "title": "C/2025 R3 (PanSTARRS)",
+   "author": "Old_sheep",
+   "url": "https://www.astrobin.com/m0q3im/",
+   "likes": 533,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (mono)",
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Askar 140APO",
+    "Vixen SD103S"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 0.4,
+   "pixel_scale": 0.957,
+   "field_radius_deg": 0.953,
+   "thumb": "https://cdn.astrobin.com/thumbs/h0f0mUSQHwrW_620x0_gcgwRxPw.jpg?v=1777175961",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/h0f0mUSQHwrW_1824x0_dOXi3kR7.jpg?v=1777175961",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/best_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\best_00.jpg",
+    "shape": [
+     413,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.16471,
+     "G": 0.16863,
+     "B": 0.17255
+    },
+    "p99_9": {
+     "R": 0.7333,
+     "G": 0.8667,
+     "B": 0.8706
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.012,
+    "background_level": 0.16471,
+    "tile_spread_p90_p10": 0.08285,
+    "noise_hf": 0.002407,
+    "bg_snr_proxy": 68.43,
+    "background_rgb": [
+     0.16471,
+     0.16471,
+     0.16471
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.185,
+    "signal_saturation_p90": 0.262,
+    "signal_hue_mix": {
+     "cyan": 0.08,
+     "azure": 0.864
+    },
+    "background_saturation_mean": 0.012,
+    "contrast_p99_p10": 0.3827,
+    "lum_median": 0.1684
+   }
+  },
+  {
+   "title": "6th Magnitude Comet C/2025 R3 PANSTARRS Blowing Strands and Streamers, 2xPanel April 8 2026",
+   "author": "Dan Bartlett",
+   "url": "https://www.astrobin.com/et5uvw/",
+   "likes": 454,
+   "iotd": true,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (color)"
+   ],
+   "telescopes": [
+    "Celestron RASA 11\""
+   ],
+   "filters": [],
+   "integration_h": 0.3,
+   "pixel_scale": 2.506,
+   "field_radius_deg": 1.903,
+   "thumb": "https://cdn.astrobin.com/thumbs/l7TRu8goi2PZ_620x0_5iZETheN.png?v=1790035886",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/l7TRu8goi2PZ_1824x0_mqLI95YT.png?v=1790035886",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/best_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\best_01.jpg",
+    "shape": [
+     342,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.0549,
+     "G": 0.05098,
+     "B": 0.05098
+    },
+    "p99_9": {
+     "R": 0.4353,
+     "G": 0.6353,
+     "B": 0.7373
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.0,
+    "background_level": 0.04649,
+    "tile_spread_p90_p10": 0.02546,
+    "noise_hf": 0.003387,
+    "bg_snr_proxy": 13.73,
+    "background_rgb": [
+     0.04706,
+     0.04706,
+     0.03922
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 0.833
+    },
+    "signal_saturation_mean": 0.285,
+    "signal_saturation_p90": 0.474,
+    "signal_hue_mix": {
+     "red": 0.068,
+     "orange": 0.046,
+     "cyan": 0.16,
+     "azure": 0.665
+    },
+    "background_saturation_mean": 0.162,
+    "contrast_p99_p10": 0.2896,
+    "lum_median": 0.0518
+   }
+  },
+  {
+   "title": "C/2025 R3 (Pan-STARRS): Temporal evolution of the ion tail",
+   "author": "Julien De Winter",
+   "url": "https://www.astrobin.com/lims5p/",
+   "likes": 232,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Takahashi FSQ-106EDX4",
+    "Takahashi FSQ-85EDX"
+   ],
+   "filters": [
+    "L",
+    "B",
+    "G",
+    "L",
+    "R"
+   ],
+   "integration_h": 0.7,
+   "pixel_scale": 1.688,
+   "field_radius_deg": 3.514,
+   "thumb": "https://cdn.astrobin.com/thumbs/AqhOOMR5GiZB_620x0_1g3BC9VT.jpg?v=1777987135",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/AqhOOMR5GiZB_1824x0__sPnTECk.jpg?v=1777987135",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/best_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\best_02.jpg",
+    "shape": [
+     403,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.0902,
+     "G": 0.09412,
+     "B": 0.0902
+    },
+    "p99_9": {
+     "R": 0.6157,
+     "G": 0.698,
+     "B": 0.8039
+    },
+    "clip_low_pct": 0.001,
+    "clip_high_pct": 0.0,
+    "background_level": 0.08627,
+    "tile_spread_p90_p10": 0.07893,
+    "noise_hf": 0.004111,
+    "bg_snr_proxy": 20.99,
+    "background_rgb": [
+     0.08235,
+     0.08235,
+     0.08235
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.293,
+    "signal_saturation_p90": 0.485,
+    "signal_hue_mix": {
+     "cyan": 0.151,
+     "azure": 0.82
+    },
+    "background_saturation_mean": 0.034,
+    "contrast_p99_p10": 0.4577,
+    "lum_median": 0.0922
+   }
+  },
+  {
+   "title": "Shroud Formation in this Two Panel Mosaic of Comet C/2025 R3 (PANSTARRS) on April 7 2026",
+   "author": "Dan Bartlett",
+   "url": "https://www.astrobin.com/7eucvg/",
+   "likes": 198,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX455 (color)"
+   ],
+   "telescopes": [
+    "Celestron RASA 11\""
+   ],
+   "filters": [],
+   "integration_h": 0.3,
+   "pixel_scale": 2.508,
+   "field_radius_deg": 2.107,
+   "thumb": "https://cdn.astrobin.com/thumbs/1qRVadqX-fJz_620x0_5iZETheN.png?v=1777891387",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/1qRVadqX-fJz_1824x0_mqLI95YT.png?v=1777891387",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/best_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\best_03.jpg",
+    "shape": [
+     460,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.06275,
+     "G": 0.0549,
+     "B": 0.03529
+    },
+    "p99_9": {
+     "R": 0.7561,
+     "G": 0.9098,
+     "B": 0.9569
+    },
+    "clip_low_pct": 0.119,
+    "clip_high_pct": 0.016,
+    "background_level": 0.04393,
+    "tile_spread_p90_p10": 0.2168,
+    "noise_hf": 0.004942,
+    "bg_snr_proxy": 8.89,
+    "background_rgb": [
+     0.04706,
+     0.04314,
+     0.02745
+    ],
+    "background_cast": {
+     "R/G": 1.091,
+     "B/G": 0.636
+    },
+    "signal_saturation_mean": 0.435,
+    "signal_saturation_p90": 0.606,
+    "signal_hue_mix": {
+     "cyan": 0.297,
+     "azure": 0.629
+    },
+    "background_saturation_mean": 0.442,
+    "contrast_p99_p10": 0.536,
+    "lum_median": 0.0538
+   }
+  },
+  {
+   "title": "C/2025 R3(PanSTARRS) 20260417",
+   "author": "rallyho",
+   "url": "https://www.astrobin.com/kd3dqv/",
+   "likes": 119,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX455 (color)",
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Celestron RASA 11\" V2"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 0.0,
+   "pixel_scale": 1.251,
+   "field_radius_deg": 1.253,
+   "thumb": "https://cdn.astrobin.com/thumbs/IstOVSPL7oCP_620x0_1g3BC9VT.jpg?v=1777620517",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/IstOVSPL7oCP_1824x0__sPnTECk.jpg?v=1777620517",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/best_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\best_04.jpg",
+    "shape": [
+     930,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.1098,
+     "G": 0.1098,
+     "B": 0.11373
+    },
+    "p99_9": {
+     "R": 0.5098,
+     "G": 0.698,
+     "B": 0.7529
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.004,
+    "background_level": 0.10588,
+    "tile_spread_p90_p10": 0.04249,
+    "noise_hf": 0.000685,
+    "bg_snr_proxy": 154.53,
+    "background_rgb": [
+     0.10588,
+     0.10588,
+     0.10588
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.219,
+    "signal_saturation_p90": 0.327,
+    "signal_hue_mix": {
+     "cyan": 0.105,
+     "azure": 0.836,
+     "blue": 0.044
+    },
+    "background_saturation_mean": 0.037,
+    "contrast_p99_p10": 0.252,
+    "lum_median": 0.1098
+   }
+  },
+  {
+   "title": "Let's continue... C/2025 R3 (PANSTARRS) 15th April 2026",
+   "author": "Julien De Winter",
+   "url": "https://www.astrobin.com/2m5nmt/",
+   "likes": 107,
+   "iotd": false,
+   "top_pick": true,
+   "sensors": [
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Takahashi FSQ-85EDX"
+   ],
+   "filters": [
+    "B",
+    "G",
+    "LP",
+    "R"
+   ],
+   "integration_h": 0.2,
+   "pixel_scale": 1.695,
+   "field_radius_deg": 2.517,
+   "thumb": "https://cdn.astrobin.com/thumbs/er1LY5gadOvt_620x0_1g3BC9VT.jpg?v=1777758933",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/er1LY5gadOvt_1824x0__sPnTECk.jpg?v=1777758933",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/best_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\best_05.jpg",
+    "shape": [
+     372,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09804,
+     "G": 0.09804,
+     "B": 0.10196
+    },
+    "p99_9": {
+     "R": 0.6706,
+     "G": 0.7216,
+     "B": 0.8431
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.0,
+    "background_level": 0.0902,
+    "tile_spread_p90_p10": 0.03196,
+    "noise_hf": 0.004187,
+    "bg_snr_proxy": 21.54,
+    "background_rgb": [
+     0.08627,
+     0.08627,
+     0.0902
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.045
+    },
+    "signal_saturation_mean": 0.215,
+    "signal_saturation_p90": 0.456,
+    "signal_hue_mix": {
+     "azure": 0.904,
+     "blue": 0.044
+    },
+    "background_saturation_mean": 0.063,
+    "contrast_p99_p10": 0.4311,
+    "lum_median": 0.0986
+   }
+  }
+ ],
+ "peer": [
+  {
+   "title": "Comet C/2025 R3  PANSTARRS",
+   "author": "Bogdan Vuk",
+   "url": "https://www.astrobin.com/8jimv8/",
+   "likes": 128,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX294 (color)"
+   ],
+   "telescopes": [
+    "Askar FRA600"
+   ],
+   "filters": [
+    "LP"
+   ],
+   "integration_h": 0.2,
+   "pixel_scale": 2.283,
+   "field_radius_deg": 1.567,
+   "thumb": "https://cdn.astrobin.com/thumbs/Wq5mAgUNZgI7_620x0_WxGAb6gj.jpg?v=1776083280",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Wq5mAgUNZgI7_1824x0_3ybYeUpz.jpg?v=1776083280",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/peer_00.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\peer_00.jpg",
+    "shape": [
+     417,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.08235,
+     "G": 0.08235,
+     "B": 0.08235
+    },
+    "p99_9": {
+     "R": 0.4471,
+     "G": 0.5333,
+     "B": 0.5294
+    },
+    "clip_low_pct": 0.015,
+    "clip_high_pct": 0.001,
+    "background_level": 0.08179,
+    "tile_spread_p90_p10": 0.01221,
+    "noise_hf": 0.002444,
+    "bg_snr_proxy": 33.46,
+    "background_rgb": [
+     0.08235,
+     0.08235,
+     0.07451
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 0.905
+    },
+    "signal_saturation_mean": 0.084,
+    "signal_saturation_p90": 0.185,
+    "signal_hue_mix": {
+     "red": 0.054,
+     "orange": 0.054,
+     "yellow": 0.138,
+     "green": 0.037,
+     "spring": 0.081,
+     "cyan": 0.277,
+     "azure": 0.288,
+     "blue": 0.046
+    },
+    "background_saturation_mean": 0.089,
+    "contrast_p99_p10": 0.149,
+    "lum_median": 0.0824
+   }
+  },
+  {
+   "title": "C/2025 R3 (PANSTARRS) 20260409",
+   "author": "rallyho",
+   "url": "https://www.astrobin.com/9bttij/",
+   "likes": 123,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX455 (color)",
+    "Sony IMX455 (mono)"
+   ],
+   "telescopes": [
+    "Celestron RASA 11\" V2"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 1.1,
+   "pixel_scale": 1.25,
+   "field_radius_deg": 1.252,
+   "thumb": "https://cdn.astrobin.com/thumbs/hxgXDQ0LXCha_620x0_1g3BC9VT.jpg?v=1782522817",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/hxgXDQ0LXCha_1824x0__sPnTECk.jpg?v=1782522817",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/peer_01.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\peer_01.jpg",
+    "shape": [
+     930,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.09412,
+     "G": 0.09804,
+     "B": 0.10196
+    },
+    "p99_9": {
+     "R": 0.5294,
+     "G": 0.7349,
+     "B": 0.7725
+    },
+    "clip_low_pct": 0.004,
+    "clip_high_pct": 0.004,
+    "background_level": 0.0902,
+    "tile_spread_p90_p10": 0.05974,
+    "noise_hf": 0.003426,
+    "bg_snr_proxy": 26.33,
+    "background_rgb": [
+     0.08627,
+     0.08627,
+     0.08627
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.26,
+    "signal_saturation_p90": 0.397,
+    "signal_hue_mix": {
+     "cyan": 0.174,
+     "azure": 0.798
+    },
+    "background_saturation_mean": 0.051,
+    "contrast_p99_p10": 0.3248,
+    "lum_median": 0.0978
+   }
+  },
+  {
+   "title": "Comet C/2025 R3 (PANSTARRS)",
+   "author": "Marzena Rogozińska",
+   "url": "https://www.astrobin.com/l2qkl6/",
+   "likes": 116,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Takahashi Epsilon-130D"
+   ],
+   "filters": [
+    "L"
+   ],
+   "integration_h": 0.6,
+   "pixel_scale": 3.701,
+   "field_radius_deg": 1.203,
+   "thumb": "https://cdn.astrobin.com/thumbs/yR19-asDvDcw_620x0_U_oRctoA.png?v=1776277246",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/yR19-asDvDcw_1824x0_nUBCbxku.png?v=1776277246",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/peer_02.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\peer_02.jpg",
+    "shape": [
+     775,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.08627,
+     "G": 0.0902,
+     "B": 0.09804
+    },
+    "p99_9": {
+     "R": 0.5843,
+     "G": 0.6941,
+     "B": 0.7529
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.003,
+    "background_level": 0.08627,
+    "tile_spread_p90_p10": 0.01044,
+    "noise_hf": 0.001951,
+    "bg_snr_proxy": 44.22,
+    "background_rgb": [
+     0.08235,
+     0.08627,
+     0.0902
+    ],
+    "background_cast": {
+     "R/G": 0.955,
+     "B/G": 1.045
+    },
+    "signal_saturation_mean": 0.272,
+    "signal_saturation_p90": 0.472,
+    "signal_hue_mix": {
+     "cyan": 0.138,
+     "azure": 0.814
+    },
+    "background_saturation_mean": 0.122,
+    "contrast_p99_p10": 0.3024,
+    "lum_median": 0.0888
+   }
+  },
+  {
+   "title": "C/2025 R3 (PANSTARRS)",
+   "author": "Yungshih Lee",
+   "url": "https://www.astrobin.com/8b1yco/",
+   "likes": 84,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "William Optics Redcat 71 WIFD"
+   ],
+   "filters": [],
+   "integration_h": 0.7,
+   "pixel_scale": 3.288,
+   "field_radius_deg": 2.908,
+   "thumb": "https://cdn.astrobin.com/thumbs/FB_GjuQIcKPN_620x0_1g3BC9VT.jpg?v=1777106167",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/FB_GjuQIcKPN_1824x0__sPnTECk.jpg?v=1777106167",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/peer_03.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\peer_03.jpg",
+    "shape": [
+     847,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.11765,
+     "G": 0.11765,
+     "B": 0.11765
+    },
+    "p99_9": {
+     "R": 0.4039,
+     "G": 0.4588,
+     "B": 0.4118
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.0,
+    "background_level": 0.11373,
+    "tile_spread_p90_p10": 0.00784,
+    "noise_hf": 0.002056,
+    "bg_snr_proxy": 55.32,
+    "background_rgb": [
+     0.11373,
+     0.11373,
+     0.1098
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 0.966
+    },
+    "signal_saturation_mean": 0.063,
+    "signal_saturation_p90": 0.139,
+    "signal_hue_mix": {
+     "orange": 0.038,
+     "yellow": 0.143,
+     "chartreuse": 0.083,
+     "green": 0.093,
+     "spring": 0.082,
+     "cyan": 0.119,
+     "azure": 0.209,
+     "blue": 0.219
+    },
+    "background_saturation_mean": 0.029,
+    "contrast_p99_p10": 0.1076,
+    "lum_median": 0.1176
+   }
+  },
+  {
+   "title": "C/2025 R3 (PanSTARRS)  April 12 20:00 UTC",
+   "author": "Yungshih Lee",
+   "url": "https://www.astrobin.com/yj6eup/",
+   "likes": 81,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Celestron RASA 8\""
+   ],
+   "filters": [],
+   "integration_h": 0.4,
+   "pixel_scale": null,
+   "field_radius_deg": null,
+   "thumb": "https://cdn.astrobin.com/thumbs/MNaYX9KpihSK_620x0_1g3BC9VT.jpg?v=1776434075",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/MNaYX9KpihSK_1824x0__sPnTECk.jpg?v=1776434075",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/peer_04.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\peer_04.jpg",
+    "shape": [
+     411,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.0902,
+     "G": 0.0902,
+     "B": 0.0902
+    },
+    "p99_9": {
+     "R": 0.3686,
+     "G": 0.4007,
+     "B": 0.4
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.0,
+    "background_level": 0.08963,
+    "tile_spread_p90_p10": 0.00861,
+    "noise_hf": 0.002056,
+    "bg_snr_proxy": 43.6,
+    "background_rgb": [
+     0.08627,
+     0.08627,
+     0.08627
+    ],
+    "background_cast": {
+     "R/G": 1.0,
+     "B/G": 1.0
+    },
+    "signal_saturation_mean": 0.059,
+    "signal_saturation_p90": 0.107,
+    "signal_hue_mix": {
+     "yellow": 0.038,
+     "green": 0.076,
+     "spring": 0.076,
+     "cyan": 0.185,
+     "azure": 0.596
+    },
+    "background_saturation_mean": 0.025,
+    "contrast_p99_p10": 0.1605,
+    "lum_median": 0.0902
+   }
+  },
+  {
+   "title": "C/2025 R3 Panstarss",
+   "author": "Alessandro Cipolat Bares",
+   "url": "https://www.astrobin.com/n89clu/",
+   "likes": 77,
+   "iotd": false,
+   "top_pick": false,
+   "sensors": [
+    "Sony IMX571 (color)"
+   ],
+   "telescopes": [
+    "Askar FRA500"
+   ],
+   "filters": [],
+   "integration_h": 0.5,
+   "pixel_scale": 4.244,
+   "field_radius_deg": 1.354,
+   "thumb": "https://cdn.astrobin.com/thumbs/Liq4tr7-qikw_620x0_xJcMTCjx.jpg?v=1775821807",
+   "thumb_hd": "https://cdn.astrobin.com/thumbs/Liq4tr7-qikw_1824x0_1SJYgH3Y.jpg?v=1775821807",
+   "file": "C:/Users/Ming/Documents/Astrophotos_editing/knowledge/targets/C2025R3/refs/peer_05.jpg",
+   "fingerprint": {
+    "file": "C:\\Users\\Ming\\Documents\\Astrophotos_editing\\knowledge\\targets\\C2025R3\\refs\\peer_05.jpg",
+    "shape": [
+     365,
+     620,
+     3
+    ],
+    "median": {
+     "R": 0.14118,
+     "G": 0.14118,
+     "B": 0.15294
+    },
+    "p99_9": {
+     "R": 0.7243,
+     "G": 0.7922,
+     "B": 0.8341
+    },
+    "clip_low_pct": 0.0,
+    "clip_high_pct": 0.021,
+    "background_level": 0.12914,
+    "tile_spread_p90_p10": 0.04173,
+    "noise_hf": 0.006464,
+    "bg_snr_proxy": 19.98,
+    "background_rgb": [
+     0.12157,
+     0.12549,
+     0.13333
+    ],
+    "background_cast": {
+     "R/G": 0.969,
+     "B/G": 1.062
+    },
+    "signal_saturation_mean": 0.187,
+    "signal_saturation_p90": 0.382,
+    "signal_hue_mix": {
+     "cyan": 0.062,
+     "azure": 0.838,
+     "blue": 0.056
+    },
+    "background_saturation_mean": 0.101,
+    "contrast_p99_p10": 0.2711,
+    "lum_median": 0.1434
+   }
+  }
+ ]
+}

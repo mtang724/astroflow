@@ -1,0 +1,4 @@
+# optional: learning from tutorial videos (astroflow.video) - Whisper transcription on an NVIDIA GPU, plus ffmpeg
+faster-whisper>=1.0
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==9.*

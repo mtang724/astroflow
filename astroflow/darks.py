@@ -1,7 +1,7 @@
 """Import freshly shot darks (e.g. from the ASIAIR share) into the Dark Library, optionally waiting for them,
 then re-match calibration, stack and process the targets that were waiting for them.
 
-    python -m astroflow.darks --source "\\\\10.0.0.161\\EMMC Images\\Autorun\\Dark" --exptime 300 --settemp -10 \\
+    python -m astroflow.darks --source "\\\\<asiair-ip>\\EMMC Images\\Autorun\\Dark" --exptime 300 --settemp -10 \\
                               --count 10 --since 2026-10-10 --wait --then process
 
 --then: none | organize (organize --refresh --apply) | stack (+ WBPP for targets without a master)
@@ -21,7 +21,8 @@ from astropy.io import fits
 
 from . import config
 
-DARK_LIB = config.ASTRO_ROOT / "Dark Library"
+def dark_library():
+    return config.ASTRO_ROOT / "Dark Library"
 
 
 def candidates(source, exptime, settemp, gain=100, offset=50, since=None, tol=1.0):
@@ -84,7 +85,7 @@ def dark_like(dirs, exptime, settemp, reference, gain=100, offset=50, since=None
 
 
 def library_dir(exptime, settemp):
-    return DARK_LIB / f"{exptime:g}s" / f"{settemp:g}degree"
+    return dark_library() / f"{exptime:g}s" / f"{settemp:g}degree"
 
 
 def import_darks(files, dest):

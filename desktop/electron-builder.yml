@@ -1,0 +1,37 @@
+# Packaging (npm run dist:win / dist:mac). Build the Python backend first, from the repository root:
+#   pyinstaller packaging/backend.spec --noconfirm        -> ../dist/astroflow-backend
+# The installed app starts resources/backend/astroflow-backend, which also serves resources/renderer.
+appId: io.github.astroflow.desktop
+productName: astroflow
+copyright: astroflow contributors
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/main/**
+  - out/preload/**
+  - package.json
+extraResources:
+  - from: ../dist/astroflow-backend
+    to: backend
+  - from: out/renderer
+    to: renderer
+asar: true
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.png
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: astroflow-${version}-setup.${ext}
+mac:
+  target:
+    - target: dmg
+      arch: [arm64]
+  category: public.app-category.photography
+  icon: build/icon.png
+  hardenedRuntime: true
+  artifactName: astroflow-${version}-${arch}.${ext}

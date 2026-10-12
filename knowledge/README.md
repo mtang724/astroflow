@@ -1,6 +1,7 @@
 # 资料库（knowledge/）
 
 agent（`read_knowledge` 工具）和人都从这里查：后期流程、参数、检查标准、目标参考。
+按任务组织的“怎么做”在根目录 `skills/`：agent 先看技能索引，按需 `load_skill`，技能再指向这里的细节文档。
 
 | 文档 | 内容 |
 |---|---|
@@ -8,6 +9,7 @@ agent（`read_knowledge` 工具）和人都从这里查：后期流程、参数�
 | `videos/ep2-osc-galaxy.md` | 进阶教程第2期：彩机星系全流程与差异（M31） |
 | `videos/<ep>/transcript.txt`, `sheets/`, `keyframes/` | 视频原始材料：转写、每10秒截图、读参数用的关键帧 |
 | `filters.md` | 每晚滤镜对处理的影响（宽带 / Antlia 四通道多波段） |
+| `comets.md` | 彗星：少帧混合曝光、云、卫星轨迹、SXT 吃彗发等的处理方法与教训（`astroflow/comet.py` + `comet` 配方） |
 | `pipeline_steps.md` | 每个自动化步骤（PJSR）的作用与参数 |
 | `checklists.md` | 每个阶段“好结果”的标准，agent 据此判断是否重跑 |
 | `pitfalls.md` | 无界面 PixInsight 与本机环境的坑 |

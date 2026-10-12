@@ -7,10 +7,12 @@ either the planner itself or `look` (vision model) with the previews and referen
 import json
 import re
 import time
-from collections import Counter
+from contextlib import contextmanager
 from pathlib import Path
 
 from .. import config, metrics, objects, pipeline, references, wbpp
+from ..services import actions, targets
+from . import skills
 
 REGISTRY = {}
 
@@ -37,8 +39,11 @@ def schemas():
     return [t["schema"] for t in REGISTRY.values()]
 
 
-class Budget:
-    def __init__(self, max_pi_jobs=30):
+class ToolContext:
+    """What the tools need from the agent session running them: the LLM (for `look`) and the PixInsight job budget."""
+
+    def __init__(self, llm=None, max_pi_jobs=30):
+        self.llm = llm
         self.max_pi_jobs = max_pi_jobs
         self.pi_jobs = 0
 
@@ -48,8 +53,24 @@ class Budget:
             raise RuntimeError(f"PixInsight job budget ({self.max_pi_jobs}) exhausted for this run; call finish.")
 
 
-BUDGET = Budget()
-LLM_REF = {"llm": None}   # set by the runner so `look` can use the vision model
+_ctx = ToolContext()
+
+
+@contextmanager
+def bound(ctx):
+    """Run tools with this session's context (one agent session runs at a time)."""
+    global _ctx
+    previous, _ctx = _ctx, ctx
+    try:
+        yield ctx
+    finally:
+        _ctx = previous
+
+
+def call(name, args):
+    if name not in REGISTRY:
+        raise KeyError(f"unknown tool {name}")
+    return REGISTRY[name]["fn"](**args)
 
 
 def resolve(target):
@@ -62,73 +83,62 @@ def resolve(target):
     return sorted(hits)[-1]
 
 
+def _inside(root, path):
+    """`path` resolved, if it lies inside `root`, else None. File names come from the model, and the model reads web
+    content (reference titles): a name like '../.env' must not reach files outside the folder meant."""
+    p, r = Path(path).resolve(), Path(root).resolve()
+    return p if p.is_relative_to(r) else None
+
 
 # ----------------------------------------------------------------------------------------------- discovery
 
 @tool("List every target under 'In Processing' with its status (lights, calibration, WBPP master, post stages done).")
 def list_targets():
-    out = []
-    for d in sorted(config.IN_PROCESSING.glob("*/*")):
-        if not d.is_dir():
-            continue
-        st = {}
-        sp = d / "Post" / "state.json"
-        if sp.exists():
-            st = json.loads(sp.read_text(encoding="utf-8"))
-        n = {sub: len(list((d / sub).glob("*.fit*"))) if (d / sub).is_dir() else 0 for sub in ("Light", "Dark", "Bias", "Flat")}
-        out.append({"target": d.name, "night": d.parent.name, "path": d.as_posix(), "lights": n["Light"],
-                    "darks": n["Dark"], "bias": n["Bias"], "flats": n["Flat"],
-                    "master": bool(wbpp.masters(d)), "recipe": st.get("recipe"),
-                    "stages_done": list((st.get("stages") or {}).keys()), "finished": bool(st.get("finished"))})
-    return out
+    return targets.list_targets()
 
 
 @tool("Inspect one target: acquisition summary from FITS headers, calibration warnings, catalogue data, "
-      "object type and suggested recipe, current pipeline state and metrics, available knowledge.",
+      "object type and suggested recipe, current pipeline state and metrics, the user's saved parameter edits "
+      "(applied to every run), available knowledge.",
       target=("string", "target name (e.g. 'M8', 'NGC 6334') or full path"))
 def inspect_target(target):
-    from astropy.io import fits
     d = resolve(target)
-    lights = sorted((d / "Light").glob("*.fit*"))
-    hdrs = [fits.getheader(p) for p in lights[:60]]
-    acq = {}
-    if hdrs:
-        h0 = hdrs[0]
-        acq = {"object": h0.get("OBJECT"), "frames": len(lights),
-               "exposures_s": dict(Counter(float(h.get("EXPTIME", 0)) for h in hdrs)),
-               "total_h": round(sum(float(h.get("EXPTIME", 0)) for h in hdrs) / 3600, 2),
-               "camera": h0.get("INSTRUME"), "gain": h0.get("GAIN"), "offset": h0.get("OFFSET"),
-               "set_temp": h0.get("SET-TEMP"), "focal_mm": h0.get("FOCALLEN"), "pixel_um": h0.get("XPIXSZ"),
-               "filter": h0.get("FILTER", "none (OSC broadband)"), "bayer": h0.get("BAYERPAT"),
-               "date_obs": h0.get("DATE-OBS")}
-    manifest = d / "calibration_manifest.txt"
-    warnings = [ln[9:].strip() for ln in manifest.read_text(encoding="utf-8").splitlines()
-                if ln.startswith("WARNING:")] if manifest.exists() else []
-    cat = objects.lookup(d.name)
-    session = objects.session_info(d)
-    recipe, typ = objects.recipe_for(d.name, filter_class=session.get("filter_class"))
+    info = targets.detail(d)
     w = pipeline.Work(d) if (d / "Post" / "state.json").exists() else None
-    stages = {}
-    if w:
-        for k, v in w.state.get("stages", {}).items():
-            stages[k] = {"metrics": v.get("metrics"), "previews": v.get("previews"), "overrides": v.get("overrides")}
-    slug = references.slug(d.name)
-    kn = config.KNOWLEDGE / "targets" / slug
-    return {"path": d.as_posix(), "session": session, "acquisition": acq, "calibration_warnings": warnings,
-            "calibration_counts": {s: len(list((d / s).glob('*.fit*'))) for s in ("Dark", "Bias", "Flat")},
-            "catalogue": cat, "type": typ, "suggested_recipe": recipe,
+    stages = {k: {"metrics": v.get("metrics"), "previews": v.get("previews"), "overrides": v.get("overrides")}
+              for k, v in (w.state.get("stages", {}) if w else {}).items()}
+    kn = config.KNOWLEDGE / "targets" / references.slug(d.name)
+    return {"path": info["path"], "session": info["session"], "acquisition": info["acquisition"],
+            "calibration_warnings": info["calibration_warnings"],
+            "calibration_counts": {k: info[k] for k in ("darks", "bias", "flats")},
+            "catalogue": info["catalogue"], "type": info["type"], "suggested_recipe": info["recipe"],
             "master": [p.as_posix() for p in wbpp.masters(d)],
             "pipeline": {"recipe": w.state.get("recipe") if w else None, "stages": stages,
                          "object_px": w.state.get("object") if w else None},
+            "user_params": pipeline.saved_overrides(d),
             "knowledge": {"target_notes": (kn / "notes.md").exists(), "references": (kn / "refs.json").exists(),
                           "agent_notes": (kn / "agent_notes.md").exists()}}
 
 
-# ----------------------------------------------------------------------------------------------- knowledge
+# ----------------------------------------------------------------------------------------------- skills & knowledge
+
+@tool("Load a skill: distilled know-how for one kind of task (see the skill index in the system prompt). Returns the "
+      "instructions and the skill's reference files (read them with read_skill_file when the instructions say so).",
+      name=("string", "skill name from the index"))
+def load_skill(name):
+    s = skills.find(name)
+    return {"skill": s.name, "instructions": s.body, "files": s.files()}
+
+
+@tool("Read one reference file of a skill (a path listed by load_skill, e.g. 'references/checks.md').",
+      name=("string", "skill name"), path=("string", "file path inside the skill"))
+def read_skill_file(name, path):
+    return {"skill": name, "path": path, "text": skills.read_file(name, path)[:20000]}
+
 
 @tool("Read the knowledge base. name: '' to list documents; 'ep1' (OSC broadband nebula video workflow), "
       "'ep2' (OSC galaxy workflow), 'filters' (what the night's filter means for processing, e.g. multiband), "
-      "'steps' (every PixInsight step and its parameters), 'checklists' "
+      "'comets' (comet stacking method and lessons), 'steps' (every PixInsight step and its parameters), 'checklists' "
       "(what good looks like at each stage), 'pitfalls', or 'targets/<NAME>' (reference notes for a target), "
       "'targets/<NAME>/agent' (lessons from earlier runs).",
       name=("string", "document name, '' to list"))
@@ -136,7 +146,7 @@ def read_knowledge(name=""):
     k = config.KNOWLEDGE
     alias = {"ep1": "videos/ep1-osc-broadband-nebula.md", "ep2": "videos/ep2-osc-galaxy.md",
              "steps": "pipeline_steps.md", "checklists": "checklists.md", "pitfalls": "pitfalls.md",
-             "filters": "filters.md"}
+             "filters": "filters.md", "comets": "comets.md"}
     if not name:
         docs = sorted(p.relative_to(k).as_posix() for p in k.rglob("*.md"))
         return {"documents": docs, "aliases": alias}
@@ -144,14 +154,16 @@ def read_knowledge(name=""):
     if m:
         f = k / "targets" / references.slug(m.group(1)) / ("agent_notes.md" if m.group(2) else "notes.md")
     else:
-        f = k / alias.get(name, name)
-    if not f.exists():
-        return {"error": f"{f.relative_to(k).as_posix()} does not exist"}
-    return {"document": f.relative_to(k).as_posix(), "text": f.read_text(encoding="utf-8")[:20000]}
+        f = _inside(k, k / alias.get(name, name))
+        if f is None:
+            return {"error": f"{name} is not in the knowledge base"}
+    if not f.is_file():
+        return {"error": f"{name} does not exist (list the documents with name='')"}
+    return {"document": f.resolve().relative_to(k.resolve()).as_posix(), "text": f.read_text(encoding="utf-8")[:20000]}
 
 
 @tool("Show a recipe: its stages and every step with default parameters (ids are what run_stage overrides use).",
-      recipe=("string", "recipe name: osc_broadband_nebula | osc_galaxy | osc_multiband_nebula"))
+      recipe=("string", "recipe name: " + " | ".join(pipeline.RECIPES)))
 def show_recipe(recipe):
     return pipeline.RECIPES[recipe]
 
@@ -161,33 +173,36 @@ def show_recipe(recipe):
       target=("string", "target name"), refresh=("boolean", "re-download even if cached", False))
 def get_references(target, refresh=False):
     d = resolve(target)
-    mode = "multiband" if objects.session_info(d).get("filter_class") == "osc_multiband" else "broadband"
-    doc = None if refresh else references.load(d.name)
-    if doc is None or doc.get("peer_mode", "broadband") != mode:
-        doc = references.fetch(d.name, n=6, fov_radius=1.44, peer=mode)
+    doc = actions.references_for(d, refresh=refresh)
+
     def short(e):
         return {k: e.get(k) for k in ("title", "author", "likes", "iotd", "top_pick", "integration_h", "url", "file")}
     fp = {g: metrics.summarize([e["fingerprint"] for e in doc.get(g, []) if e.get("fingerprint")])
           for g in ("best", "peer")}
     notes = config.KNOWLEDGE / "targets" / references.slug(d.name) / "notes.md"
-    return {"peer_mode": mode, "best": [short(e) for e in doc.get("best", [])], "peer": [short(e) for e in doc.get("peer", [])],
-            "fingerprint_medians": fp, "notes": notes.read_text(encoding="utf-8")[:8000] if notes.exists() else None}
+    return {"peer_mode": doc.get("peer_mode", "broadband"), "best": [short(e) for e in doc.get("best", [])],
+            "peer": [short(e) for e in doc.get("peer", [])], "fingerprint_medians": fp,
+            "notes": notes.read_text(encoding="utf-8")[:8000] if notes.exists() else None}
 
 
 # ----------------------------------------------------------------------------------------------- doing
 
-@tool("Organise new raw target folders under F:\\AstroPhotograph into In Processing (lights moved, matching "
-      "darks/bias/flats copied by FITS headers). Default is a dry run that returns the plan; apply=true executes it "
-      "(only when the user's task asks for it). refresh=true re-matches calibration for already staged targets "
-      "(e.g. after new darks were added to the library).",
-      apply=("boolean", "execute the plan", False), refresh=("boolean", "re-match calibration of staged targets", False))
-def organize(apply=False, refresh=False):
-    import subprocess
-    import sys
-    cmd = [sys.executable, str(config.PROJECT / "organize.py")] + (["--apply"] if apply else []) + (["--refresh"] if refresh else [])
-    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                       env={**__import__("os").environ, "PYTHONIOENCODING": "utf-8"})
-    return {"applied": apply, "returncode": r.returncode, "output": (r.stdout + r.stderr)[-6000:]}
+@tool("Import a folder of raw frames (any capture program or layout; types read from FITS headers) into "
+      "In Processing/<night>/<target>, each target with matching darks/bias/flats: from the folder itself first, else "
+      "from the calibration library. A folder with calibration frames only goes to the library and completes the "
+      "targets that lack them. source: the folder (default: new folders put in the data root). Default is a dry run "
+      "that returns the plan; apply=true executes it (only when the user's task asks for it). refresh=true gives "
+      "staged targets the library frames they lack.",
+      apply=("boolean", "execute the plan", False), refresh=("boolean", "complete staged targets from the library", False),
+      source=("string", "folder to import instead of the data root", False),
+      copy=("boolean", "copy lights instead of moving them", False))
+def organize(apply=False, refresh=False, source=None, copy=False):
+    from .. import organize as org
+    plan, notes = org.build_plan(sources=[source] if source else None, refresh=refresh)
+    log = []
+    if apply:
+        org.apply_plan(plan, move_lights=not copy, log=log.append)
+    return {"applied": apply, "plan": org.summary(plan), "notes": notes, "log": log[-50:]}
 
 
 @tool("Calibrate/register/integrate the target with WBPP (headless, 5-20 min). Only needed when no master exists.",
@@ -196,10 +211,22 @@ def stack(target):
     d = resolve(target)
     if wbpp.masters(d):
         return {"skipped": "master already exists", "masters": [p.as_posix() for p in wbpp.masters(d)]}
-    BUDGET.spend()
+    _ctx.spend()
     r = wbpp.run(d)
     r["highlights"] = r.get("highlights", [])[-15:]
     return r
+
+
+@tool("Comet targets only: stack WBPP's registered frames twice - on the stars and on the moving nucleus - with "
+      "per-frame background, photometric scaling, cloud and satellite-trail rejection and StarXTerminator star "
+      "removal (10-15 min). Produces Post/comet_stack.fits (comet layer) + Post/stars_linear.fits, then run the "
+      "'comet' recipe with run_stage(recipe='comet'). Look at Post/weights.jpg via look(images=['weights']) if needed.",
+      target=("string", "target name or folder"),
+      reuse_sxt=("boolean", "reuse the star removal of an earlier run (after changing later steps)", False))
+def comet_stack(target, reuse_sxt=False):
+    d = resolve(target)
+    _ctx.spend()
+    return actions.comet_stack(d, reuse_sxt=reuse_sxt)
 
 
 def _compact_stage(rec):
@@ -212,7 +239,8 @@ def _compact_stage(rec):
 
 
 @tool("Run one pipeline stage of the target's recipe in headless PixInsight and return per-step info, metrics "
-      "and preview paths. Re-running a stage discards later stages. overrides: {step_id: {param: value, "
+      "and preview paths. Re-running a stage discards later stages. The user's saved parameter edits (user_params "
+      "in inspect_target) always apply; overrides go on top of them: {step_id: {param: value, "
       "'params': {...}, 'enabled': false}}; extra_steps: steps appended at the end of the stage (same format as "
       "the recipe, e.g. {'id':'sat3','op':'saturation','boost':0.58}); replace_steps: a full step list to use "
       "instead of the recipe's (advanced). Use read_knowledge('steps') for every op and parameter.",
@@ -220,15 +248,12 @@ def _compact_stage(rec):
       overrides=("object", "per-step overrides keyed by step id", False),
       extra_steps=("array", "steps appended to the stage", False),
       replace_steps=("array", "replacement step list", False),
-      recipe=("string", "only for the first stage: force a recipe (osc_broadband_nebula | osc_galaxy | "
-                        "osc_multiband_nebula)", False))
+      recipe=("string", "only for the first stage: force a recipe (" + " | ".join(pipeline.RECIPES) + ")", False))
 def run_stage(target, stage, overrides=None, extra_steps=None, replace_steps=None, recipe=None):
     d = resolve(target)
     w = pipeline.Work(d, recipe)
-    if recipe and w.state.get("recipe") != recipe:
-        w.state["recipe"], w.recipe = recipe, pipeline.RECIPES[recipe]
-        w.state["stages"] = {}
-        w.save()
+    if recipe:
+        w.use_recipe(recipe)
     spec = w.stage(stage)
     if replace_steps or extra_steps:
         spec = dict(spec)
@@ -238,7 +263,7 @@ def run_stage(target, stage, overrides=None, extra_steps=None, replace_steps=Non
             s.setdefault("id", f"x{i}")
         spec["steps"] = steps
         w.recipe = [spec if s["stage"] == stage else s for s in w.recipe]
-    BUDGET.spend()
+    _ctx.spend()
     rec = pipeline.run_stage(w, stage, overrides or {})
     return _compact_stage(rec)
 
@@ -251,11 +276,17 @@ VISION_SYSTEM = ("你是资深深空天文摄影后期评审，熟悉 PixInsight
 
 def _preview_path(d, name):
     if name.startswith("ref:"):        # ref:peer_00 / ref:best_02
-        p = config.KNOWLEDGE / "targets" / references.slug(d.name) / "refs" / f"{name[4:]}.jpg"
+        root = config.KNOWLEDGE / "targets" / references.slug(d.name) / "refs"
+        p = root / f"{name[4:]}.jpg"
     else:
-        p = d / "Post" / "previews" / (name if name.endswith(".jpg") else f"{name}.jpg")
-    if not p.exists():
-        raise FileNotFoundError(f"no image {name} ({p})")
+        root = d / "Post"
+        fname = name if name.endswith(".jpg") else f"{name}.jpg"
+        p = root / "previews" / fname
+        if not p.exists():                      # files written next to the checkpoints (e.g. comet weights.jpg)
+            p = root / fname
+    p = _inside(root, p)
+    if p is None or not p.is_file():
+        raise FileNotFoundError(f"no image {name} in {root}")
     return p
 
 
@@ -272,7 +303,7 @@ def look(target, images, question, want_json=False):
     imgs = [(n if isinstance(n, str) else n.get("name"), _preview_path(d, n if isinstance(n, str) else n.get("name")))
             for n in images]
     q = question + ("\n只输出一个 JSON 对象。" if want_json else "")
-    ans = LLM_REF["llm"].look(imgs, q, system=VISION_SYSTEM, want_json=want_json)
+    ans = _ctx.llm.look(imgs, q, system=VISION_SYSTEM, want_json=want_json)
     return {"answer": ans}
 
 
@@ -334,7 +365,7 @@ def _chroma_vs_refs(d, w, preview, group):
       "(1.38\"/px: 1000 px ~ 23').",
       target=("string", "target name"), width=("integer", "crop width in px"), height=("integer", "crop height in px"))
 def export_crop(target, width, height):
-    BUDGET.spend()
+    _ctx.spend()
     return {"files": pipeline.export_crop(resolve(target), int(width), int(height))}
 
 

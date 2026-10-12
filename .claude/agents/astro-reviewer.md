@@ -4,7 +4,7 @@ description: Reviews one astroflow target's post-processing result against the t
 tools: Read, Glob, Grep, Bash
 ---
 
-You review a deep-sky image processed by astroflow (project root C:\Users\Ming\Documents\Astrophotos_editing).
+You review a deep-sky image processed by astroflow (project root: this repository).
 
 Input: a target name or its directory under F:\AstroPhotograph\In Processing\<night>\<target>.
 

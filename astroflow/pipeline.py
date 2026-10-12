@@ -5,13 +5,15 @@
 
 Work directory: <target>/Post/
     state.json             stages done, parameters used, results, metrics
+    params.json            the user's saved parameter edits (from the app), applied to every run
     NN_<stage>.xisf        checkpoint written by each stage (input of the next)
     previews/*.jpg         what a human (or the vision model) looks at
     metrics/*.tif          downsampled linear-value copies for metrics.py
 
 Recipes are lists of stages; every stage is ONE headless PixInsight job (one launch, ~12 s overhead), so a
 stage can be re-run with new parameters without redoing earlier ones. Parameter defaults come from the
-tutorial videos (knowledge/videos/*.md); `overrides` (from the CLI or the agent) are merged per step.
+tutorial videos (knowledge/videos/*.md); the user's saved edits and then `overrides` (from the CLI or the agent)
+are merged per step.
 """
 import argparse
 import copy
@@ -20,7 +22,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import metrics, objects, pi, wbpp
+from . import jobctx, jsonfile, metrics, objects, pi, wbpp
 
 # --------------------------------------------------------------------------- recipes
 # Step dicts are passed verbatim to pjsr/steps.js (op = function name). "id" lets overrides address a step.
@@ -144,7 +146,44 @@ MULTIBAND_NEB = [
     ]},
 ]
 
-RECIPES = {"osc_broadband_nebula": NEBULA_EP1, "osc_galaxy": GALAXY_EP2, "osc_multiband_nebula": MULTIBAND_NEB}
+# Comets: input is astroflow.comet's comet layer (comet-aligned starless stack, linear, colour balanced on the stars,
+# background already modelled per frame with the comet protected) plus its star layer (stars_linear.fits), so there is
+# no gradient, colour or SXT step: the composite is stretched with exactly the comet layer's stretch and the stars are
+# the screen-inverse difference (SXT would take the bright coma for a star). A few short frames -> noise is the main
+# enemy (stronger linear NXT). Mid-April 2026 references of C/2025 R3: compact cyan-green coma, narrow blue ion tail
+# with streamers, dark neutral sky -> strong stretch, then a black point that darkens the sky; LHE only through a
+# luminance mask; no SCNR (the coma is green).
+COMET = [
+    {"stage": "linear", "input": "master", "output": "10_linear", "linear_in": True, "steps": [
+        {"id": "bg", "op": "find_background"},
+        {"id": "nxt", "op": "nxt", "params": {"denoise": 0.45, "denoise_color": 0.60, "iterations": 2}},
+    ]},
+    {"stage": "stretch", "input": "10_linear", "aux": {"comp": "stars_linear.fits"}, "output": "30_starless",
+     "stars_output": "31_stars", "linear_in": True, "steps": [
+        {"id": "compose", "op": "pixelmath", "target": "comp", "expression": "$T + main"},
+        {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.20, "expandLow": 0.05,
+         "aggressiveness": 5, "alsoOn": ["comp"]},
+        {"id": "split", "op": "split_stars", "composite": "comp"},
+    ]},
+    {"stage": "starless", "input": "30_starless", "output": "40_starless_final", "linear_in": False, "steps": [
+        # noise first: the black point and the saturation boost would otherwise clip / amplify the noisy blue channel
+        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.60, "denoise_color": 0.90, "iterations": 2}},
+        {"id": "lhe", "op": "lhe", "params": {"radius": 64, "slopeLimit": 1.5, "amount": 0.35}, "mask": "lum",
+         "maskClip": 0.10},
+        {"id": "sat", "op": "saturation", "boost": 0.80, "mask": "lum", "maskClip": 0.05, "passes": 2, "rgb": {}},
+        {"id": "ht", "op": "ht", "shadows": "sky", "skyTarget": 0.09, "midtones": 0.48},   # references' sky ~0.09
+    ]},
+    {"stage": "stars_color", "input": "31_stars", "output": "41_stars_final", "linear_in": False, "steps": [
+        {"id": "star_sat", "op": "saturation", "boost": 0.55, "mask": False},
+    ]},
+    {"stage": "combine", "input": "40_starless_final", "aux": {"stars": "41_stars_final"}, "output": "50_final",
+     "linear_in": False, "final": True, "steps": [
+        {"id": "recombine", "op": "recombine", "mode": "screen", "starsAmount": 1.0},
+    ]},
+]
+
+RECIPES = {"osc_broadband_nebula": NEBULA_EP1, "osc_galaxy": GALAXY_EP2, "osc_multiband_nebula": MULTIBAND_NEB,
+           "comet": COMET}
 
 
 # --------------------------------------------------------------------------- state
@@ -166,9 +205,17 @@ class Work:
         self.state.setdefault("stages", {})
         self.state.setdefault("history", [])
         self.recipe = RECIPES[self.state["recipe"]]
+        names = self.stage_names()                 # drop records of stages an older recipe version had
+        self.state["stages"] = {k: v for k, v in self.state["stages"].items() if k in names}
 
     def save(self):
-        self.state_path.write_text(json.dumps(self.state, ensure_ascii=False, indent=1), encoding="utf-8")
+        jsonfile.write(self.state_path, self.state)
+
+    def use_recipe(self, name):
+        """Switch to another recipe and save: stage records of the old one no longer apply (their files stay)."""
+        if self.state.get("recipe") != name:
+            self.state["recipe"], self.recipe, self.state["stages"] = name, RECIPES[name], {}
+        self.save()
 
     def master(self):
         if self.state.get("master"):
@@ -180,7 +227,9 @@ class Work:
         return ms[0]
 
     def checkpoint(self, name):
-        return self.master() if name == "master" else self.dir / f"{name}.xisf"
+        if name == "master":
+            return self.master()
+        return self.dir / (name if Path(name).suffix.lower() in (".xisf", ".fits", ".fit", ".tif") else f"{name}.xisf")
 
     def stage(self, name):
         for s in self.recipe:
@@ -200,6 +249,31 @@ def _fmt(obj, mapping):
     if isinstance(obj, list):
         return [_fmt(v, mapping) for v in obj]
     return obj
+
+
+def params_path(target_dir):
+    """The user's saved parameter edits for a target (edited in the app: services/recipes.py)."""
+    return Path(target_dir) / "Post" / "params.json"
+
+
+def saved_overrides(target_dir):
+    """{stage: {step_id: override}} the user saved for this target. Every run applies them (from the app, the agent or
+    the command line); overrides given for one run go on top."""
+    p = params_path(target_dir)
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
+def merge_overrides(base, extra):
+    """Per-step overrides of one stage, `extra` winning; nested `params` are merged key by key."""
+    out = copy.deepcopy(base or {})
+    for sid, ov in (extra or {}).items():
+        step = out.setdefault(sid, {})
+        for k, v in ov.items():
+            if k == "params" and isinstance(v, dict):
+                step.setdefault("params", {}).update(v)
+            else:
+                step[k] = v
+    return out
 
 
 def merge_step(step, override):
@@ -230,9 +304,10 @@ def solve_hints(target_dir):
 # --------------------------------------------------------------------------- running
 
 def run_stage(work, name, overrides=None, timeout=3600):
-    """Run one stage. overrides: {step_id: {...}}. Returns the stage record stored in state.json."""
+    """Run one stage. overrides: {step_id: {...}}, on top of the user's saved edits. Returns the stage record stored in
+    state.json."""
     spec = work.stage(name)
-    overrides = overrides or {}
+    overrides = merge_overrides(saved_overrides(work.target).get(name), overrides)
     prev = {"previews": work.previews.as_posix(), "metrics": work.metrics.as_posix(), "post": work.dir.as_posix()}
     steps = []
     for st in spec["steps"]:
@@ -378,14 +453,21 @@ def export_crop(target_dir, width, height, center=None, formats=("png", "jpg")):
     return res.get("saved", []) + res.get("previews", [])
 
 
-def run(target_dir, recipe=None, start=None, only=None, overrides=None):
+def run(target_dir, recipe=None, start=None, only=None, overrides=None, master=None):
+    """master: start image when it is not a WBPP master (e.g. astroflow.comet's comet_linear.fits)."""
     work = Work(target_dir, recipe)
+    if master:
+        work.state["master"] = Path(master).as_posix()
     names = work.stage_names()
     todo = [only] if only else names[names.index(start):] if start else \
         [n for n in names if n not in work.state["stages"]]
     out = []
-    for n in todo:
+    for i, n in enumerate(todo):
+        jobctx.check_cancelled()
+        jobctx.emit("stage.started", stage=n, index=i, total=len(todo), target=work.target.name)
         out.append(run_stage(work, n, (overrides or {}).get(n)))
+        jobctx.emit("stage.finished", stage=n, index=i, total=len(todo), seconds=out[-1]["seconds"],
+                    previews=out[-1].get("previews", []))
     return out
 
 
@@ -415,6 +497,7 @@ if __name__ == "__main__":
     ap.add_argument("--stage", help="run only this stage")
     ap.add_argument("--from", dest="start", help="run this stage and everything after it")
     ap.add_argument("--set", action="append", help="override, e.g. starless.sat.boost=0.65 or linear.nxt.params.denoise=0.25")
+    ap.add_argument("--master", help="start image when it is not a WBPP master (e.g. Post/comet_linear.fits)")
     a = ap.parse_args()
-    for rec in run(a.target, a.recipe, a.start, a.stage, parse_sets(a.set)):
+    for rec in run(a.target, a.recipe, a.start, a.stage, parse_sets(a.set), a.master):
         print(json.dumps({k: rec[k] for k in ("stage", "seconds", "previews", "metrics")}, ensure_ascii=False, indent=1))

@@ -339,21 +339,64 @@ STEPS.stretch = function (ctx, p) {
       afApply(M, p.hasOwnProperty("params") ? p.params : null);
       M.executeOn(w.mainView, false);
    } else throw new Error("unknown stretch method " + method);
+   // the very same transformation on other windows (e.g. a composite whose stars are split off afterwards)
+   var also = p.alsoOn || [];
+   for (var i = 0; i < also.length; ++i) {
+      var ow = ctx.win[also[i]];
+      if (!ow) throw new Error("stretch.alsoOn: no window '" + also[i] + "'");
+      if (method == "ez_soft") {
+         var HT = new HistogramTransformation;
+         HT.H = [[0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1],
+                 [info.blackPoint, info.midtones, info.whitePoint, -info.expandLow, 1.0], [0, 0.5, 1, 0, 1]];
+         HT.executeOn(ow.mainView, false);
+      } else if (method == "stf") AF.applyHT(ow.mainView, info.c0, info.m);
+      else throw new Error("stretch.alsoOn needs method ez_soft or stf");
+   }
    ctx.linear = false;
    info.medianAfter = AF.stats(w.mainView).median;
    return info;
 };
 
+// Stars from a stretched composite and its stretched starless version (same stretch): the inverse of the screen
+// blend, so `recombine` (screen) gives the composite back. Used instead of SXT when the layers already exist
+// separately (astroflow.comet) - SXT would also take a comet's bright coma for a star.
+STEPS.split_stars = function (ctx, p) {
+   var w = afWin(ctx, p);
+   var comp = ctx.win[p.composite];
+   if (!comp) throw new Error("split_stars: no composite window '" + p.composite + "'");
+   var PM = new PixelMath;
+   PM.expression = "1 - (1 - $T)/max(1 - " + w.mainView.id + ", 0.000001)";
+   PM.useSingleExpression = true; PM.createNewImage = false; PM.rescale = false; PM.truncate = true;
+   PM.executeOn(comp.mainView, false);
+   if (ctx.win.stars) ctx.win.stars.forceClose();
+   delete ctx.win[p.composite];
+   comp.mainView.id = "stars";
+   ctx.win.stars = comp;
+   ctx.unscreen = true;
+   return { starsId: "stars", from: p.composite };
+};
+
+// shadows: a number, "auto" (clip p.clipFraction of the darkest pixels, capped at maxShadows) or "sky" (the black
+// point that leaves the sky median at p.skyTarget; use it on registered stacks, whose empty borders make the
+// clip-fraction rule clip almost nothing).
 STEPS.ht = function (ctx, p) {
    var w = afWin(ctx, p);
-   var c0 = p.shadows;
-   if (c0 == undefined || c0 == "auto") c0 = AF.shadowsForClipFraction(w.mainView, p.clipFraction || 0.0004);
-   c0 = Math.min(c0, p.maxShadows || 0.08);
+   var c0 = p.shadows, m = p.midtones || 0.5;
+   if (c0 == "sky") {
+      var st = AF.stats(w.mainView), med = 0;
+      for (var i = 0; i < st.median.length; ++i) med += st.median[i] / st.median.length;
+      var u = Math.mtf(1 - m, p.skyTarget || 0.09);         // input value that this midtones balance maps to the target
+      c0 = Math.max(0, (med - u) / (1 - u));
+      if (p.maxShadows) c0 = Math.min(c0, p.maxShadows);
+   } else {
+      if (c0 == undefined || c0 == "auto") c0 = AF.shadowsForClipFraction(w.mainView, p.clipFraction || 0.0004);
+      c0 = Math.min(c0, p.maxShadows || 0.08);
+   }
    var HT = new HistogramTransformation;
    HT.H = [[0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1],
-           [c0, p.midtones || 0.5, p.highlights || 1.0, 0, 1], [0, 0.5, 1, 0, 1]];
+           [c0, m, p.highlights || 1.0, 0, 1], [0, 0.5, 1, 0, 1]];
    HT.executeOn(w.mainView, false);
-   return { shadows: AF.round(c0, 6), midtones: p.midtones || 0.5, medianAfter: AF.stats(w.mainView).median };
+   return { shadows: AF.round(c0, 6), midtones: m, medianAfter: AF.stats(w.mainView).median };
 };
 
 // ---------------------------------------------------------------- nonlinear enhancement

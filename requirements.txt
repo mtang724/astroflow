@@ -1,16 +1,23 @@
-# core (organise, pipeline, metrics, references, agent)
+# core: organise, stack, pipeline, comet, metrics, references, agent, and the desktop app's local API
 astropy>=6
 numpy>=2
 scipy>=1.11
 pillow>=10
 tifffile>=2024.1
 requests>=2.31
-openai>=1.40            # DeepSeek's OpenAI-compatible API
+openai>=1.40            # any OpenAI-compatible API: DeepSeek, OpenAI, local Ollama / LM Studio / vLLM
+psutil>=6               # cross-platform PixInsight process control
+platformdirs>=4         # per-user settings / cache folders on Windows and macOS
+keyring>=25             # API keys in Windows Credential Manager / macOS Keychain
+fastapi>=0.115          # desktop app backend (astroflow.api)
+uvicorn>=0.30
+websockets>=13
 
-# optional: learning from tutorial videos (astroflow.video) on an NVIDIA GPU
-faster-whisper>=1.0
-nvidia-cublas-cu12
-nvidia-cudnn-cu12==9.*
+# development: python -m pytest -q ; packaging: pyinstaller packaging/backend.spec
+pytest>=8
+httpx>=0.27             # FastAPI TestClient
+pyinstaller>=6.16
 
+# optional (NVIDIA GPU): learning from tutorial videos -> pip install -r requirements-video.txt
 # external tools (not pip): PixInsight 1.9.x with WBPP, RC Astro BlurXTerminator/NoiseXTerminator/StarXTerminator,
-# Gaia DR3/SP database for SPCC, EZ Processing Suite (algorithms ported), ffmpeg (video), node (optional: syntax checks)
+# Gaia DR3/SP database for SPCC; Node 24 for the desktop app (desktop/)

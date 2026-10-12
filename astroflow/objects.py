@@ -6,6 +6,7 @@ guessing in code.
 import csv
 import re
 from functools import lru_cache
+from pathlib import Path
 
 from . import config
 
@@ -30,7 +31,10 @@ RECIPE_FOR_TYPE = {
     "emission_nebula": "osc_broadband_nebula", "reflection_nebula": "osc_broadband_nebula",
     "planetary_nebula": "osc_broadband_nebula", "supernova_remnant": "osc_broadband_nebula",
     "dark_nebula": "osc_broadband_nebula",
+    "comet": "comet",
 }
+
+COMET_NAME = re.compile(r"^(?:[CP][/-]?\s*\d{4}[\s_-]*[A-Z]{1,2}\d*|\d+P\b|COMET\b)", re.I)   # C/2025 R3, C2025-R3, 12P/...
 
 
 def norm(name):
@@ -40,11 +44,15 @@ def norm(name):
     return n
 
 
-@lru_cache(maxsize=1)
 def _catalog():
+    return _load_catalog(str(config.PI_SCRIPTS))     # keyed by the folder: a path fixed in Settings applies at once
+
+
+@lru_cache(maxsize=4)
+def _load_catalog(scripts_dir):
     rows = {}
     for fname, key_extra in (("Messier.csv", "NGC/IC"), ("NGC-IC.csv", "Messier")):
-        path = config.PI_SCRIPTS / "AdP" / fname
+        path = Path(scripts_dir) / "AdP" / fname
         if not path.exists():
             continue
         with open(path, encoding="utf-8", errors="replace") as f:
@@ -74,6 +82,8 @@ def lookup(name):
 
 
 def object_type(name):
+    if COMET_NAME.match(str(name).strip()):
+        return "comet"
     return KNOWN_TYPES.get(norm(name), "unknown")
 
 
