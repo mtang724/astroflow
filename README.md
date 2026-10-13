@@ -8,7 +8,7 @@ model: DeepSeek, OpenAI, or local Ollama / LM Studio) judges each stage and tune
 
 从“拍完的一晚数据”到“成品图”：导入整理 → 叠加 → 按目标类型的配方出片（每一步参数可调）→ 和高赞作品对比 → AI 助手判断与调参。
 
-**[下载](https://github.com/mtang724/astroflow/releases) · [使用说明](docs/user-guide.md) · [0.2.0 发布说明](docs/releases/v0.2.0.md)**
+**[下载](https://github.com/mtang724/astroflow/releases) · [使用说明](docs/user-guide.md) · [0.2.1 发布说明](docs/releases/v0.2.1.md)**
 
 ![astroflow 主界面](docs/images/overview.png)
 

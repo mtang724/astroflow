@@ -50,7 +50,7 @@ def create_app(token, static_dir=None, dev_origins=(), services=None):
         services.hub.bind(asyncio.get_running_loop())
         yield
 
-    app = FastAPI(title="astroflow", version="0.2", lifespan=lifespan)
+    app = FastAPI(title="astroflow", version="0.2.1", lifespan=lifespan)
     app.state.services = services
     app.state.token = token
 
