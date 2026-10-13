@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CircleCheck, FolderOpen, KeyRound, PlugZap, Plus, Trash, TriangleAlert } from 'lucide-react'
+import { CircleCheck, FolderOpen, KeyRound, ListChecks, PlugZap, Plus, Trash, TriangleAlert } from 'lucide-react'
 import { toast } from 'sonner'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
@@ -57,6 +57,7 @@ function PathRow(props: {
 
 function GeneralTab({ s }: { s: Settings }): React.JSX.Element {
   const patch = usePatchSettings()
+  const { setSettingsOpen, setSetupOpen } = useUi()
   const [form, setForm] = useState({ astro_root: s.astro_root, pixinsight_exe: s.pixinsight_exe, pixinsight_scripts: s.pixinsight_scripts, runs_dir: s.runs_dir })
   const set = (k: keyof typeof form) => (v: string) => setForm((f) => ({ ...f, [k]: v }))
   return (
@@ -68,11 +69,16 @@ function GeneralTab({ s }: { s: Settings }): React.JSX.Element {
       <PathRow label="PixInsight 脚本目录" value={form.pixinsight_scripts} ok={s.checks.pixinsight_scripts} onChange={set('pixinsight_scripts')} pick={() => pickFolder('PixInsight 的 src/scripts 目录')} />
       <PathRow label="任务临时目录（可留空）" value={form.runs_dir} ok={s.checks.runs_dir} onChange={set('runs_dir')} pick={() => pickFolder('任务临时目录')}
         hint="PixInsight 脚本写在这里；路径里不能有空格或中文。留空自动选择。" />
-      <div className="flex items-center justify-between pt-2">
-        <span className="font-mono text-[11px] text-muted-foreground">{s.settings_file}</span>
-        <Button disabled={patch.isPending} onClick={() => patch.mutate(form, { onSuccess: () => toast.success('已保存') })}>
-          保存
-        </Button>
+      <div className="flex items-center justify-between gap-2 pt-2">
+        <span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">{s.settings_file}</span>
+        <div className="flex shrink-0 gap-2">
+          <Button variant="outline" onClick={() => { setSettingsOpen(false); setSetupOpen(true) }}>
+            <ListChecks /> 检查运行环境
+          </Button>
+          <Button disabled={patch.isPending} onClick={() => patch.mutate(form, { onSuccess: () => toast.success('已保存') })}>
+            保存
+          </Button>
+        </div>
       </div>
     </div>
   )
@@ -111,6 +117,7 @@ function ProviderEditor(props: { s: Settings; provider: Provider; onRenamed: (na
     await call(api.PUT('/api/settings/keys/{provider}', { params: { path: { provider: provider.name } }, body: { key: value } }))
     setKey('')
     await qc.invalidateQueries({ queryKey: keys.settings })
+    void qc.invalidateQueries({ queryKey: keys.setup })
     toast.success(value ? '密钥已保存到系统钥匙串' : '密钥已删除')
   }
   const test = async (): Promise<void> => {
@@ -278,7 +285,7 @@ function GearTab({ s }: { s: Settings }): React.JSX.Element {
 }
 
 export function SettingsDialog(): React.JSX.Element {
-  const { settingsOpen, setSettingsOpen } = useUi()
+  const { settingsOpen, setSettingsOpen, settingsTab, setSettingsTab } = useUi()
   const { data: s } = useSettings()
   return (
     <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
@@ -288,7 +295,7 @@ export function SettingsDialog(): React.JSX.Element {
           <DialogDescription>Windows 与 macOS 通用；路径和模型保存在本机，密钥存放在系统钥匙串。</DialogDescription>
         </DialogHeader>
         {s && (
-          <Tabs defaultValue="general">
+          <Tabs value={settingsTab} onValueChange={setSettingsTab}>
             <TabsList>
               <TabsTrigger value="general">常规</TabsTrigger>
               <TabsTrigger value="ai">AI 模型</TabsTrigger>

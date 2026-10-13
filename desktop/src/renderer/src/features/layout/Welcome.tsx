@@ -1,13 +1,12 @@
-import { FolderInput, Settings, Sparkles, Telescope } from 'lucide-react'
+import { FolderInput, ListChecks, Sparkles, Telescope } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useSettings } from '@/api/hooks'
+import { useSetup } from '@/api/hooks'
+import { blockingChecks } from '@/features/setup/SetupDialog'
 import { useUi } from '@/state/ui'
 
 export function Welcome(): React.JSX.Element {
-  const { setImportOpen, setSettingsOpen } = useUi()
-  const { data: settings } = useSettings()
-  const needsSetup =
-    settings && (!settings.checks.astro_root || !settings.checks.pixinsight_exe || !settings.checks.runs_dir)
+  const { setImportOpen, setSetupOpen } = useUi()
+  const missing = blockingChecks(useSetup().data)
   return (
     <div className="flex h-full items-center justify-center p-8">
       <div className="max-w-md text-center">
@@ -20,9 +19,9 @@ export function Welcome(): React.JSX.Element {
           每一步的参数都可以调；也可以让 AI 助手替你判断和调参。
         </p>
         <div className="mt-6 flex justify-center gap-2">
-          {needsSetup ? (
-            <Button onClick={() => setSettingsOpen(true)}>
-              <Settings /> 先完成设置
+          {missing.length > 0 ? (
+            <Button onClick={() => setSetupOpen(true)}>
+              <ListChecks /> 先补齐 {missing.length} 项必需组件
             </Button>
           ) : (
             <Button onClick={() => setImportOpen(true)}>

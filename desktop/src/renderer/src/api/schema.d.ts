@@ -130,6 +130,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Report */
+        get: operations["report_api_setup_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/setup/data-root": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Data Root
+         * @description Create the data folder (with In Processing and Processed) and make it the data root.
+         */
+        post: operations["create_data_root_api_setup_data_root_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/targets": {
         parameters: {
             query?: never;
@@ -988,6 +1025,87 @@ export interface components {
             /** Extra Targets */
             extra_targets?: string[] | null;
         };
+        /** SetupAction */
+        SetupAction: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "apply" | "create_folder" | "pick_folder" | "pick_file" | "open_settings";
+            /** Label */
+            label: string;
+            /** Setting */
+            setting?: string | null;
+            /** Value */
+            value?: {
+                [key: string]: string;
+            } | null;
+            /** Tab */
+            tab?: string | null;
+        };
+        /** SetupCheck */
+        SetupCheck: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "required" | "recommended" | "optional";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "warn" | "missing" | "unknown";
+            /** Summary */
+            summary: string;
+            /**
+             * Steps
+             * @default []
+             */
+            steps?: components["schemas"]["SetupStep"][];
+            /**
+             * Links
+             * @default []
+             */
+            links?: components["schemas"]["SetupLink"][];
+            /**
+             * Actions
+             * @default []
+             */
+            actions?: components["schemas"]["SetupAction"][];
+        };
+        /** SetupLink */
+        SetupLink: {
+            /** Label */
+            label: string;
+            /** Url */
+            url: string;
+        };
+        /** SetupReport */
+        SetupReport: {
+            /** Ready */
+            ready: boolean;
+            /** Checks */
+            checks: components["schemas"]["SetupCheck"][];
+            /**
+             * Notes
+             * @default []
+             */
+            notes?: string[];
+        };
+        /** SetupStep */
+        SetupStep: {
+            /** Text */
+            text: string;
+            /**
+             * Code
+             * @default []
+             */
+            code?: string[];
+        };
         /** Stage */
         Stage: {
             /** Stage */
@@ -1334,6 +1452,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LLMTestOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    report_api_setup_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupReport"];
+                };
+            };
+        };
+    };
+    create_data_root_api_setup_data_root_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PathIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupReport"];
                 };
             };
             /** @description Validation Error */

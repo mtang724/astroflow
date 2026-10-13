@@ -6,7 +6,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
-from .. import config, settings
+from .. import config, doctor, settings
 from ..agent.llm import LLM
 from .models import KeyIn, LLMTestIn, LLMTestOut, Ok, Provider, ProviderRenameIn, SettingsOut, SettingsPatch
 
@@ -36,6 +36,8 @@ def patch_settings(patch: SettingsPatch):
         changes["llm_providers"] = [{k: v for k, v in p.items() if k != "has_key"} for p in changes["llm_providers"]]
         if not changes["llm_providers"]:
             raise HTTPException(400, "keep at least one LLM provider")
+    if changes.get("pixinsight_exe"):       # macOS dialogs return PixInsight.app; some pick the install folder
+        changes["pixinsight_exe"] = doctor.resolve_pixinsight_exe(changes["pixinsight_exe"])
     removed = {p["name"] for p in s.llm_providers}
     for k, v in changes.items():
         setattr(s, k, v)

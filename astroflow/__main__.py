@@ -1,5 +1,6 @@
 """astroflow command line.
 
+    python -m astroflow doctor                     # what is missing on this computer and how to install it
     python -m astroflow status                     # every target in In Processing and how far it got
     python -m astroflow organize [--apply] [--refresh] [--source <folder>] [--copy]
     python -m astroflow stack <target>|--all       # WBPP for targets without a master (skips missing darks)
@@ -20,6 +21,7 @@ def main(argv=None):
         sys.stdout.reconfigure(errors="replace")
     ap = argparse.ArgumentParser(prog="astroflow", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("doctor")
     sub.add_parser("status")
     o = sub.add_parser("organize")
     o.add_argument("--apply", action="store_true")
@@ -50,6 +52,11 @@ def main(argv=None):
     v.add_argument("--out")
     a = ap.parse_args(argv)
 
+    if a.cmd == "doctor":
+        from . import doctor
+        report = doctor.run()
+        doctor.print_report(report)
+        return 0 if report["ready"] else 1
     if a.cmd == "status":
         from .agent import tools
         for t in tools.list_targets():

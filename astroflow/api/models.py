@@ -66,6 +66,42 @@ class LLMTestOut(BaseModel):
     seconds: float = 0
 
 
+# ----------------------------------------------------------------------------------------------- setup check
+class SetupStep(BaseModel):
+    text: str
+    code: list[str] = []                   # lines to copy (repository addresses)
+
+
+class SetupLink(BaseModel):
+    label: str
+    url: str
+
+
+class SetupAction(BaseModel):
+    kind: Literal["apply", "create_folder", "pick_folder", "pick_file", "open_settings"]
+    label: str
+    setting: str | None = None             # the setting a picked or created path goes to
+    value: dict[str, str] | None = None    # apply: the settings to save; create_folder: {setting: path}
+    tab: str | None = None                 # open_settings: the tab to show
+
+
+class SetupCheck(BaseModel):
+    id: str
+    title: str
+    level: Literal["required", "recommended", "optional"]
+    status: Literal["ok", "warn", "missing", "unknown"]
+    summary: str
+    steps: list[SetupStep] = []
+    links: list[SetupLink] = []
+    actions: list[SetupAction] = []
+
+
+class SetupReport(BaseModel):
+    ready: bool                            # nothing required is missing: stacking and processing can run
+    checks: list[SetupCheck]
+    notes: list[str] = []
+
+
 # ----------------------------------------------------------------------------------------------- targets
 class TargetSummary(BaseModel):
     name: str

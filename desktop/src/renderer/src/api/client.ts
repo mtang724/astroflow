@@ -19,6 +19,9 @@ export type OrganizeRow = Schemas['OrganizeRow']
 export type FrameSet = Schemas['FrameSet']
 export type AgentSession = Schemas['AgentSessionOut']
 export type AgentEvent = Schemas['AgentEvent']
+export type SetupReport = Schemas['SetupReport']
+export type SetupCheck = Schemas['SetupCheck']
+export type SetupAction = Schemas['SetupAction']
 
 export const api = createClient<paths>({ baseUrl: '' })
 

@@ -7,6 +7,7 @@ import { JobsPanel } from '@/features/jobs/JobsPanel'
 import { TargetView } from '@/features/target/TargetView'
 import { Welcome } from '@/features/layout/Welcome'
 import { SettingsDialog } from '@/features/settings/SettingsDialog'
+import { SetupDialog } from '@/features/setup/SetupDialog'
 import { ImportDialog } from '@/features/import/ImportDialog'
 import { ImageViewer } from '@/features/viewer/ImageViewer'
 import { useUi } from '@/state/ui'
@@ -32,6 +33,7 @@ export function App(): React.JSX.Element {
       </div>
       <ErrorBoundary>
         <SettingsDialog />
+        <SetupDialog />
         <ImportDialog />
         <ImageViewer />
       </ErrorBoundary>

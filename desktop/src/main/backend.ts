@@ -56,7 +56,28 @@ function waitForReady(child: ChildProcess, timeoutMs: number): Promise<number> {
       clearTimeout(timer)
       reject(new Error(`backend exited with code ${code}\n${stderr}`))
     })
+    child.once('error', (err) => {
+      // the program could not be started at all (no Python on PATH): without this handler Electron itself crashes
+      clearTimeout(timer)
+      reject(err)
+    })
   })
+}
+
+/** The error box text for a backend that would not start: what to do first, then the error and where the log is. */
+export function startupHelp(err: unknown): string {
+  const text = String(err)
+  const log = join(app.getPath('logs'), 'backend.log')
+  let hint = ''
+  if (!app.isPackaged && /ENOENT/.test(text)) {
+    hint = 'Python was not found. Install Python 3.12 or newer, or set ASTROFLOW_PYTHON to the python to use.'
+  } else if (!app.isPackaged && /No module named/.test(text)) {
+    const name = /No module named '([^']+)'/.exec(text)?.[1] ?? 'a package'
+    hint = `The Python package "${name}" is missing. In the repository run:  pip install -r requirements.txt`
+  } else if (app.isPackaged) {
+    hint = 'If this keeps happening, report it in the GitHub Issues with the log below.'
+  }
+  return `${hint ? hint + '\n\n' : ''}${text}\n\nLog: ${log}`
 }
 
 async function waitHealthy(url: string, timeoutMs: number): Promise<void> {

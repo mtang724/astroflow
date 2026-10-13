@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell, type IpcMainInvokeEvent } from 'electron'
 import { existsSync } from 'fs'
 import { extname, join } from 'path'
-import { startBackend, type Backend } from './backend'
+import { startBackend, startupHelp, type Backend } from './backend'
 
 let backend: Backend | null = null
 let window: BrowserWindow | null = null
@@ -105,7 +105,7 @@ if (!app.requestSingleInstanceLock()) {
     try {
       backend = await startBackend(!app.isPackaged)
     } catch (err) {
-      dialog.showErrorBox('astroflow could not start its backend', String(err))
+      dialog.showErrorBox('astroflow could not start its backend', startupHelp(err))
       app.quit()
       return
     }

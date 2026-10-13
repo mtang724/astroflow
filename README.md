@@ -21,6 +21,7 @@ model: DeepSeek, OpenAI, or local Ollama / LM Studio) judges each stage and tune
   - 图像：各阶段预览、成品、参考作品，可以缩放、两张图对比
   - AI 助手：用一句话说想要的效果，它会调用工具处理，过程逐步可见
 - **任务栏**：一次只跑一个 PixInsight 任务，实时日志，随时停止（会结束 PixInsight 进程）。
+- **检查运行环境**：第一次打开时检查 PixInsight、WBPP、RC Astro 插件（是否激活）、Gaia 数据库、数据目录和 AI 模型，缺什么列出来并一步步说明怎么装；能自动处理的（找到的 PixInsight 路径、创建数据目录）点一下就好。
 - **设置**：数据根目录、PixInsight 位置、AI 服务商（任何 OpenAI 兼容接口，包括本地模型）；API 密钥存放在系统钥匙串（Windows 凭据管理器 / macOS 钥匙串），不会写进文件，界面上也不显示。
 
 安装包：`desktop/dist/astroflow-<版本>-setup.exe`（Windows），`.dmg`（macOS，由 GitHub Actions 在 Mac 上构建）。
@@ -52,6 +53,7 @@ python -m astroflow process "M8" --from starless --set starless.sat.boost=0.8
 # 彗星（少帧、混合曝光、有云也行）：WBPP 之后，按星和彗核分别叠加，再用 comet 配方收尾
 python -m astroflow comet "F:\AstroPhotograph\C2025-R3"
 
+python -m astroflow doctor                 # 检查这台电脑缺什么组件、怎么装
 python -m astroflow status                 # 每个目标的进度
 python -m astroflow refs "NGC 7293"        # 抓同目标高赞作品作参考
 python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截图，整理进资料库
@@ -74,6 +76,7 @@ python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截
 | 本地 API（应用的后端） | `astroflow/api/`（FastAPI，只监听本机，每次启动一个令牌） |
 | 应用服务：任务队列、目标、可调参数 | `astroflow/services/` |
 | 设置（路径、AI 服务商、偏好；密钥进系统钥匙串） | `astroflow/settings.py`，`config.py` 读它 |
+| 环境检查（缺什么组件、怎么装；不启动 PixInsight，读它的设置槽 1） | `astroflow/doctor.py` |
 | 整理 | `astroflow/organize.py`（根目录 `organize.py` 兼容旧命令） |
 | 统一命令行入口 | `python -m astroflow`（`astroflow/__main__.py`） |
 | 叠加（WBPP 命令行自动化） | `astroflow/wbpp.py` |

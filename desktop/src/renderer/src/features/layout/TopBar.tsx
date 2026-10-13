@@ -1,19 +1,21 @@
-import { FolderInput, FolderOpen, Settings, Telescope } from 'lucide-react'
+import { FolderInput, FolderOpen, Settings, Telescope, TriangleAlert } from 'lucide-react'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { api, call } from '@/api/client'
-import { keys } from '@/api/hooks'
+import { keys, useSetup } from '@/api/hooks'
 import { useConnection } from '@/api/events'
+import { blockingChecks } from '@/features/setup/SetupDialog'
 import { pickFolder } from '@/lib/desktop'
 import { useUi } from '@/state/ui'
 import { cn } from 'cn'
 
 export function TopBar(): React.JSX.Element {
   const connected = useConnection((s) => s.connected)
-  const { setSettingsOpen, setImportOpen, select } = useUi()
+  const { setSettingsOpen, setSetupOpen, setImportOpen, select } = useUi()
   const qc = useQueryClient()
+  const missing = blockingChecks(useSetup().data).length
 
   const openFolder = async (): Promise<void> => {
     const path = await pickFolder('打开一个目标文件夹（包含 Light/ 或 Post/）')
@@ -45,6 +47,11 @@ export function TopBar(): React.JSX.Element {
       </div>
       <div className="flex-1" />
       <div className="flex items-center gap-2 [-webkit-app-region:no-drag]">
+        {missing > 0 && (
+          <Button variant="ghost" size="sm" className="text-warn hover:text-warn" onClick={() => setSetupOpen(true)}>
+            <TriangleAlert /> 缺少 {missing} 项组件
+          </Button>
+        )}
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">

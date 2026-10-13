@@ -12,7 +12,8 @@ export const keys = {
   target: (path: string) => ['target', path] as const,
   params: (path: string) => ['params', path] as const,
   jobs: ['jobs'] as const,
-  settings: ['settings'] as const
+  settings: ['settings'] as const,
+  setup: ['setup'] as const
 }
 
 // ----------------------------------------------------------------------------------------------- queries
@@ -43,6 +44,11 @@ export function useJobs() {
 
 export function useSettings() {
   return useQuery({ queryKey: keys.settings, queryFn: () => call(api.GET('/api/settings')) })
+}
+
+/** What is missing on this computer and how to install it (the setup dialog rechecks it on window focus). */
+export function useSetup() {
+  return useQuery({ queryKey: keys.setup, queryFn: () => call(api.GET('/api/setup')) })
 }
 
 /** The newest queued/running job for a target (actions are disabled while one exists). */
@@ -138,6 +144,7 @@ export function usePatchSettings() {
     onSuccess: (s) => {
       qc.setQueryData(keys.settings, s)
       void qc.invalidateQueries({ queryKey: keys.targets })
+      void qc.invalidateQueries({ queryKey: keys.setup })
     },
     onError: (e) => toast.error('设置未保存', { description: (e as Error).message })
   })
