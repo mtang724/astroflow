@@ -1,113 +1,157 @@
 # astroflow
 
-Automated astrophotography post-processing for a one-shot-colour camera, as a desktop app for Windows and macOS
-(plus a command line). It organises a night's frames with matching calibration, stacks with headless WBPP and
-post-processes in headless PixInsight, following recipes learned from tutorial videos, including comets shot through
-clouds. It compares every target with top-rated works of the same object, and an AI agent (any OpenAI-compatible
-model: DeepSeek, OpenAI, or local Ollama / LM Studio) judges each stage and tunes parameters until the result holds up.
+**English** | [简体中文](README.zh-CN.md)
 
-从“拍完的一晚数据”到“成品图”：导入整理 → 单帧检查 → 叠加（几晚也能合成一张）→ 按目标类型的配方出片（每一步参数可调）→ 和高赞作品对比 → AI 助手判断与调参 → 分享图。
+Automated astrophotography post-processing, as a desktop app for Windows and macOS (plus a command line). It organises
+a night's frames with matching calibration frames, stacks them with headless WBPP and post-processes them in headless
+PixInsight, following recipes learned from tutorial videos. It handles colour cameras and mono cameras (LRGB), and
+even comets shot through clouds. It compares every target with top-rated works of the same object, and an AI
+assistant (any OpenAI-compatible model: DeepSeek, OpenAI, or a local Ollama / LM Studio) checks each stage and tunes
+parameters until the result holds up.
 
-**[下载](https://github.com/mtang724/astroflow/releases) · [使用说明](docs/user-guide.md) · [0.2.1 发布说明](docs/releases/v0.2.1.md)**
+From a night's data to a finished picture: import → frame check → stacking (several nights into one image) → the
+recipe for the object type (every parameter adjustable) → comparison with top-rated works → AI review and tuning →
+pictures to share.
 
-![astroflow 主界面](docs/images/overview.png)
+**[Download](https://github.com/mtang724/astroflow/releases) · [User guide (Chinese)](docs/user-guide.md) ·
+[0.2.1 release notes (Chinese)](docs/releases/v0.2.1.md)**
 
-## 桌面应用（Windows / macOS）
+![The astroflow main window](docs/images/overview.png)
 
-- **导入新数据**：选一个拍摄文件夹（ASIAIR、NINA、SharpCap 等的导出，存储卡，或已经分好 Light/Dark/Bias/Flat 的目标文件夹）。FITS 和单反 / 微单的 RAW 文件（CR2、CR3、NEF、ARW、DNG、RAF …）都行。按文件头认出帧类型（RAW 看文件夹名），按目标和日期整理，暗场 / 偏置 / 平场先用同一批拍的，缺的再从校准帧库找；只有校准帧的文件夹会放进校准帧库并补给缺它们的目标。先看计划再执行（默认复制，不动原文件）。
-- **目标页**：
-  - 概览：成品、拍摄数据、校准帧与警告、这一晚用的滤镜、下一步该做什么；同一目标拍了几晚时，一键合并叠加（每晚用自己的平场）
-  - 单帧检查：每帧的缩略图、星点数、星点大小和背景，标出被云、风、跑焦、天亮影响的帧，一键排除（可恢复）
-  - 处理流程：每个阶段、每个步骤的参数，改了就保存，可以只重跑一个阶段或从某阶段跑到最后；调好的参数可以存成“我的风格”，套用到同类目标
-  - 图像：各阶段预览、成品、参考作品，可以缩放、两张图对比
-  - AI 助手：用一句话说想要的效果，它会调用工具处理，过程逐步可见
-  - 分享图：裁成 3:4（小红书）、16:9（B站）等比例，可加拍摄信息和署名
-- **黑白相机 LRGB**：WBPP 按滤镜叠出 L/R/G/B 主帧后自动用黑白配方：通道对齐与裁切、各自去背景、合成彩色、L 单独去卷积降噪，再按亮度合成（教程第 3 期）。
-- **全部处理**：把还没出图的目标排队，一个接一个叠加、出图；在后台跑完时弹出系统通知。
-- **任务栏**：一次只跑一个 PixInsight 任务，实时日志，随时停止（会结束 PixInsight 进程）。
-- **中文 / English 界面**：设置里切换，默认跟随系统；AI 助手也用同一种语言回答。
-- **自动更新**：启动时检查 GitHub 上的新版本。Windows 下载后重启即装好（或下次关闭时自动安装）；macOS 预览版打开下载页。
-- **磁盘空间和归档**：看每个目标占多少空间，一键删掉可以再生成的中间文件（保留原始帧、叠加结果和成品）；处理完的目标一键归档到 `Processed\`。
-- **检查运行环境**：第一次打开时检查 PixInsight、WBPP、RC Astro 插件（是否激活）、Gaia 数据库、数据目录和 AI 模型，缺什么列出来并一步步说明怎么装；能自动处理的（找到的 PixInsight 路径、创建数据目录）点一下就好。
-- **设置**：数据根目录、PixInsight 位置、AI 服务商（任何 OpenAI 兼容接口，包括本地模型）；API 密钥存放在系统钥匙串（Windows 凭据管理器 / macOS 钥匙串），不会写进文件，界面上也不显示。
+## Desktop app (Windows / macOS)
 
-安装包：`desktop/dist/astroflow-<版本>-setup.exe`（Windows），`.dmg`（macOS，由 GitHub Actions 在 Mac 上构建）。
-开发、架构和打包见 [`desktop/README.md`](desktop/README.md)。
+- **Import new data**: pick a capture folder (exports from ASIAIR, NINA, SharpCap and the like, a memory card, or a
+  target folder already split into Light/Dark/Bias/Flat). FITS works, and so do the RAW files of DSLR and mirrorless
+  cameras (CR2, CR3, NEF, ARW, DNG, RAF …). Frame types come from the file headers (for RAW files, from the folder
+  names). Frames are sorted by target and date. Darks, bias and flats from the same session come first, and anything
+  missing comes from the calibration library. A folder with only calibration frames goes into the library and fills
+  in targets that lack them. You see the plan before anything happens (files are copied by default; originals stay
+  untouched).
+- **Target page**:
+  - Overview: the finished image, capture details, calibration frames and warnings, the night's filter, and what to do
+    next. When a target was shot on several nights, one click stacks them together (each night with its own flats).
+  - Frame check: a thumbnail, star count, star size and background for every frame. Frames hurt by clouds, wind,
+    focus drift or dawn are flagged and can be excluded in one click (and restored).
+  - Processing: every stage and every step's parameters. Edits are saved; you can re-run one stage, or run from a
+    stage to the end. Tuned parameters can be saved as "my styles" and applied to similar targets.
+  - Images: previews of every stage, the finished image and reference works, with zoom and side-by-side comparison.
+  - AI assistant: say what you want in one sentence; it calls the processing tools and you can follow every step.
+  - Share pictures: crops to 3:4, 16:9 and other ratios, with capture details and a signature if you like.
+- **Mono cameras (LRGB)**: when WBPP stacks one master per filter (L/R/G/B), the mono recipes take over: align the
+  channels and crop to the shared area, remove each channel's background, combine the colour, sharpen and denoise L on
+  its own, then merge L back at matching brightness (tutorial episode 3).
+- **Process all**: queues every target that has no result yet and stacks and processes them one after another, with a
+  system notification when the queue finishes in the background.
+- **Job bar**: one PixInsight job at a time, a live log, and Stop at any moment (it ends the PixInsight process).
+- **Chinese / English interface**: switch in Settings (follows the system by default); the AI assistant answers in
+  the same language.
+- **Automatic updates**: checks GitHub for new versions at start. On Windows a new version downloads and installs on
+  restart (or the next time the app closes); the macOS preview opens the download page.
+- **Disk space and archiving**: see how much space each target takes, delete intermediate files that can be made again
+  in one click (raw frames, stacks and finished images stay), and move a finished target to `Processed\` in one click.
+- **Setup check**: on first start it checks PixInsight, WBPP, the RC Astro tools (and whether they are activated),
+  the Gaia database, the data folder and the AI model, lists what is missing and explains step by step how to install
+  it. What it can fix itself (a PixInsight it found, creating the data folder) takes one click.
+- **Settings**: data folder, PixInsight location, AI provider (any OpenAI-compatible API, local models included). API
+  keys live in the system keychain (Windows Credential Manager / macOS Keychain), never in a file, and the app never
+  shows them.
 
-## 准备
+Installers: `desktop/dist/astroflow-<version>-setup.exe` (Windows) and a `.dmg` (macOS, built on a Mac by GitHub
+Actions). Development, architecture and packaging: [`desktop/README.md`](desktop/README.md).
 
-- PixInsight 1.9.x（含 WBPP），RC Astro 三件套（BXT / NXT / SXT），SPCC 用的 Gaia DR3/SP 数据库（在 PixInsight 界面里配置好）
-- 从源码运行：Python 3.12+ 与 `pip install -r requirements.txt`；桌面应用另需 Node 24（`cd desktop && npm install && npm run dev`）
-- 视频学习（可选，NVIDIA GPU）：`pip install -r requirements-video.txt` 与 ffmpeg
+## Requirements
 
-## 命令行
+- PixInsight 1.9.x (with WBPP), the RC Astro tools (BXT / NXT / SXT), and the Gaia DR3/SP database for SPCC (set up in
+  PixInsight)
+- Running from source: Python 3.12+ and `pip install -r requirements.txt`; the desktop app also needs Node 24
+  (`cd desktop && npm install && npm run dev`)
+- Learning from videos (optional, NVIDIA GPU): `pip install -r requirements-video.txt` and ffmpeg
+
+## Command line
 
 ```powershell
-# 导入拍摄数据（先预览，再 --apply 执行）；--source 导入别处的文件夹，--copy 不移动光照帧；--refresh 用校准帧库补全已整理的目标
-python -m astroflow organize [--apply] [--refresh] [--source <文件夹>] [--copy]
+# Import capture data (preview first, then --apply); --source imports another folder, --copy leaves the lights in
+# place; --refresh fills in organised targets from the calibration library
+python -m astroflow organize [--apply] [--refresh] [--source <folder>] [--copy]
 
-# 暗场后来在 ASIAIR 上补拍：等拍够再导入暗场库、补校准、重新叠加（在 PowerShell 里运行，Git Bash 看不到网络共享）
-python -m astroflow.darks --source "\\<ASIAIR 的 IP>\EMMC Images\Autorun\Dark" --exptime 300 --settemp -10 --count 10 --since 2026-10-10 --wait --then restack
+# Darks shot later on the ASIAIR: once there are enough, import them into the library, recalibrate and stack again
+# (run it in PowerShell: Git Bash cannot see network shares)
+python -m astroflow.darks --source "\\<ASIAIR IP>\EMMC Images\Autorun\Dark" --exptime 300 --settemp -10 --count 10 --since 2026-10-10 --wait --then restack
 
-# 让 AI 处理一个目标（叠加 + 全流程后期 + 自检 + 报告），或按要求重调
+# Let the AI process a target (stacking + the whole post-processing + self-check + report), or redo part of it
 python -m astroflow agent "M8"
-python -m astroflow agent "M8" --task "只重做 starless 阶段，饱和度再高一点"
+python -m astroflow agent "M8" --task "Redo only the starless stage, with a little more saturation"
 
-# 不用 AI：按默认配方跑，或改某个参数只重跑某一段
+# Without AI: run the default recipe, or change one parameter and re-run from one stage
 python -m astroflow process "M8"
 python -m astroflow process "M8" --from starless --set starless.sat.boost=0.8
 
-# 彗星（少帧、混合曝光、有云也行）：WBPP 之后，按星和彗核分别叠加，再用 comet 配方收尾
+# Comets (few frames, mixed exposures, clouds): after WBPP, stack on the stars and on the nucleus separately, then
+# finish with the comet recipe
 python -m astroflow comet "F:\AstroPhotograph\C2025-R3"
 
-python -m astroflow doctor                 # 检查这台电脑缺什么组件、怎么装
-python -m astroflow status                 # 每个目标的进度
-python -m astroflow refs "NGC 7293"        # 抓同目标高赞作品作参考
-python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截图，整理进资料库
+python -m astroflow doctor                 # what this computer is missing, and how to install it
+python -m astroflow status                 # progress of every target
+python -m astroflow refs "NGC 7293"        # fetch top-rated works of the same object as references
+python -m astroflow video "<tutorial.mp4>" # a new tutorial video -> transcript + frames for the knowledge base
 ```
 
-- **每晚用的滤镜**记在 `In Processing\<日期>\session.json`（FITS 头里没有；应用里在目标概览页选）：无滤镜 `osc_broadband`，Antlia 四通道等多波段 `osc_multiband`。它决定配方、色彩校准方式和参考作品分组。黑白相机不用记：每个滤镜一张主帧（`..._FILTER-L_mono.xisf`），配方据此选 `mono_lrgb_*`。
-- **运行时请关闭 PixInsight 界面**：无界面任务需要独占 PixInsight（第二个实例读不到 Gaia 星表配置，BXT 也会崩溃），任务会自动排队等待。
+- **The filter used each night** is stored in `In Processing\<date>\session.json` (FITS headers don't record it; in
+  the app you pick it on the target's overview): no filter is `osc_broadband`, a multiband filter such as the Antlia
+  Quad Band is `osc_multiband`. It decides the recipe, the colour calibration and which references to compare with.
+  Mono cameras need nothing here: each filter has its own master (`..._FILTER-L_mono.xisf`), and the recipe becomes
+  `mono_lrgb_*`.
+- **Close the PixInsight window while jobs run**: headless jobs need PixInsight to themselves (a second instance can't
+  read the Gaia catalogue settings, and BXT crashes). Jobs wait in a queue until it is closed.
 
-## 结果在哪里
-`<数据根目录>\In Processing\<日期>\<目标>\Post\`
-- `<目标>_<日期>.png / .jpg / .tif`：成品（PNG/JPG 8 位全分辨率，16 位 TIFF 可进 PS 继续调）；小目标另有 `_crop` 裁切版
-- `previews\`：每一阶段的预览图；`report.md`：AI 的处理报告；`NN_*.xisf`：各阶段检查点
-- `params.json`：你在应用里改过的参数。以后每次运行都会用（应用、AI 助手、命令行都一样）；`state.json`：各阶段的运行记录
-- `share\`：分享图
-- 满意后在应用里“归档”，整个目标文件夹移到 `Processed\`
+## Where the results are
+`<data folder>\In Processing\<date>\<target>\Post\`
+- `<target>_<date>.png / .jpg / .tif`: the finished image (8-bit full-resolution PNG/JPG, and a 16-bit TIFF for
+  further editing in Photoshop); small objects also get a `_crop` version
+- `previews\`: a preview of every stage; `report.md`: the AI's processing report; `NN_*.xisf`: each stage's checkpoint
+- `params.json`: the parameters you changed in the app, used by every later run (app, AI assistant and command line
+  alike); `state.json`: the record of each stage's run
+- `share\`: pictures to share
+- When you're happy, "Archive" in the app moves the whole target folder to `Processed\`
 
-## 组成
-| 部分 | 位置 |
+## What's in the repository
+| Part | Where |
 |---|---|
-| 桌面应用（Electron + React） | `desktop/`（见 `desktop/README.md`） |
-| 本地 API（应用的后端） | `astroflow/api/`（FastAPI，只监听本机，每次启动一个令牌） |
-| 应用服务：任务队列、目标、可调参数、我的风格、全部处理 | `astroflow/services/` |
-| 设置（路径、AI 服务商、偏好；密钥进系统钥匙串） | `astroflow/settings.py`，`config.py` 读它 |
-| 环境检查（缺什么组件、怎么装；不启动 PixInsight，读它的设置槽 1） | `astroflow/doctor.py` |
-| 整理 | `astroflow/organize.py`（根目录 `organize.py` 兼容旧命令），读 FITS 和相机 RAW：`astroflow/frameio.py` |
-| 单帧检查、多晚合并、磁盘空间与归档、分享图 | `astroflow/framecheck.py`、`multinight.py`、`storage.py`、`share.py` |
-| 统一命令行入口 | `python -m astroflow`（`astroflow/__main__.py`） |
-| 叠加（WBPP 命令行自动化） | `astroflow/wbpp.py` |
-| 后期配方（宽带星云 / 星系 / 多波段星云 / 彗星 / 黑白 LRGB） | `astroflow/pipeline.py` + `astroflow/pjsr/*.js`（PixInsight 端步骤库） |
-| 彗星叠加（云、卫星轨迹、彗核运动、去星） | `astroflow/comet.py`，方法与教训见 `knowledge/comets.md` |
-| 无界面 PixInsight 运行器（串行锁、看门狗、可取消） | `astroflow/pi.py`，`astroflow/jobctx.py` |
-| 指标 / 参考作品 / 星表 / 暗场导入 | `astroflow/metrics.py`、`references.py`、`objects.py`、`darks.py` |
-| AI agent（任何 OpenAI 兼容模型；不支持工具调用的本地模型走提示词模式） | `astroflow/agent/`（`session.py`、`tools.py`、`skills.py`） |
-| 技能：沉淀下来的处理经验，agent 按需加载（同 Claude Agent Skills 格式） | `skills/<名字>/SKILL.md` |
-| 资料库（流程、参数、检查标准、坑、目标笔记） | `knowledge/`（见 `knowledge/README.md`） |
-| 测试 | `tests/`（`python -m pytest -q`） |
-| 使用说明、发布说明、计划 | `docs/`（`user-guide.md`、`releases/`、`plans/`，截图在 `docs/images/`） |
-| 打包 | `packaging/backend.spec`（PyInstaller），`desktop/electron-builder.yml`，`.github/workflows/desktop.yml` |
-| Claude Code skill / 子 agent | `.claude/skills/astro-postprocess/`、`.claude/agents/astro-reviewer.md` |
+| Desktop app (Electron + React) | `desktop/` (see `desktop/README.md`) |
+| Local API (the app's backend) | `astroflow/api/` (FastAPI, listens on this computer only, a new token every start) |
+| App services: job queue, targets, adjustable parameters, my styles, process all | `astroflow/services/` |
+| Settings (paths, AI provider, preferences; keys in the system keychain) | `astroflow/settings.py`, read by `config.py` |
+| Setup check (missing components and how to install them; reads PixInsight's settings slot 1 without starting it) | `astroflow/doctor.py` |
+| Organising | `astroflow/organize.py` (the root `organize.py` keeps the old command working); FITS and camera RAW reading: `astroflow/frameio.py` |
+| Frame check, multi-night stacking, disk space and archiving, share pictures | `astroflow/framecheck.py`, `multinight.py`, `storage.py`, `share.py` |
+| Mono cameras: one master per filter | `astroflow/mono.py` |
+| One command-line entry point | `python -m astroflow` (`astroflow/__main__.py`) |
+| Stacking (WBPP command-line automation) | `astroflow/wbpp.py` |
+| Post-processing recipes (broadband nebula / galaxy / multiband nebula / comet / mono LRGB) | `astroflow/pipeline.py` + `astroflow/pjsr/*.js` (the step library on the PixInsight side) |
+| Comet stacking (clouds, satellite trails, nucleus motion, star removal) | `astroflow/comet.py`; methods and lessons in `knowledge/comets.md` |
+| Headless PixInsight runner (one at a time, watchdog, cancellable) | `astroflow/pi.py`, `astroflow/jobctx.py` |
+| Metrics / reference works / catalogue / dark import | `astroflow/metrics.py`, `references.py`, `objects.py`, `darks.py` |
+| AI agent (any OpenAI-compatible model; local models without tool calling use a prompt mode) | `astroflow/agent/` (`session.py`, `tools.py`, `skills.py`) |
+| Skills: processing know-how the agent loads when needed (Claude Agent Skills format) | `skills/<name>/SKILL.md` |
+| Knowledge base (workflows, parameters, checklists, pitfalls, notes per target) | `knowledge/` (see `knowledge/README.md`) |
+| Tests | `tests/` (`python -m pytest -q`) |
+| User guide, release notes, plans | `docs/` (`user-guide.md`, `releases/`, `plans/`; screenshots in `docs/images/`) |
+| Packaging | `packaging/backend.spec` (PyInstaller), `desktop/electron-builder.yml`, `.github/workflows/desktop.yml` |
+| Claude Code skill / subagent | `.claude/skills/astro-postprocess/`, `.claude/agents/astro-reviewer.md` |
 
-## 不在仓库里的东西
-教程视频及其截图和转写稿（版权），AstroBin 参考缩略图（他人作品，仅本地比较用；`refs.json` 保留标题、作者和链接），运行日志 `.runs/`，`.env`，打包输出。
+## Not in the repository
+Tutorial videos, their frames and transcripts (copyrighted); AstroBin reference thumbnails (other people's work, used
+only for local comparison; `refs.json` keeps title, author and link); run logs in `.runs/`; `.env`; build output.
 
-## 致谢
+## Thanks
 
-后期配方的流程和默认参数整理自 B 站 UP 主氪化金的《PixInsight 进阶教程》第 1 期（[BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh)）、第 2 期（[BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD)）和第 3 期（[BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu)），感谢作者的分享。
+The recipes' steps and default settings follow the Bilibili series 《PixInsight 进阶教程》 (advanced PixInsight
+tutorials) by 氪化金: episode 1 ([BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh)), episode 2
+([BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD)) and episode 3
+([BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu)). Thank you for sharing them.
 
-## 版权
+## Copyright
 
-© 2026 Ming，保留所有权利。可以在 GitHub 上查看代码，也可以下载发布页的安装包个人、非商业地使用；未经书面许可，不得复制、修改、再分发代码，也不得用于商业用途。需要授权请在 Issues 里联系。详见 [LICENSE](LICENSE)。
+© 2026 Ming. All rights reserved. You may view the code on GitHub and use the installers from the releases page for
+personal, non-commercial purposes. Copying, modifying or redistributing the code, and any commercial use, need written
+permission; to ask, open an issue. See [LICENSE](LICENSE).
