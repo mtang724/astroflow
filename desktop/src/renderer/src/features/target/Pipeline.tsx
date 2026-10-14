@@ -8,13 +8,15 @@ import { useActiveJob, useChooseRecipe, useParams, useResetParams, useRunProcess
 import { RECIPE_LABELS, STAGE_LABELS, STEP_LABELS, basename, formatDuration, label } from '@/lib/labels'
 import { useUi } from '@/state/ui'
 import { ParamField } from './ParamField'
+import { StyleMenu } from './StyleMenu'
 import { cn } from 'cn'
+import { mark, tr } from '@/lib/i18n'
 
 const RECIPE_HINTS: Record<string, string> = {
-  osc_broadband_nebula: '发射星云、反射星云、超新星遗迹等，无滤镜拍摄',
-  osc_galaxy: '旋涡星系、椭圆星系、星系群',
-  osc_multiband_nebula: '星云，用多波段 / 窄带滤镜拍摄',
-  comet: '彗星（先叠加再出图，见概览）'
+  osc_broadband_nebula: mark('发射星云、反射星云、超新星遗迹等，无滤镜拍摄'),
+  osc_galaxy: mark('旋涡星系、椭圆星系、星系群'),
+  osc_multiband_nebula: mark('星云，用多波段 / 窄带滤镜拍摄'),
+  comet: mark('彗星（先叠加再出图，见概览）')
 }
 
 /** The type is not in the built-in catalogue: the user says which recipe fits. */
@@ -23,7 +25,7 @@ function RecipePicker({ t }: { t: TargetDetail }): React.JSX.Element {
   return (
     <div className="max-w-xl space-y-3 p-6">
       <p className="text-sm text-muted-foreground">
-        认不出“{t.name}”是什么天体（不在内置星表里）。选一个配方，之后就可以调参数和出图：
+        {tr('认不出“{name}”是什么天体（不在内置星表里）。选一个配方，之后就可以调参数和出图：', { name: t.name })}
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
         {Object.entries(RECIPE_HINTS).map(([recipe, hint]) => (
@@ -34,11 +36,11 @@ function RecipePicker({ t }: { t: TargetDetail }): React.JSX.Element {
             className="rounded-lg border p-3 text-left transition-colors hover:bg-accent/50 disabled:opacity-50"
           >
             <span className="block text-sm font-medium">{label(RECIPE_LABELS, recipe)}</span>
-            <span className="block text-xs text-muted-foreground">{hint}</span>
+            <span className="block text-xs text-muted-foreground">{tr(hint)}</span>
           </button>
         ))}
       </div>
-      <p className="text-xs text-muted-foreground">也可以在 AI 助手里告诉它这是什么天体，让它来选。</p>
+      <p className="text-xs text-muted-foreground">{tr('也可以在 AI 助手里告诉它这是什么天体，让它来选。')}</p>
     </div>
   )
 }
@@ -63,6 +65,7 @@ export function Pipeline({ target: t }: { target: TargetDetail }): React.JSX.Ele
   const info = status[selected.stage]
   const busy = !!active
   const edits = selected.steps.reduce((n, st) => n + st.fields.filter((f) => f.edited).length, 0)
+  const allEdits = stages.reduce((n, s) => n + s.steps.reduce((m, st) => m + st.fields.filter((f) => f.edited).length, 0), 0)
 
   return (
     <div className="flex h-full">
@@ -93,8 +96,8 @@ export function Pipeline({ target: t }: { target: TargetDetail }): React.JSX.Ele
                       {i + 1}. {label(STAGE_LABELS, s.stage)}
                     </span>
                     <span className="block text-[11px] text-muted-foreground">
-                      {st?.done ? formatDuration(st.seconds) : '未运行'}
-                      {edited ? ' · 已改参数' : ''}
+                      {st?.done ? formatDuration(st.seconds) : tr('未运行')}
+                      {edited ? ' · ' + tr('已改参数') : ''}
                     </span>
                   </span>
                 </button>
@@ -107,20 +110,21 @@ export function Pipeline({ target: t }: { target: TargetDetail }): React.JSX.Ele
         <div className="space-y-4 p-6">
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="mr-auto text-base font-medium">{label(STAGE_LABELS, selected.stage)}</h2>
+            <StyleMenu path={t.path} recipe={t.recipe} edits={allEdits} disabled={busy} />
             {edits > 0 && (
               <Button variant="ghost" size="sm" disabled={busy} onClick={() => reset.mutate(selected.stage)}>
-                <RotateCcw /> 恢复本阶段默认值（{edits}）
+                <RotateCcw /> {tr('恢复本阶段默认值（{n}）', { n: edits })}
               </Button>
             )}
             <Button variant="secondary" size="sm" disabled={busy} onClick={() => run.mutate({ path: t.path, stage: selected.stage })}>
-              <Play /> 只运行这一阶段
+              <Play /> {tr('只运行这一阶段')}
             </Button>
             <Button size="sm" disabled={busy} onClick={() => run.mutate({ path: t.path, start: selected.stage })}>
-              <SkipForward /> 从这里运行到最后
+              <SkipForward /> {tr('从这里运行到最后')}
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            改动会保存到这个目标，下次运行时生效；重新运行一个阶段会使它后面的阶段失效。
+            {tr('改动会保存到这个目标，下次运行时生效；重新运行一个阶段会使它后面的阶段失效。')}
           </p>
           {info?.previews?.length ? (
             <div className="flex gap-3 overflow-x-auto pb-1">
@@ -142,10 +146,10 @@ export function Pipeline({ target: t }: { target: TargetDetail }): React.JSX.Ele
                 <div className="mb-2 flex items-baseline gap-2">
                   <span className="text-sm font-medium">{label(STEP_LABELS, step.op)}</span>
                   <span className="font-mono text-[11px] text-muted-foreground">{step.id}</span>
-                  {step.optional && <span className="text-[11px] text-muted-foreground">可选</span>}
+                  {step.optional && <span className="text-[11px] text-muted-foreground">{tr('可选')}</span>}
                 </div>
                 {step.fields.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">没有可调参数</p>
+                  <p className="text-xs text-muted-foreground">{tr('没有可调参数')}</p>
                 ) : (
                   <div className="space-y-1.5">
                     {step.fields.map((f) => (

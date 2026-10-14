@@ -9,6 +9,7 @@ import { JOB_STATE_LABELS, formatDuration, label } from '@/lib/labels'
 import { useJobLogs } from '@/state/jobLogs'
 import { useUi } from '@/state/ui'
 import { cn } from 'cn'
+import { tr } from '@/lib/i18n'
 
 function useNow(active: boolean): number {
   const [now, setNow] = useState(() => Date.now() / 1000)
@@ -21,7 +22,7 @@ function useNow(active: boolean): number {
 }
 
 function elapsed(job: Job, now: number): string {
-  if (!job.started_at) return '等待中'
+  if (!job.started_at) return tr('等待中')
   return formatDuration((job.finished_at ?? now) - job.started_at)
 }
 
@@ -49,7 +50,7 @@ function JobLog({ job }: { job: Job }): React.JSX.Element {
     <ScrollArea className="h-full">
       <pre className="p-3 font-mono text-[11px] leading-relaxed whitespace-pre-wrap text-muted-foreground">
         {job.error && <span className="text-destructive">{job.error + '\n'}</span>}
-        {(lines ?? []).join('\n') || '（暂无日志）'}
+        {(lines ?? []).join('\n') || tr('（暂无日志）')}
       </pre>
       <div ref={end} />
     </ScrollArea>
@@ -72,7 +73,7 @@ export function JobsPanel(): React.JSX.Element {
       <div className="flex h-10 items-center gap-3 px-3 text-xs">
         <button className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground" onClick={() => setJobsOpen(!jobsOpen)}>
           <ChevronDown className={cn('size-3.5 transition-transform', !jobsOpen && 'rotate-180')} />
-          任务
+          {tr('任务')}
           {active.length > 0 && <Badge variant="secondary" className="h-4 px-1.5 text-[10px]">{active.length}</Badge>}
         </button>
         {running ? (
@@ -82,17 +83,17 @@ export function JobsPanel(): React.JSX.Element {
             {running.progress && <span className="truncate text-muted-foreground">· {running.progress}</span>}
             <span className="shrink-0 text-muted-foreground tabular-nums">{elapsed(running, now)}</span>
             <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => cancel.mutate(running.id)}>
-              <CircleStop /> 停止
+              <CircleStop /> {tr('停止')}
             </Button>
           </div>
         ) : (
-          <span className="flex-1 text-muted-foreground">空闲</span>
+          <span className="flex-1 text-muted-foreground">{tr('空闲')}</span>
         )}
       </div>
       {jobsOpen && (
         <div className="flex h-[calc(100%-2.5rem)] border-t">
           <ScrollArea className="w-80 shrink-0 border-r">
-            {recent.length === 0 && <p className="p-4 text-xs text-muted-foreground">还没有任务。</p>}
+            {recent.length === 0 && <p className="p-4 text-xs text-muted-foreground">{tr('还没有任务。')}</p>}
             {recent.map((j) => (
               <button
                 key={j.id}

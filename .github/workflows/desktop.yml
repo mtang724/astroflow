@@ -66,4 +66,6 @@ jobs:
           path: |
             desktop/dist/*.exe
             desktop/dist/*.dmg
+            desktop/dist/*.blockmap
+            desktop/dist/latest*.yml
           if-no-files-found: error

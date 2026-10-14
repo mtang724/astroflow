@@ -19,6 +19,7 @@ from collections import deque
 from dataclasses import dataclass, field
 
 from .. import jobctx
+from ..i18n import tr
 
 
 @dataclass
@@ -69,6 +70,9 @@ STEPS = {             # events that move a job to its next step
     "stage.started": lambda d: f"{d['stage']} ({d['index'] + 1}/{d['total']})",
     "comet.step": lambda d: f"comet: {d['step']} ({d['index'] + 1}/{d['total']})",
     "organize.item": lambda d: f"{d['target']} ({d['index'] + 1}/{d['total']})",
+    "frames.progress": lambda d: tr("{done}/{n} 帧", done=d["index"] + 1, n=d["total"]),
+    "combine.progress": lambda d: tr("{done}/{n} 个文件", done=d["index"], n=d["total"]),
+    "cleanup.item": lambda d: f"{d['target']} ({d['index'] + 1}/{d['total']})",
 }
 DOING = {             # what the current step is doing right now
     "pi.waiting": lambda d: f"waiting: {d['reason']}",

@@ -1,9 +1,10 @@
 """Import a night's raw frames into the workspace, each target with the calibration frames it needs.
 
-Frames are recognised by their FITS headers, so any capture program and any folder layout works (ASIAIR, NINA,
-SharpCap, Ekos, a memory card, or a target folder that already holds Light/Dark/Bias/Flat): the frame type comes from
-IMAGETYP (else from the file or folder name), the target from OBJECT, the night from the capture time (local time minus
-12 h, so frames after midnight stay with the evening). Lights are grouped by target and night into
+Frames are recognised by their headers, so any capture program and any folder layout works (ASIAIR, NINA, SharpCap,
+Ekos, a memory card, or a target folder that already holds Light/Dark/Bias/Flat), and so do a camera's own RAW files
+(CR2, CR3, NEF, ARW, DNG, RAF ...: astroflow.frameio): the frame type comes from IMAGETYP (else from the file or folder
+name; RAW files never record it), the target from OBJECT (else the folder name), the night from the capture time (local
+time minus 12 h, so frames after midnight stay with the evening). Lights are grouped by target and night into
 
     <data root>/In Processing/<YYYYMonDD>/<Target>/{Light,Dark,Bias,Flat}
 
@@ -36,9 +37,9 @@ from pathlib import Path
 
 from astropy.io import fits
 
-from . import config, jobctx
+from . import config, frameio, jobctx, multinight
+from .i18n import mark, tr
 
-FITS_SUFFIXES = (".fit", ".fits")
 FOLDER = {"light": "Light", "dark": "Dark", "darkflat": "Dark", "bias": "Bias", "flat": "Flat"}
 IMAGETYP = {"light": "Light", "dark": "Dark", "darkflat": "Dark Flat", "bias": "Bias", "flat": "Flat"}
 PRODUCT_DIRS = {"output", "calibrated", "registered", "debayered", "cosmetized", "master", "masters", "logs",
@@ -46,7 +47,7 @@ PRODUCT_DIRS = {"output", "calibrated", "registered", "debayered", "cosmetized",
 TEMP_TOLERANCE = 1.0          # °C between set-points; 0.5 °C changes IMX571 dark current by only ~6 %
 SENSOR_TEMP_TOLERANCE = 3.0   # °C between measured sensor temperatures, when no set-point was recorded
 ROTATOR_WARN_DEG = 3
-ORIGIN_LABEL = {"import": "随数据", "library": "校准帧库", "target": "目标已有"}
+ORIGIN_LABEL = {"import": mark("随数据"), "library": mark("校准帧库"), "target": mark("目标已有")}
 
 
 def root():
@@ -138,9 +139,9 @@ def local_time(path, h):
 
 
 def read_meta(path):
-    """What matching needs from one frame's FITS header; "type" is None when the header does not say."""
+    """What matching needs from one frame's header (FITS, or a RAW file's EXIF); "type" is None when it does not say."""
     path = Path(path)
-    h = fits.getheader(path)
+    h = frameio.header(path)
     imagetyp = str(_first(h, "IMAGETYP", "FRAME", "FRAMETYP") or "")
     gain, iso = _first(h, "GAIN"), _first(h, "ISO", "ISOSPEED")
     m = {"path": path,
@@ -180,7 +181,7 @@ def scan(folder, skip=(), origin="import"):
         dirnames[:] = sorted(n for n in dirnames if not _product_dir(n) and (d / n).resolve() not in skip)
         for name in sorted(filenames):
             p = d / name
-            if p.suffix.lower() not in FITS_SUFFIXES:
+            if not frameio.is_frame(p):
                 continue
             if name.lower().startswith("preview_"):
                 previews += 1
@@ -200,13 +201,18 @@ def scan(folder, skip=(), origin="import"):
             frames.append(m)
     notes = []
     if unreadable:
-        notes.append(f"{len(unreadable)} 个文件读不了：{'，'.join(unreadable[:5])}{' …' if len(unreadable) > 5 else ''}")
+        notes.append(tr("{n} 个文件读不了：{files}", n=len(unreadable), files=_some(unreadable)))
     if untyped:
-        notes.append(f"{len(untyped)} 个文件看不出是光照帧还是校准帧（文件头没有 IMAGETYP，文件名和文件夹名也看不出）："
-                     f"{'，'.join(untyped[:5])}{' …' if len(untyped) > 5 else ''}")
+        notes.append(tr("{n} 个文件看不出是光照帧还是校准帧（文件头没有 IMAGETYP，文件名和文件夹名也看不出）：{files}",
+                        n=len(untyped), files=_some(untyped)))
     if previews:
-        notes.append(f"跳过了 {previews} 张 ASIAIR 预览图（Preview_*）")
+        notes.append(tr("跳过了 {n} 张 ASIAIR 预览图（Preview_*）", n=previews))
     return frames, notes
+
+
+def _some(names):
+    """The first few names of a list, for a note."""
+    return tr("，").join(names[:5]) + (" …" if len(names) > 5 else "")
 
 
 def _type_from_folders(path, top):
@@ -325,17 +331,19 @@ def match_calibration(lights, sources):
         darks = _first_match(sources, ref, _dark_for, _closest)
         gap = _temp_gap(ref, darks[0])[0] if darks else None
         if not darks:
-            warnings.append(f"缺少暗场：{_need(ref, exposure=True)}")
+            warnings.append(tr("缺少暗场：{need}", need=_need(ref, exposure=True)))
         elif gap:
-            warnings.append(f"暗场 {_temp_of(darks[0]):g} °C，光照帧 {_temp_of(ref):g} °C（在 {TEMP_TOLERANCE:g} °C 容差内）")
+            warnings.append(tr("暗场 {dark} °C，光照帧 {light} °C（在 {tolerance} °C 容差内）",
+                               dark=f"{_temp_of(darks[0]):g}", light=f"{_temp_of(ref):g}", tolerance=f"{TEMP_TOLERANCE:g}"))
         elif gap is None and darks[0]["night"] != ref["night"]:
-            warnings.append(f"相机没有记录温度，暗场是 {darks[0]['night']} 拍的，不是同一晚，可能不完全匹配")
+            warnings.append(tr("相机没有记录温度，暗场是 {night} 拍的，不是同一晚，可能不完全匹配", night=darks[0]["night"]))
         found["darks"] += darks
     flat_sets = []
     for ref in _distinct(lights, ("camera", "size", "bin", "filter")):
         flats = _first_match(sources, ref, _flat_for, _everything)
         if not flats:
-            warnings.append(f"缺少这一晚的平场：{ref['night']}{'，滤镜 ' + ref['filter'] if ref['filter'] else ''}")
+            warnings.append(tr("缺少这一晚的平场：{night}，滤镜 {filter}", night=ref["night"], filter=ref["filter"])
+                            if ref["filter"] else tr("缺少这一晚的平场：{night}", night=ref["night"]))
         found["flats"] += flats
         flat_sets += _distinct(flats, ("camera", "size", "bin", "gain", "offset", "exptime"))
     dark_flats = [c for f in flat_sets for c in _first_match(sources, f, _darkflat_for, _closest)]
@@ -343,12 +351,13 @@ def match_calibration(lights, sources):
     for ref in _distinct(lights, ("camera", "size", "bin", "gain", "offset", "settemp")):
         bias = _first_match(sources, ref, _bias_for, _closest)
         if not bias and not dark_flats:
-            warnings.append(f"缺少偏置：{_need(ref)}")
+            warnings.append(tr("缺少偏置：{need}", need=_need(ref)))
         found["bias"] += bias
     light_rot = {lt["rotator"] for lt in lights if lt["rotator"] is not None}
     flat_rot = {f["rotator"] for f in found["flats"] if f["rotator"] is not None}
     if light_rot and flat_rot and max(abs(a - b) for a in light_rot for b in flat_rot) > ROTATOR_WARN_DEG:
-        warnings.append(f"平场和光照帧的旋转角度不同：光照帧 {sorted(light_rot)}，平场 {sorted(flat_rot)}")
+        warnings.append(tr("平场和光照帧的旋转角度不同：光照帧 {lights}，平场 {flats}", lights=sorted(light_rot),
+                           flats=sorted(flat_rot)))
     return {k: list({m["path"]: m for m in v}.values()) for k, v in found.items()}, warnings
 
 
@@ -392,19 +401,20 @@ def build_plan(sources=None, refresh=False):
         used = {m["path"] for it in plan for k in ("darks", "bias", "flats") for m in it[k]}
         unused = [m for m in calibration if m["path"] not in used]
         if unused:
-            notes.append(f"导入的文件夹里有 {describe(unused)} 没有用上（没有和它们相配的光照帧）")
+            notes.append(tr("导入的文件夹里有 {frames} 没有用上（没有和它们相配的光照帧）", frames=describe(unused)))
     elif calibration:
         new = [m for m in calibration if not _in_library(m["path"])]     # importing the library itself adds nothing
         if new:
             plan.append(_library_item(new))
         plan += _complete_staged(calibration)
     if not frames:
-        notes.append("没有找到可用的 FITS 图像（.fit / .fits）")
+        notes.append(tr("没有找到可用的图像（FITS 或相机 RAW 文件）"))
     return plan, notes
 
 
 def staged_targets():
-    return sorted(d for d in staging().glob("*/*") if (d / "Light").is_dir())
+    """Night targets in In Processing (not multi-night ones: those link to their nights' frames)."""
+    return sorted(d for d in staging().glob("*/*") if (d / "Light").is_dir() and not multinight.is_combined(d))
 
 
 def _complete_staged(candidates):
@@ -430,7 +440,7 @@ def _in_library(path):
 
 def _library_item(frames):
     nights = sorted({str(m["night"]) for m in frames})
-    return {"kind": "library", "target": "校准帧库", "night": nights[0] if len(nights) == 1 else f"{nights[0]} – {nights[-1]}",
+    return {"kind": "library", "target": tr("校准帧库"), "night": nights[0] if len(nights) == 1 else f"{nights[0]} – {nights[-1]}",
             "dest": root(), "lights": [], "darks": [m for m in frames if m["type"] in ("dark", "darkflat")],
             "bias": [m for m in frames if m["type"] == "bias"], "flats": [m for m in frames if m["type"] == "flat"],
             "warnings": [], "lights_in_place": True}
@@ -469,13 +479,13 @@ def _gain_text(m):
     if m["gain"] is None:
         return ""
     g = f"{m['gain']:g}" if isinstance(m["gain"], float) else m["gain"]
-    return f"ISO {g}" if m["iso"] else f"增益 {g}"
+    return f"ISO {g}" if m["iso"] else tr("增益 {gain}", gain=g)
 
 
 def _need(ref, exposure=False):
     parts = [_exposure_text(ref["exptime"]) if exposure else "", _gain_text(ref),
              f"{ref['settemp']:g} °C" if ref["settemp"] is not None else ""]
-    return "、".join(p for p in parts if p) or "这台相机"
+    return tr("、").join(p for p in parts if p) or tr("这台相机")
 
 
 def describe(frames):
@@ -484,7 +494,7 @@ def describe(frames):
     for m in frames:
         temp = f"{m['settemp']:g} °C" if m["settemp"] is not None else ""
         counts[(round(m["exptime"], 4), _gain_text(m), temp, m["filter"] or "")] += 1
-    return "，".join(" · ".join(p for p in (f"{n} × {_exposure_text(e)}", g, t, f) if p)
+    return tr("，").join(" · ".join(p for p in (f"{n} × {_exposure_text(e)}", g, t, f) if p)
                     for (e, g, t, f), n in sorted(counts.items())) or "-"
 
 
@@ -516,17 +526,20 @@ def imported_counts(plan):
 
 
 def print_plan(plan, notes):
-    kinds = {"target": "新目标", "fill": "补全已有目标", "library": "加入校准帧库"}
+    kinds = {"target": tr("新目标"), "fill": tr("补全已有目标"), "library": tr("加入校准帧库")}
     for row in summary(plan):
-        print(f"\n=== {kinds[row['kind']]}：{row['target']}  {row['night']}  -> {row['dest']}  （要复制 {row['to_copy']} 个文件）")
-        for key, label in (("lights", "光照帧"), ("darks", "暗场"), ("bias", "偏置"), ("flats", "平场")):
+        print("\n=== " + tr("{kind}：{target}  {night}  -> {dest}  （要复制 {n} 个文件）", kind=kinds[row["kind"]],
+                                target=row["target"], night=row["night"], dest=row["dest"], n=row["to_copy"]))
+        for key, label in (("lights", mark("光照帧")), ("darks", mark("暗场")), ("bias", mark("偏置")),
+                           ("flats", mark("平场"))):
             fs = row[key]
-            origin = ORIGIN_LABEL.get(fs["origin"], "多处" if fs["origin"] == "mixed" else "")
-            print(f"  {label}：{fs['detail']}{'（' + origin + '）' if origin else ''}")
+            origin = tr(ORIGIN_LABEL[fs["origin"]]) if fs["origin"] in ORIGIN_LABEL else \
+                tr("多处") if fs["origin"] == "mixed" else ""
+            print(f"  {tr(label)}：{fs['detail']}" + (f"（{origin}）" if origin else ""))
         for w in row["warnings"]:
             print(f"  !! {w}")
     for n in notes:
-        print(f"\n（注意）{n}")
+        print("\n" + tr("（注意）{note}", note=n))
 
 
 # ----------------------------------------------------------------------------------------------- carrying out
@@ -534,7 +547,10 @@ def print_plan(plan, notes):
 def copy_or_move(src, dst_dir, move, imagetyp=None):
     """Copy (or move) a file into dst_dir. A copy is written as <name>.partial and renamed when complete, so an import
     cut short (Cancel, app closed, card pulled) never leaves a truncated frame under the real name. imagetyp: write it
-    into the copy's header (the original lacks one; WBPP sorts frames by it)."""
+    into the copy's header (the original lacks one; WBPP sorts frames by it). RAW files cannot take one: WBPP reads
+    their type from the folder name (Light, Dark, Flat, Bias)."""
+    if imagetyp and frameio.is_raw(src):
+        imagetyp = None
     jobctx.check_cancelled()
     dst_dir.mkdir(parents=True, exist_ok=True)
     dst = dst_dir / src.name

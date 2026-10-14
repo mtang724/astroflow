@@ -8,6 +8,7 @@ The user's edits are stored in <target>/Post/params.json ({stage: {step_id: {key
 run applies them (pipeline.saved_overrides). Only this module writes that file: the pipeline keeps its own state.json,
 which a running job rewrites while the user may be editing.
 """
+import json
 import threading
 
 from .. import jsonfile, pipeline
@@ -62,6 +63,14 @@ def set_field(target_dir, stage, step_id, key, value):
             step.pop(key, None)
         else:
             step[key] = value
+        _prune(ov)
+        jsonfile.write(pipeline.params_path(target_dir), ov)
+
+
+def replace(target_dir, ov):
+    """All of the target's edits at once (a saved style: services.presets)."""
+    with _lock:
+        ov = json.loads(json.dumps(ov))                  # a copy: the caller's dict is not pruned
         _prune(ov)
         jsonfile.write(pipeline.params_path(target_dir), ov)
 

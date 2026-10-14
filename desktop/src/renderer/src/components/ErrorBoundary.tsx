@@ -1,6 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { tr } from '@/lib/i18n'
 
 interface Props {
   children: ReactNode
@@ -35,10 +36,10 @@ export class ErrorBoundary extends Component<Props, State> {
       <div className="flex h-full items-center justify-center p-8">
         <div className="max-w-md text-center">
           <TriangleAlert className="mx-auto mb-3 size-8 text-warn" />
-          <p className="text-sm font-medium">这个面板出错了</p>
+          <p className="text-sm font-medium">{tr('这个面板出错了')}</p>
           <p className="mt-1 font-mono text-xs break-all text-muted-foreground">{this.state.error.message}</p>
           <Button variant="secondary" size="sm" className="mt-4" onClick={() => this.setState({ error: null })}>
-            重试
+            {tr('重试')}
           </Button>
         </div>
       </div>

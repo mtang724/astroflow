@@ -12,32 +12,34 @@ import { api, call, type AgentEvent, type AgentSession } from '@/api/client'
 import { useJobs } from '@/api/hooks'
 import { useAgentStore } from '@/state/agent'
 import { useUi } from '@/state/ui'
+import { mark, tr } from '@/lib/i18n'
+import { label } from '@/lib/labels'
 import { cn } from 'cn'
 
 const QUICK_PROMPTS = [
-  '按流程完整处理这个目标，并和参考作品比较',
-  '饱和度再高一点，背景再暗一点',
-  '和参考作品比一下，还差在哪里？',
-  '只重做无星图增强（starless）阶段'
+  mark('按流程完整处理这个目标，并和参考作品比较'),
+  mark('饱和度再高一点，背景再暗一点'),
+  mark('和参考作品比一下，还差在哪里？'),
+  mark('只重做无星图增强（starless）阶段')
 ]
 
 const TOOL_LABELS: Record<string, string> = {
-  inspect_target: '查看目标',
-  list_targets: '列出目标',
-  load_skill: '加载技能',
-  read_skill_file: '读技能资料',
-  read_knowledge: '查资料库',
-  show_recipe: '查看配方',
-  get_references: '参考作品',
-  organize: '整理文件',
-  stack: 'WBPP 叠加',
-  comet_stack: '彗星叠加',
-  run_stage: '运行阶段',
-  look: '看图',
-  compare_with_references: '与参考对比',
-  export_crop: '裁切导出',
-  remember: '记录经验',
-  finish: '完成并写报告'
+  inspect_target: mark('查看目标'),
+  list_targets: mark('列出目标'),
+  load_skill: mark('加载技能'),
+  read_skill_file: mark('读技能资料'),
+  read_knowledge: mark('查资料库'),
+  show_recipe: mark('查看配方'),
+  get_references: mark('参考作品'),
+  organize: mark('整理文件'),
+  stack: mark('WBPP 叠加'),
+  comet_stack: mark('彗星叠加'),
+  run_stage: mark('运行阶段'),
+  look: mark('看图'),
+  compare_with_references: mark('与参考对比'),
+  export_crop: mark('裁切导出'),
+  remember: mark('记录经验'),
+  finish: mark('完成并写报告')
 }
 
 type Item =
@@ -50,10 +52,11 @@ function toItems(events: AgentEvent[]): Item[] {
     const d = e.data as Record<string, unknown>
     if (e.kind === 'user' || e.kind === 'assistant') items.push({ kind: e.kind, text: String(d.text ?? ''), t: e.t })
     else if (e.kind === 'error') items.push({ kind: 'error', text: String(d.message ?? ''), t: e.t })
-    else if (e.kind === 'cancelled') items.push({ kind: 'cancelled', text: '已取消', t: e.t })
+    else if (e.kind === 'cancelled') items.push({ kind: 'cancelled', text: tr('已取消'), t: e.t })
     else if (e.kind === 'done') {
       const usage = d.usage as { prompt?: number; completion?: number } | undefined
-      items.push({ kind: 'done', text: usage ? `用量 ${usage.prompt ?? 0} + ${usage.completion ?? 0} tokens` : '', t: e.t })
+      const text = usage ? tr('用量 {prompt} + {completion} tokens', { prompt: usage.prompt ?? 0, completion: usage.completion ?? 0 }) : ''
+      items.push({ kind: 'done', text, t: e.t })
     } else if (e.kind === 'tool_call') {
       items.push({ kind: 'tool', tool: String(d.tool), args: (d.args as Record<string, unknown>) ?? {}, t: e.t })
     } else if (e.kind === 'tool_result' || e.kind === 'job') {
@@ -63,7 +66,14 @@ function toItems(events: AgentEvent[]): Item[] {
         open.result = String(d.text ?? '')
         open.ok = Boolean(d.ok)
       } else {
-        const p = d.kind === 'stage.started' ? `阶段 ${d.stage}` : d.kind === 'pi.started' ? `PixInsight ${d.script}` : d.kind === 'comet.step' ? `彗星：${d.step}` : null
+        const p =
+          d.kind === 'stage.started'
+            ? tr('阶段 {stage}', { stage: String(d.stage) })
+            : d.kind === 'pi.started'
+              ? `PixInsight ${d.script}`
+              : d.kind === 'comet.step'
+                ? tr('彗星：{step}', { step: String(d.step) })
+                : null
         if (p) open.progress = p
       }
     }
@@ -87,14 +97,14 @@ function ToolCard({ item }: { item: Extract<Item, { kind: 'tool' }> }): React.JS
         ) : (
           <TriangleAlert className="size-3.5 shrink-0 text-destructive" />
         )}
-        <span className="font-medium">{TOOL_LABELS[item.tool] ?? item.tool}</span>
+        <span className="font-medium">{label(TOOL_LABELS, item.tool)}</span>
         <span className="min-w-0 flex-1 truncate font-mono text-muted-foreground">{args}</span>
         {running && item.progress && <span className="shrink-0 text-muted-foreground">{item.progress}</span>}
         <ChevronRight className="size-3.5 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-90" />
       </CollapsibleTrigger>
       <CollapsibleContent>
         <pre className="max-h-72 overflow-auto border-t px-3 py-2 font-mono text-[11px] whitespace-pre-wrap text-muted-foreground">
-          {item.result ?? '运行中…'}
+          {item.result ?? tr('运行中…')}
         </pre>
       </CollapsibleContent>
     </Collapsible>
@@ -160,7 +170,7 @@ export function AgentChat({ target }: { target: string }): React.JSX.Element {
       setJobId(j.id)
       setText('')
     } catch (e) {
-      toast.error('发送失败', { description: (e as Error).message })
+      toast.error(tr('发送失败'), { description: (e as Error).message })
     }
   }
   const cancel = (): void => {
@@ -174,20 +184,20 @@ export function AgentChat({ target }: { target: string }): React.JSX.Element {
           <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <Sparkles className="size-6" />
           </div>
-          <h2 className="text-base font-medium">AI 处理助手</h2>
+          <h2 className="text-base font-medium">{tr('AI 处理助手')}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            它会读拍摄数据和资料库、按配方跑 PixInsight、看每一步的结果、和高赞作品比较并自己调参。你也可以直接告诉它想要的效果。
+            {tr('它会读拍摄数据和资料库、按配方跑 PixInsight、看每一步的结果、和高赞作品比较并自己调参。你也可以直接告诉它想要的效果。')}
           </p>
           {error && (
             <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-left text-xs text-destructive">
               {error}
               <Button variant="link" size="sm" className="h-auto p-0 pl-1 text-xs" onClick={() => setSettingsOpen(true)}>
-                <KeyRound /> 去设置模型和密钥
+                <KeyRound /> {tr('去设置模型和密钥')}
               </Button>
             </div>
           )}
           <Button className="mt-5" onClick={() => void start()}>
-            <Bot /> 开始对话
+            <Bot /> {tr('开始对话')}
           </Button>
         </div>
       </div>
@@ -198,16 +208,16 @@ export function AgentChat({ target }: { target: string }): React.JSX.Element {
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 border-b px-6 py-2 text-xs text-muted-foreground">
         <Bot className="size-3.5" /> {session.provider} · {session.model}
-        {!session.vision && <Badge variant="outline" className="text-[10px]">无视觉模型：只按指标判断</Badge>}
-        {!session.native_tools && <Badge variant="outline" className="text-[10px]">提示词工具模式</Badge>}
+        {!session.vision && <Badge variant="outline" className="text-[10px]">{tr('无视觉模型：只按指标判断')}</Badge>}
+        {!session.native_tools && <Badge variant="outline" className="text-[10px]">{tr('提示词工具模式')}</Badge>}
       </div>
       <ScrollArea className="min-h-0 flex-1">
         <div className="mx-auto max-w-3xl space-y-3 px-6 py-5">
           {items.length === 0 && (
             <div className="flex flex-wrap gap-2">
               {QUICK_PROMPTS.map((p) => (
-                <Button key={p} variant="outline" size="sm" className="h-auto py-1.5 text-xs whitespace-normal" onClick={() => void send(p)}>
-                  {p}
+                <Button key={p} variant="outline" size="sm" className="h-auto py-1.5 text-xs whitespace-normal" onClick={() => void send(tr(p))}>
+                  {tr(p)}
                 </Button>
               ))}
             </div>
@@ -231,7 +241,8 @@ export function AgentChat({ target }: { target: string }): React.JSX.Element {
           )}
           {working && (
             <p className="flex items-center gap-2 text-xs text-muted-foreground">
-              <LoaderCircle className="size-3.5 animate-spin" /> 思考和处理中{job?.progress ? ` · ${job.progress}` : ''}
+              <LoaderCircle className="size-3.5 animate-spin" /> {tr('思考和处理中')}
+              {job?.progress ? ` · ${job.progress}` : ''}
             </p>
           )}
           <div ref={end} />
@@ -248,12 +259,12 @@ export function AgentChat({ target }: { target: string }): React.JSX.Element {
                 void send(text)
               }
             }}
-            placeholder="告诉 AI 想要什么效果，例如“星点小一点，彗尾再蓝一点”（Enter 发送，Shift+Enter 换行）"
+            placeholder={tr('告诉 AI 想要什么效果，例如“星点小一点，彗尾再蓝一点”（Enter 发送，Shift+Enter 换行）')}
             className="max-h-40 min-h-11 resize-none text-sm"
           />
           {working ? (
             <Button variant="secondary" onClick={cancel}>
-              <CircleStop /> 停止
+              <CircleStop /> {tr('停止')}
             </Button>
           ) : (
             <Button onClick={() => void send(text)} disabled={!text.trim()}>

@@ -24,13 +24,19 @@ React renderer (src/renderer)       served by the backend (packaged) or Vite (de
 - **Files with one writer each.** `Post/state.json` belongs to the pipeline (written by jobs), `Post/params.json` to the parameter panel; every run applies `params.json`, whether it comes from the app, the agent or the command line. JSON state files are written atomically.
 
 ```
-src/main/        index.ts (window, IPC: folder/file pickers, open path), backend.ts (spawn, readiness, shutdown)
+src/main/        index.ts (window, IPC: folder/file pickers, open path, notifications), backend.ts (spawn, readiness,
+                 shutdown), updates.ts (new versions from GitHub releases)
 src/preload/     the only native capabilities the renderer gets (types.d.ts)
 src/renderer/src/
   api/           client.ts (typed fetch), events.ts (WebSocket), hooks.ts (queries, mutations, event -> cache)
   state/         ui.ts (selection, dialogs, viewer), agent.ts (chat events), jobLogs.ts
-  features/      layout (top bar, sidebar), target (overview, pipeline parameters, gallery), agent (chat),
-                 jobs (queue + live log), settings, import (organise plan), viewer (zoom / compare)
+  features/      layout (top bar, sidebar), target (overview, nights, pipeline parameters, styles, archive, gallery),
+                 frames (single-frame check), share (share pictures), batch (process everything), storage (disk
+                 space), agent (chat), jobs (queue + live log), settings, setup, import (organise plan), viewer,
+                 updates (new version dialog)
+  lib/           notify.ts (a system notification when the queue drains in the background), i18n.ts (tr / mark),
+                 updates.ts (update state from the main process), labels, desktop bridge
+  locales/       en.json: English for every UI text, keyed by the Chinese text (backend: astroflow/locales/en.py)
   components/ui  shadcn/ui components (added with `npx shadcn add ...`)
 ```
 
@@ -52,6 +58,14 @@ npm run dev:web    # then open http://localhost:5173/?t=dev
 
 Other scripts: `npm run typecheck`, `npm run gen:api` (after changing `astroflow/api/models.py`), `npm run build`.
 
+Text shown to the user is written in Chinese and passed through `tr('…{x}…', { x })` (or `mark('…')` for module-level
+constants that are translated where shown); its English goes into `src/renderer/src/locales/en.json`, with the Chinese
+text as the key. The backend does the same with `tr` / `mark` from `astroflow/i18n.py` and `astroflow/locales/en.py`.
+`tests/test_i18n.py` fails when a text has no English or its placeholders differ.
+
+To try the update flow without a release, serve a folder holding a `latest.yml`, the installer and its `.blockmap`
+over HTTP and start the app with `ASTROFLOW_UPDATE_FEED=http://localhost:<port>/`.
+
 > If Electron starts as plain Node (`Cannot read properties of undefined (reading 'requestSingleInstanceLock')`), the shell has `ELECTRON_RUN_AS_NODE` set (VS Code's extension host does that): unset it.
 
 ## Packaging
@@ -65,6 +79,10 @@ cd desktop && npm run dist:mac                   # on a Mac -> desktop/dist/astr
 `.github/workflows/desktop.yml` builds both on GitHub (Actions → desktop → Run workflow). macOS builds are only
 ad-hoc signed unless Developer ID secrets are configured; the first launch of a downloaded copy then needs
 System Settings → Privacy & Security → Open Anyway.
+
+A release must carry `latest.yml` and `astroflow-<version>-setup.exe.blockmap` next to the Windows installer (both are
+written by `npm run dist:win` and uploaded by the workflow): installed Windows copies find new versions through them.
+macOS copies only compare with the latest release on GitHub and open its page.
 
 The packaged app keeps its knowledge base in the per-user data folder (seeded from the bundled copy), PixInsight
 job files in the per-user cache folder, and settings in `%APPDATA%\astroflow` / `~/Library/Application Support/astroflow`.

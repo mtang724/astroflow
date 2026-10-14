@@ -17,6 +17,13 @@ extraResources:
   - from: out/renderer
     to: renderer
 asar: true
+# New versions come from the GitHub releases (src/main/updates.ts). Building writes latest.yml and the installer's
+# .blockmap next to it: attach both to the release with the installer, or installed apps cannot update to it.
+publish:
+  provider: github
+  owner: mtang724
+  repo: astroflow
+  releaseType: release
 win:
   target:
     - target: nsis

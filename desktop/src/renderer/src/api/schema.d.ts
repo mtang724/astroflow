@@ -235,6 +235,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/targets/nights": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Target Nights
+         * @description The target's nights in In Processing and its multi-night target (astroflow.multinight).
+         */
+        get: operations["target_nights_api_targets_nights_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/storage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Disk Usage
+         * @description Disk space of every target, most removable first.
+         */
+        get: operations["disk_usage_api_storage_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/targets/session": {
         parameters: {
             query?: never;
@@ -340,6 +380,144 @@ export interface paths {
         put?: never;
         /** Organize Plan */
         post: operations["organize_plan_api_organize_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/frames": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Frames */
+        get: operations["frames_api_frames_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/frames/exclude": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exclude */
+        post: operations["exclude_api_frames_exclude_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/frames/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore */
+        post: operations["restore_api_frames_restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Presets */
+        get: operations["list_presets_api_presets_get"];
+        put?: never;
+        /** Save Preset */
+        post: operations["save_preset_api_presets_post"];
+        /** Delete Preset */
+        delete: operations["delete_preset_api_presets_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/presets/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Apply Preset */
+        post: operations["apply_preset_api_presets_apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share/info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Info */
+        get: operations["info_api_share_info_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview */
+        post: operations["preview_api_share_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export */
+        post: operations["export_api_share_export_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -499,6 +677,114 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/actions/frames": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check Frames */
+        post: operations["check_frames_api_actions_frames_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/combine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Combine Nights */
+        post: operations["combine_nights_api_actions_combine_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/batch/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Batch Plan
+         * @description What processing everything would do for each target.
+         */
+        get: operations["batch_plan_api_batch_plan_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Process All
+         * @description One job per target, each doing everything that target still needs (actions.run_all).
+         */
+        post: operations["process_all_api_actions_batch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/cleanup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Free Space */
+        post: operations["free_space_api_actions_cleanup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/actions/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive */
+        post: operations["archive_api_actions_archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/agent/sessions": {
         parameters: {
             query?: never;
@@ -630,6 +916,56 @@ export interface components {
             /** Events */
             events: components["schemas"]["AgentEvent"][];
         };
+        /** ArchiveIn */
+        ArchiveIn: {
+            /** Path */
+            path: string;
+            /**
+             * Clean
+             * @default false
+             */
+            clean?: boolean;
+        };
+        /** BatchIn */
+        BatchIn: {
+            /** Paths */
+            paths: string[];
+        };
+        /** BatchOut */
+        BatchOut: {
+            /** Jobs */
+            jobs: components["schemas"]["Job"][];
+            /** Skipped */
+            skipped: components["schemas"]["BatchRow"][];
+        };
+        /** BatchRow */
+        BatchRow: {
+            /** Path */
+            path: string;
+            /** Name */
+            name: string;
+            /** Night */
+            night: string;
+            /**
+             * Nights
+             * @default []
+             */
+            nights?: string[];
+            /** Steps */
+            steps: ("stack" | "comet" | "process")[];
+            /** Skip */
+            skip?: string | null;
+        };
+        /** CleanupIn */
+        CleanupIn: {
+            /** Paths */
+            paths: string[];
+        };
+        /** CombineIn */
+        CombineIn: {
+            /** Nights */
+            nights: string[];
+        };
         /** CometIn */
         CometIn: {
             /** Path */
@@ -672,6 +1008,60 @@ export interface components {
              */
             edited?: boolean;
         };
+        /** FrameCheckIn */
+        FrameCheckIn: {
+            /** Path */
+            path: string;
+            /**
+             * Force
+             * @default false
+             */
+            force?: boolean;
+        };
+        /** FrameReport */
+        FrameReport: {
+            /** Frames */
+            frames: components["schemas"]["FrameRow"][];
+            /**
+             * Fwhm Unit
+             * @enum {string}
+             */
+            fwhm_unit: "arcsec" | "px";
+            /** Scale */
+            scale?: number | null;
+            /** Restack */
+            restack: boolean;
+            summary: components["schemas"]["FrameSummary"];
+        };
+        /** FrameRow */
+        FrameRow: {
+            /** Name */
+            name: string;
+            /** Path */
+            path: string;
+            /** Excluded */
+            excluded: boolean;
+            /** Measured */
+            measured: boolean;
+            /** Error */
+            error?: string | null;
+            /** Thumb */
+            thumb: string;
+            /** Time */
+            time?: string | null;
+            /** Exptime */
+            exptime?: number | null;
+            /** Stars */
+            stars?: number | null;
+            /** Fwhm */
+            fwhm?: number | null;
+            /** Ecc */
+            ecc?: number | null;
+            /** Background */
+            background?: number | null;
+            /** Flags */
+            flags: string[];
+        };
         /** FrameSet */
         FrameSet: {
             /** Count */
@@ -683,6 +1073,32 @@ export interface components {
              * @enum {string}
              */
             origin: "import" | "library" | "target" | "mixed" | "";
+        };
+        /** FrameSummary */
+        FrameSummary: {
+            /** Total */
+            total: number;
+            /** Measured */
+            measured: number;
+            /** Excluded */
+            excluded: number;
+            /** Suspicious */
+            suspicious: number;
+            /** Stars */
+            stars?: number | null;
+            /** Fwhm */
+            fwhm?: number | null;
+            /** Ecc */
+            ecc?: number | null;
+            /** Background */
+            background?: number | null;
+        };
+        /** FramesIn */
+        FramesIn: {
+            /** Path */
+            path: string;
+            /** Names */
+            names: string[];
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -789,6 +1205,34 @@ export interface components {
              */
             seconds?: number;
         };
+        /** NightInfo */
+        NightInfo: {
+            /** Night */
+            night: string;
+            /** Path */
+            path: string;
+            /** Lights */
+            lights: number;
+        };
+        /** NightsOut */
+        NightsOut: {
+            /** Name */
+            name: string;
+            /** Nights */
+            nights: components["schemas"]["NightInfo"][];
+            /** Combined */
+            combined?: string | null;
+            /**
+             * Included
+             * @default []
+             */
+            included?: string[];
+            /**
+             * Missing
+             * @default []
+             */
+            missing?: string[];
+        };
         /** Ok */
         Ok: {
             /**
@@ -867,6 +1311,26 @@ export interface components {
         PathIn: {
             /** Path */
             path: string;
+        };
+        /** Preset */
+        Preset: {
+            /** Name */
+            name: string;
+            /** Recipe */
+            recipe: string;
+            /** Source */
+            source?: string | null;
+            /** Saved */
+            saved?: string | null;
+            /** Edits */
+            edits: number;
+        };
+        /** PresetIn */
+        PresetIn: {
+            /** Path */
+            path: string;
+            /** Name */
+            name: string;
         };
         /** ProcessIn */
         ProcessIn: {
@@ -999,6 +1463,11 @@ export interface components {
             checks: {
                 [key: string]: boolean;
             };
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "zh" | "en";
         };
         /** SettingsPatch */
         SettingsPatch: {
@@ -1106,6 +1575,70 @@ export interface components {
              */
             code?: string[];
         };
+        /** ShareInfo */
+        ShareInfo: {
+            /** Source */
+            source: string | null;
+            /**
+             * Width
+             * @default 0
+             */
+            width?: number;
+            /**
+             * Height
+             * @default 0
+             */
+            height?: number;
+            /**
+             * Caption
+             * @default []
+             */
+            caption?: string[];
+            /**
+             * Signature
+             * @default
+             */
+            signature?: string;
+            /**
+             * Crops
+             * @default {}
+             */
+            crops?: {
+                [key: string]: number[];
+            };
+        };
+        /** ShareOut */
+        ShareOut: {
+            /** File */
+            file: string;
+            /** Width */
+            width: number;
+            /** Height */
+            height: number;
+        };
+        /** ShareSpec */
+        ShareSpec: {
+            /** Path */
+            path: string;
+            /**
+             * Aspect
+             * @default 3:4
+             * @enum {string}
+             */
+            aspect?: "3:4" | "4:5" | "1:1" | "16:9" | "original";
+            /** Crop */
+            crop?: number[] | null;
+            /**
+             * Caption
+             * @default []
+             */
+            caption?: string[];
+            /**
+             * Signature
+             * @default
+             */
+            signature?: string;
+        };
         /** Stage */
         Stage: {
             /** Stage */
@@ -1139,6 +1672,40 @@ export interface components {
             /** Fields */
             fields: components["schemas"]["Field_"][];
         };
+        /** StoragePart */
+        StoragePart: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "frames" | "masters" | "wbpp_frames" | "checkpoints" | "results";
+            /** Bytes */
+            bytes: number;
+            /** Files */
+            files: number;
+            /** Removable */
+            removable: boolean;
+        };
+        /** StorageUsage */
+        StorageUsage: {
+            /** Path */
+            path: string;
+            /** Name */
+            name: string;
+            /** Night */
+            night: string;
+            /**
+             * Nights
+             * @default []
+             */
+            nights?: string[];
+            /** Total */
+            total: number;
+            /** Removable */
+            removable: number;
+            /** Parts */
+            parts: components["schemas"]["StoragePart"][];
+        };
         /** TargetDetail */
         TargetDetail: {
             /** Name */
@@ -1147,6 +1714,16 @@ export interface components {
             path: string;
             /** Night */
             night: string;
+            /**
+             * Nights
+             * @default []
+             */
+            nights?: string[];
+            /**
+             * Staged
+             * @default false
+             */
+            staged?: boolean;
             /** Lights */
             lights: number;
             /** Darks */
@@ -1203,6 +1780,16 @@ export interface components {
             path: string;
             /** Night */
             night: string;
+            /**
+             * Nights
+             * @default []
+             */
+            nights?: string[];
+            /**
+             * Staged
+             * @default false
+             */
+            staged?: boolean;
             /** Lights */
             lights: number;
             /** Darks */
@@ -1635,6 +2222,57 @@ export interface operations {
             };
         };
     };
+    target_nights_api_targets_nights_get: {
+        parameters: {
+            query: {
+                path: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NightsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    disk_usage_api_storage_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StorageUsage"][];
+                };
+            };
+        };
+    };
     set_session_api_targets_session_post: {
         parameters: {
             query?: never;
@@ -1868,6 +2506,328 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrganizePlan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    frames_api_frames_get: {
+        parameters: {
+            query: {
+                path: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FrameReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    exclude_api_frames_exclude_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FramesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FrameReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_api_frames_restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FramesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FrameReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_presets_api_presets_get: {
+        parameters: {
+            query?: {
+                recipe?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Preset"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_preset_api_presets_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PresetIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Preset"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_preset_api_presets_delete: {
+        parameters: {
+            query: {
+                name: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ok"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    apply_preset_api_presets_apply_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PresetIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ok"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    info_api_share_info_get: {
+        parameters: {
+            query: {
+                path: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareInfo"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_api_share_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShareSpec"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_api_share_export_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShareSpec"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareOut"];
                 };
             };
             /** @description Validation Error */
@@ -2138,6 +3098,191 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ReferencesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Job"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    check_frames_api_actions_frames_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FrameCheckIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Job"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    combine_nights_api_actions_combine_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CombineIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Job"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    batch_plan_api_batch_plan_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchRow"][];
+                };
+            };
+        };
+    };
+    process_all_api_actions_batch_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    free_space_api_actions_cleanup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CleanupIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Job"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_api_actions_archive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ArchiveIn"];
             };
         };
         responses: {

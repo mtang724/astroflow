@@ -1,12 +1,14 @@
 """Calibrate, register, integrate (and plate-solve) one target with WBPP's command-line automation mode.
 
-Settings not passed here come from the user's last WBPP session (Settings persisted by PixInsight).
+Settings not passed here come from the user's last WBPP session (Settings persisted by PixInsight). Frames may be FITS
+or camera RAW files (PixInsight's RAW module reads them; the folder name tells WBPP their type). A multi-night target
+(astroflow.multinight) groups calibration by night with the keyword NIGHT, read from its NIGHT_<night> folders.
 """
 import glob
 import re
 from pathlib import Path
 
-from . import config, pi
+from . import config, frameio, multinight, pi
 
 FRAME_DIRS = ("Light", "Dark", "Bias", "Flat")   # never pass the target folder itself: WBPP would ingest the JPG thumbnails
 
@@ -16,8 +18,10 @@ def wbpp_args(target_dir, platesolve=True, extra=None):
     args = ["automationMode=true"]
     for sub in FRAME_DIRS:
         d = target_dir / sub
-        if d.is_dir() and any(p.suffix.lower() in (".fit", ".fits", ".xisf") for p in d.iterdir()):
+        if frameio.frame_files(d) or (d.is_dir() and any(d.rglob("*.xisf"))):     # WBPP scans subfolders too
             args.append(f"dir={d.as_posix()}")
+    if multinight.is_combined(target_dir):
+        args.append(f"keywords={multinight.KEYWORD} pre")       # calibrate per night, integrate all together
     args += [f"outputDirectory={(target_dir / 'Output').as_posix()}",
              f"platesolve={'true' if platesolve else 'false'}",
              "platesolveFallbackManual=false",

@@ -6,6 +6,7 @@ import { fileUrl, type TargetDetail } from '@/api/client'
 import { STAGE_LABELS, basename, label } from '@/lib/labels'
 import { useUi, type ViewerImage } from '@/state/ui'
 import { cn } from 'cn'
+import { tr } from '@/lib/i18n'
 
 interface Section {
   title: string
@@ -17,11 +18,14 @@ function sections(t: TargetDetail): Section[] {
   const stages = t.stages.flatMap((s) =>
     s.previews.map((p) => ({ src: p, label: `${label(STAGE_LABELS, s.stage)} · ${basename(p)}` }))
   )
-  const refs = t.references.map((r) => ({ src: r.file, label: `${r.title ?? ''} — ${r.author ?? ''}（${r.likes ?? 0} 赞）` }))
+  const refs = t.references.map((r) => ({
+    src: r.file,
+    label: `${r.title ?? ''} — ${r.author ?? ''}` + tr('（{n} 赞）', { n: r.likes ?? 0 })
+  }))
   return [
-    { title: '成品', images: finals },
-    { title: '各阶段预览', images: stages },
-    { title: '参考作品', images: refs }
+    { title: tr('成品'), images: finals },
+    { title: tr('各阶段预览'), images: stages },
+    { title: tr('参考作品'), images: refs }
   ].filter((s) => s.images.length)
 }
 
@@ -43,15 +47,15 @@ export function Gallery({ target: t }: { target: TargetDetail }): React.JSX.Elem
     }
   }
 
-  if (!all.length) return <p className="p-6 text-sm text-muted-foreground">还没有图像。</p>
+  if (!all.length) return <p className="p-6 text-sm text-muted-foreground">{tr('还没有图像。')}</p>
   return (
     <ScrollArea className="h-full">
       <div className="space-y-6 p-6">
         <div className="flex items-center gap-2">
           <Button variant={comparing ? 'default' : 'secondary'} size="sm" onClick={() => (setComparing(!comparing), setPicked([]))}>
-            {comparing ? <X /> : <Columns2 />} {comparing ? '取消对比' : '对比两张图'}
+            {comparing ? <X /> : <Columns2 />} {comparing ? tr('取消对比') : tr('对比两张图')}
           </Button>
-          {comparing && <span className="text-xs text-muted-foreground">依次点选两张图（例如我们的成品和一张参考作品）</span>}
+          {comparing && <span className="text-xs text-muted-foreground">{tr('依次点选两张图（例如我们的成品和一张参考作品）')}</span>}
         </div>
         {all.map((section) => (
           <section key={section.title}>

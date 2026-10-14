@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { fileUrl } from '@/api/client'
 import { openPath } from '@/lib/desktop'
 import { useUi } from '@/state/ui'
+import { tr } from '@/lib/i18n'
 
 const DISPLAY_MAX = 3000 // px; the full-resolution file opens in the system viewer
 
@@ -33,8 +34,8 @@ export function ImageViewer(): React.JSX.Element {
   return (
     <Dialog open={!!viewer} onOpenChange={(o) => !o && close()}>
       <DialogContent showCloseButton={false} className="flex h-[94vh] w-[96vw] max-w-none flex-col gap-0 overflow-hidden bg-black p-0 sm:max-w-none">
-        <DialogTitle className="sr-only">{current?.label ?? '图像'}</DialogTitle>
-        <DialogDescription className="sr-only">缩放与平移查看图像</DialogDescription>
+        <DialogTitle className="sr-only">{current?.label ?? tr('图像')}</DialogTitle>
+        <DialogDescription className="sr-only">{tr('缩放与平移查看图像')}</DialogDescription>
         {viewer && current && (
           <TransformWrapper key={`${current.src}|${viewer.compareWith?.src ?? ''}`} minScale={0.2} maxScale={16} centerOnInit disabled={!!viewer.compareWith}>
             {({ zoomIn, zoomOut, resetTransform }) => (
@@ -49,31 +50,31 @@ export function ImageViewer(): React.JSX.Element {
                       <span className="tabular-nums text-white/50">
                         {viewer.index + 1}/{viewer.images.length}
                       </span>
-                      <Button variant="ghost" size="icon" className="size-7" onClick={() => go(-1)} aria-label="上一张">
+                      <Button variant="ghost" size="icon" className="size-7" onClick={() => go(-1)} aria-label={tr('上一张')}>
                         <ChevronLeft />
                       </Button>
-                      <Button variant="ghost" size="icon" className="size-7" onClick={() => go(1)} aria-label="下一张">
+                      <Button variant="ghost" size="icon" className="size-7" onClick={() => go(1)} aria-label={tr('下一张')}>
                         <ChevronRight />
                       </Button>
                     </>
                   )}
                   {!viewer.compareWith && (
                     <>
-                      <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomOut()} aria-label="缩小">
+                      <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomOut()} aria-label={tr('缩小')}>
                         <ZoomOut />
                       </Button>
-                      <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomIn()} aria-label="放大">
+                      <Button variant="ghost" size="icon" className="size-7" onClick={() => zoomIn()} aria-label={tr('放大')}>
                         <ZoomIn />
                       </Button>
-                      <Button variant="ghost" size="icon" className="size-7" onClick={() => resetTransform()} aria-label="适应窗口">
+                      <Button variant="ghost" size="icon" className="size-7" onClick={() => resetTransform()} aria-label={tr('适应窗口')}>
                         <Maximize />
                       </Button>
                     </>
                   )}
                   <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => void openPath(current.src)}>
-                    <ExternalLink /> 原图
+                    <ExternalLink /> {tr('原图')}
                   </Button>
-                  <Button variant="ghost" size="icon" className="size-7" onClick={close} aria-label="关闭">
+                  <Button variant="ghost" size="icon" className="size-7" onClick={close} aria-label={tr('关闭')}>
                     <X />
                   </Button>
                 </div>

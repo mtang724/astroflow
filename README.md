@@ -6,7 +6,7 @@ post-processes in headless PixInsight, following recipes learned from tutorial v
 clouds. It compares every target with top-rated works of the same object, and an AI agent (any OpenAI-compatible
 model: DeepSeek, OpenAI, or local Ollama / LM Studio) judges each stage and tunes parameters until the result holds up.
 
-从“拍完的一晚数据”到“成品图”：导入整理 → 叠加 → 按目标类型的配方出片（每一步参数可调）→ 和高赞作品对比 → AI 助手判断与调参。
+从“拍完的一晚数据”到“成品图”：导入整理 → 单帧检查 → 叠加（几晚也能合成一张）→ 按目标类型的配方出片（每一步参数可调）→ 和高赞作品对比 → AI 助手判断与调参 → 分享图。
 
 **[下载](https://github.com/mtang724/astroflow/releases) · [使用说明](docs/user-guide.md) · [0.2.1 发布说明](docs/releases/v0.2.1.md)**
 
@@ -14,13 +14,19 @@ model: DeepSeek, OpenAI, or local Ollama / LM Studio) judges each stage and tune
 
 ## 桌面应用（Windows / macOS）
 
-- **导入新数据**：选一个拍摄文件夹（ASIAIR、NINA、SharpCap 等的导出，存储卡，或已经分好 Light/Dark/Bias/Flat 的目标文件夹；单反也行）。按每张图的文件头认出帧类型，按目标和日期整理，暗场 / 偏置 / 平场先用同一批拍的，缺的再从校准帧库找；只有校准帧的文件夹会放进校准帧库并补给缺它们的目标。先看计划再执行（默认复制，不动原文件）。
+- **导入新数据**：选一个拍摄文件夹（ASIAIR、NINA、SharpCap 等的导出，存储卡，或已经分好 Light/Dark/Bias/Flat 的目标文件夹）。FITS 和单反 / 微单的 RAW 文件（CR2、CR3、NEF、ARW、DNG、RAF …）都行。按文件头认出帧类型（RAW 看文件夹名），按目标和日期整理，暗场 / 偏置 / 平场先用同一批拍的，缺的再从校准帧库找；只有校准帧的文件夹会放进校准帧库并补给缺它们的目标。先看计划再执行（默认复制，不动原文件）。
 - **目标页**：
-  - 概览：成品、拍摄数据、校准帧与警告、这一晚用的滤镜、下一步该做什么
-  - 处理流程：每个阶段、每个步骤的参数，改了就保存，可以只重跑一个阶段或从某阶段跑到最后
+  - 概览：成品、拍摄数据、校准帧与警告、这一晚用的滤镜、下一步该做什么；同一目标拍了几晚时，一键合并叠加（每晚用自己的平场）
+  - 单帧检查：每帧的缩略图、星点数、星点大小和背景，标出被云、风、跑焦、天亮影响的帧，一键排除（可恢复）
+  - 处理流程：每个阶段、每个步骤的参数，改了就保存，可以只重跑一个阶段或从某阶段跑到最后；调好的参数可以存成“我的风格”，套用到同类目标
   - 图像：各阶段预览、成品、参考作品，可以缩放、两张图对比
   - AI 助手：用一句话说想要的效果，它会调用工具处理，过程逐步可见
+  - 分享图：裁成 3:4（小红书）、16:9（B站）等比例，可加拍摄信息和署名
+- **全部处理**：把还没出图的目标排队，一个接一个叠加、出图；在后台跑完时弹出系统通知。
 - **任务栏**：一次只跑一个 PixInsight 任务，实时日志，随时停止（会结束 PixInsight 进程）。
+- **中文 / English 界面**：设置里切换，默认跟随系统；AI 助手也用同一种语言回答。
+- **自动更新**：启动时检查 GitHub 上的新版本。Windows 下载后重启即装好（或下次关闭时自动安装）；macOS 预览版打开下载页。
+- **磁盘空间和归档**：看每个目标占多少空间，一键删掉可以再生成的中间文件（保留原始帧、叠加结果和成品）；处理完的目标一键归档到 `Processed\`。
 - **检查运行环境**：第一次打开时检查 PixInsight、WBPP、RC Astro 插件（是否激活）、Gaia 数据库、数据目录和 AI 模型，缺什么列出来并一步步说明怎么装；能自动处理的（找到的 PixInsight 路径、创建数据目录）点一下就好。
 - **设置**：数据根目录、PixInsight 位置、AI 服务商（任何 OpenAI 兼容接口，包括本地模型）；API 密钥存放在系统钥匙串（Windows 凭据管理器 / macOS 钥匙串），不会写进文件，界面上也不显示。
 
@@ -67,17 +73,19 @@ python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截
 - `<目标>_<日期>.png / .jpg / .tif`：成品（PNG/JPG 8 位全分辨率，16 位 TIFF 可进 PS 继续调）；小目标另有 `_crop` 裁切版
 - `previews\`：每一阶段的预览图；`report.md`：AI 的处理报告；`NN_*.xisf`：各阶段检查点
 - `params.json`：你在应用里改过的参数。以后每次运行都会用（应用、AI 助手、命令行都一样）；`state.json`：各阶段的运行记录
-- 满意后由你把整个目标文件夹移到 `Processed\`
+- `share\`：分享图
+- 满意后在应用里“归档”，整个目标文件夹移到 `Processed\`
 
 ## 组成
 | 部分 | 位置 |
 |---|---|
 | 桌面应用（Electron + React） | `desktop/`（见 `desktop/README.md`） |
 | 本地 API（应用的后端） | `astroflow/api/`（FastAPI，只监听本机，每次启动一个令牌） |
-| 应用服务：任务队列、目标、可调参数 | `astroflow/services/` |
+| 应用服务：任务队列、目标、可调参数、我的风格、全部处理 | `astroflow/services/` |
 | 设置（路径、AI 服务商、偏好；密钥进系统钥匙串） | `astroflow/settings.py`，`config.py` 读它 |
 | 环境检查（缺什么组件、怎么装；不启动 PixInsight，读它的设置槽 1） | `astroflow/doctor.py` |
-| 整理 | `astroflow/organize.py`（根目录 `organize.py` 兼容旧命令） |
+| 整理 | `astroflow/organize.py`（根目录 `organize.py` 兼容旧命令），读 FITS 和相机 RAW：`astroflow/frameio.py` |
+| 单帧检查、多晚合并、磁盘空间与归档、分享图 | `astroflow/framecheck.py`、`multinight.py`、`storage.py`、`share.py` |
 | 统一命令行入口 | `python -m astroflow`（`astroflow/__main__.py`） |
 | 叠加（WBPP 命令行自动化） | `astroflow/wbpp.py` |
 | 后期配方（宽带星云 / 星系 / 多波段星云 / 彗星） | `astroflow/pipeline.py` + `astroflow/pjsr/*.js`（PixInsight 端步骤库） |

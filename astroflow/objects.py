@@ -98,9 +98,16 @@ def recipe_for(name, type_hint=None, filter_class=None):
     return RECIPE_FOR_TYPE.get(t), t
 
 
-def session_info(target_dir):
-    """In Processing/<night>/session.json (filter used that night etc.), {} when absent."""
-    import json
+def session_path(target_dir):
+    """Where the filter of a target's night is recorded: In Processing/<night>/session.json, or the target's own
+    session.json (a multi-night target, astroflow.multinight)."""
     from pathlib import Path
-    p = Path(target_dir).parent / "session.json"
+    own = Path(target_dir) / "session.json"
+    return own if own.exists() or (Path(target_dir) / "combined.json").exists() else Path(target_dir).parent / "session.json"
+
+
+def session_info(target_dir):
+    """The night's session.json (filter used that night etc.), {} when absent."""
+    import json
+    p = session_path(target_dir)
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}

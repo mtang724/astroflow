@@ -1,13 +1,13 @@
-"""Targets, recipe parameters, the night's filter and the organise plan."""
+"""Targets, recipe parameters, the night's filter, their nights and disk space, and the organise plan."""
 import json
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
-from .. import config, jsonfile, organize, pipeline, settings
+from .. import config, jsonfile, multinight, objects, organize, pipeline, settings, storage
 from ..services import recipes, targets
-from .models import (OrganizeIn, OrganizePlan, ParamIn, PathIn, RecipeIn, SessionIn, Stage, TargetDetail,
-                     TargetSummary)
+from .models import (NightsOut, OrganizeIn, OrganizePlan, ParamIn, PathIn, RecipeIn, SessionIn, Stage, StorageUsage,
+                     TargetDetail, TargetSummary)
 
 router = APIRouter(prefix="/api", tags=["targets"])
 
@@ -47,11 +47,33 @@ def close_target(body: PathIn):
     return targets.list_targets(extra=s.extra_targets)
 
 
+@router.get("/targets/nights", response_model=NightsOut)
+def target_nights(path: str):
+    """The target's nights in In Processing and its multi-night target (astroflow.multinight)."""
+    d = _target_dir(path)
+    combined = multinight.combined_dir(d.name)
+    own = multinight.info(combined) or {}
+    return NightsOut(name=d.name, nights=multinight.candidates(d.name),
+                     combined=combined.as_posix() if own else None,
+                     included=[n["night"] for n in own.get("nights", [])],
+                     missing=[n["night"] for n in own.get("nights", []) if n.get("missing")])
+
+
+@router.get("/storage", response_model=list[StorageUsage])
+def disk_usage():
+    """Disk space of every target, most removable first."""
+    rows = []
+    for t in targets.list_targets(extra=settings.get().extra_targets):
+        rows.append({"path": t["path"], "name": t["name"], "night": t["night"], "nights": t["nights"],
+                     **storage.usage(t["path"])})
+    return sorted(rows, key=lambda r: -r["removable"])
+
+
 @router.post("/targets/session", response_model=TargetSummary)
 def set_session(body: SessionIn):
     """The night's filter (FITS headers do not record it): <night>/session.json, read by recipe choice and references."""
     d = _target_dir(body.path)
-    p = d.parent / "session.json"
+    p = objects.session_path(d)
     data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
     data.update({"filter": body.filter, "filter_class": body.filter_class})
     jsonfile.write(p, data)

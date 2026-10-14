@@ -118,7 +118,14 @@ export async function startBackend(dev: boolean): Promise<Backend> {
 
   const child = spawn(cmd, args, {
     cwd,
-    env: { ...process.env, ASTROFLOW_TOKEN: token, PYTHONIOENCODING: 'utf-8', PYTHONUNBUFFERED: '1' },
+    env: {
+      ...process.env,
+      ASTROFLOW_TOKEN: token,
+      // the language "same as the system" means (astroflow.i18n): what the OS lists first
+      ASTROFLOW_SYSTEM_LANG: app.getPreferredSystemLanguages()[0] ?? app.getLocale(),
+      PYTHONIOENCODING: 'utf-8',
+      PYTHONUNBUFFERED: '1'
+    },
     stdio: ['pipe', 'pipe', 'pipe'],
     windowsHide: true,
     // macOS / Linux: its own process group, so killTree can end PixInsight too (Windows uses taskkill /T instead).

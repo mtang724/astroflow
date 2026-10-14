@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from .. import config, metrics, objects, pipeline, references, wbpp
+from ..i18n import tr
 from ..services import actions, targets
 from . import skills
 
@@ -263,6 +264,9 @@ def run_stage(target, stage, overrides=None, extra_steps=None, replace_steps=Non
             s.setdefault("id", f"x{i}")
         spec["steps"] = steps
         w.recipe = [spec if s["stage"] == stage else s for s in w.recipe]
+    for earlier in pipeline.with_missing_inputs(w, [stage])[:-1]:   # its input was cleaned up to free disk space
+        _ctx.spend()
+        pipeline.run_stage(w, earlier)
     _ctx.spend()
     rec = pipeline.run_stage(w, stage, overrides or {})
     return _compact_stage(rec)
@@ -394,11 +398,12 @@ def finish(target, summary, issues=""):
     if (d / "Post" / "50_final.xisf").exists() and not list((d / "Post").glob(f"{d.name}_*.png")):
         pipeline.export_final(d, ("png",))   # the user wants a PNG of every finished image
     finals = sorted(str(p) for p in (d / "Post").glob(f"{d.name}_*.*") if p.suffix.lower() in (".jpg", ".png", ".tif"))
-    lines = [f"# {d.name} 后期报告", "", f"- 配方: {w.state.get('recipe')}", f"- 完成时间: {time.strftime('%Y-%m-%d %H:%M')}",
-             f"- 成品: {', '.join(finals) or '无'}", "", "## 总结", summary, ""]
+    lines = [tr("# {target} 后期报告", target=d.name), "", tr("- 配方: {recipe}", recipe=w.state.get("recipe")),
+             tr("- 完成时间: {time}", time=time.strftime("%Y-%m-%d %H:%M")),
+             tr("- 成品: {files}", files=", ".join(finals) or tr("无")), "", tr("## 总结"), summary, ""]
     if issues:
-        lines += ["## 待确认 / 问题", issues, ""]
-    lines += ["## 各阶段参数与指标", ""]
+        lines += [tr("## 待确认 / 问题"), issues, ""]
+    lines += [tr("## 各阶段参数与指标"), ""]
     for name, rec in w.state.get("stages", {}).items():
         m = rec.get("metrics") or {}
         lines.append(f"### {name}  ({rec.get('seconds')} s)")

@@ -5,24 +5,25 @@ import { Switch } from '@/components/ui/switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import type { Field } from '@/api/client'
 import { cn } from 'cn'
+import { mark, tr } from '@/lib/i18n'
 
 // Short explanations for the parameters people tune most (the rest show their key).
 const HINTS: Record<string, string> = {
-  boost: '饱和度曲线中点（0.5 = 不变，越大越饱和）',
-  passes: '重复次数',
-  targetMedian: '拉伸后的背景亮度目标',
-  expandLow: '暗部扩展',
-  'params.denoise': '降噪强度',
-  'params.denoise_color': '色彩降噪强度',
-  'params.amount': '强度',
-  'params.radius': '半径（像素）',
-  'params.slopeLimit': '对比度限制',
-  starsAmount: '星点合并强度',
-  midtones: '中间调（< 0.5 变亮）',
-  skyTarget: '天空背景亮度目标',
-  clipFraction: '黑点处剪掉的像素比例',
-  maskClip: '蒙版暗部剪切',
-  maskMidtones: '蒙版中间调（越小作用越强）'
+  boost: mark('饱和度曲线中点（0.5 = 不变，越大越饱和）'),
+  passes: mark('重复次数'),
+  targetMedian: mark('拉伸后的背景亮度目标'),
+  expandLow: mark('暗部扩展'),
+  'params.denoise': mark('降噪强度'),
+  'params.denoise_color': mark('色彩降噪强度'),
+  'params.amount': mark('强度'),
+  'params.radius': mark('半径（像素）'),
+  'params.slopeLimit': mark('对比度限制'),
+  starsAmount: mark('星点合并强度'),
+  midtones: mark('中间调（< 0.5 变亮）'),
+  skyTarget: mark('天空背景亮度目标'),
+  clipFraction: mark('黑点处剪掉的像素比例'),
+  maskClip: mark('蒙版暗部剪切'),
+  maskMidtones: mark('蒙版中间调（越小作用越强）')
 }
 
 interface Props {
@@ -57,8 +58,8 @@ export function ParamField({ field, onCommit, disabled }: Props): React.JSX.Elem
           </label>
         </TooltipTrigger>
         <TooltipContent side="left">
-          {HINTS[field.key] ?? field.key}
-          {field.edited && ` · 默认 ${String(field.default)}`}
+          {HINTS[field.key] ? tr(HINTS[field.key]) : field.key}
+          {field.edited && ' · ' + tr('默认 {value}', { value: String(field.default) })}
         </TooltipContent>
       </Tooltip>
       {field.type === 'bool' ? (
@@ -75,7 +76,7 @@ export function ParamField({ field, onCommit, disabled }: Props): React.JSX.Elem
         />
       )}
       <button
-        aria-label="恢复默认"
+        aria-label={tr('恢复默认')}
         disabled={!field.edited || disabled}
         onClick={() => onCommit(null)}
         className={cn('text-muted-foreground hover:text-foreground', !field.edited && 'invisible')}

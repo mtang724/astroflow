@@ -21,6 +21,13 @@ def tmp_settings(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "_dotenv", lambda key: None)
     s = settings.get()
     s.runs_dir = (tmp_path / "runs").as_posix()
+    s.preferences["language"] = "zh"                  # the messages tests compare are the Chinese ones
     settings.save(s)
     yield tmp_path, store
     monkeypatch.setattr(settings, "_current", None)
+
+
+@pytest.fixture(autouse=True)
+def _own_settings(tmp_settings):
+    """Every test runs on its own settings file (Chinese messages), never the user's."""
+    yield

@@ -1,11 +1,13 @@
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell, type IpcMainInvokeEvent } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, Notification, shell, type IpcMainInvokeEvent } from 'electron'
 import { existsSync } from 'fs'
 import { extname, join } from 'path'
 import { startBackend, startupHelp, type Backend } from './backend'
+import { checkForUpdates, downloadUpdate, initUpdates, installUpdate, openReleasePage, updateState } from './updates'
 
 let backend: Backend | null = null
 let window: BrowserWindow | null = null
 let appOrigins: string[] = [] // where the app's own pages come from: the backend, and Vite in development
+const notifications = new Set<Notification>() // shown ones, kept until closed (a collected one loses its click)
 
 // What the renderer may open with the system's default application: images it shows (finals, previews, references).
 // Never executables or scripts, whatever path a compromised page might ask for.
@@ -89,6 +91,39 @@ function registerIpc(): void {
   ipcMain.handle('show-in-folder', (event, path: unknown) => {
     if (fromApp(event) && typeof path === 'string' && existsSync(path)) shell.showItemInFolder(path)
   })
+  // A system notification for jobs that finished while the window was in the background (in front of it, the app's own
+  // messages say it). Clicking it brings the window back and tells the renderer which target it was about.
+  ipcMain.handle('notify', (event, title: unknown, body: unknown, target: unknown) => {
+    if (!fromApp(event) || typeof title !== 'string' || !Notification.isSupported()) return
+    if (window?.isFocused() && !window.isMinimized()) return
+    const n = new Notification({ title, body: typeof body === 'string' ? body : '' })
+    notifications.add(n)
+    n.on('close', () => notifications.delete(n))
+    n.on('click', () => {
+      notifications.delete(n)
+      if (!window) return
+      if (window.isMinimized()) window.restore()
+      window.show()
+      window.focus()
+      if (typeof target === 'string') window.webContents.send('show-target', target)
+    })
+    n.show()
+  })
+  // new versions (updates.ts): the renderer asks; changes of state come back as 'updates:state'
+  ipcMain.handle('updates:state', (event) => (fromApp(event) ? updateState() : null))
+  ipcMain.handle('updates:check', (event) => (fromApp(event) ? checkForUpdates() : null))
+  ipcMain.handle('updates:download', (event) => (fromApp(event) ? downloadUpdate() : undefined))
+  ipcMain.handle('updates:install', (event) => (fromApp(event) ? installUpdate() : undefined))
+  ipcMain.handle('updates:open-page', (event) => {
+    if (fromApp(event)) openReleasePage()
+  })
+}
+
+/** Stop the backend (it cancels its job and kills any PixInsight it started), once. */
+let stopping: Promise<void> | null = null
+function stopBackend(): Promise<void> {
+  stopping ??= backend ? backend.stop() : Promise.resolve()
+  return stopping
 }
 
 if (!app.requestSingleInstanceLock()) {
@@ -99,9 +134,13 @@ if (!app.requestSingleInstanceLock()) {
     window?.focus()
   })
 
+  // Windows shows notifications only for an app with an identity: the installer's, or this executable in development
+  if (process.platform === 'win32') app.setAppUserModelId(app.isPackaged ? 'io.github.astroflow.desktop' : process.execPath)
+
   app.whenReady().then(async () => {
     nativeTheme.themeSource = 'dark' // dark title bar and native dialogs, matching the app
     registerIpc()
+    initUpdates(() => window, stopBackend)
     try {
       backend = await startBackend(!app.isPackaged)
     } catch (err) {
@@ -114,11 +153,13 @@ if (!app.requestSingleInstanceLock()) {
 
   app.on('window-all-closed', () => app.quit())
 
-  let stopping = false
+  let stopped = false
   app.on('before-quit', (event) => {
-    if (!backend || stopping) return
+    if (!backend || stopped) return
     event.preventDefault() // stop the backend (and any PixInsight job) first, then quit for real
-    stopping = true
-    void backend.stop().finally(() => app.quit())
+    void stopBackend().finally(() => {
+      stopped = true
+      app.quit()
+    })
   })
 }

@@ -4,6 +4,7 @@ numpy>=2
 scipy>=1.11
 pillow>=10
 tifffile>=2024.1
+rawpy>=0.27               # camera RAW files (CR2, CR3, NEF, ARW, DNG, RAF ...): metadata and pixels (LibRaw)
 requests>=2.31
 openai>=1.40            # any OpenAI-compatible API: DeepSeek, OpenAI, local Ollama / LM Studio / vLLM
 psutil>=6               # cross-platform PixInsight process control

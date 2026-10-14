@@ -1,7 +1,7 @@
 // What the user is looking at: selected target, tab, open dialogs, the image viewer. Persisted per window session.
 import { create } from 'zustand'
 
-export type TargetTab = 'overview' | 'pipeline' | 'images' | 'agent'
+export type TargetTab = 'overview' | 'frames' | 'pipeline' | 'images' | 'agent'
 
 export interface ViewerImage {
   src: string // path on disk (served through /api/files)
@@ -16,6 +16,11 @@ interface UiState {
   setupOpen: boolean
   importOpen: boolean
   jobsOpen: boolean
+  batchOpen: boolean
+  storage: { open: boolean; focus: string | null } // disk space dialog; focus: the target it was opened for
+  sharePath: string | null // the target whose share picture is being made
+  archivePath: string | null // the target being archived (confirmation)
+  updateOpen: boolean
   viewer: { images: ViewerImage[]; index: number; compareWith: ViewerImage | null } | null
   select: (path: string | null) => void
   setTab: (tab: TargetTab) => void
@@ -25,6 +30,12 @@ interface UiState {
   setSetupOpen: (open: boolean) => void
   setImportOpen: (open: boolean) => void
   setJobsOpen: (open: boolean) => void
+  setBatchOpen: (open: boolean) => void
+  openStorage: (focus?: string | null) => void
+  closeStorage: () => void
+  setSharePath: (path: string | null) => void
+  setArchivePath: (path: string | null) => void
+  setUpdateOpen: (open: boolean) => void
   openViewer: (images: ViewerImage[], index?: number, compareWith?: ViewerImage | null) => void
   closeViewer: () => void
 }
@@ -45,6 +56,11 @@ export const useUi = create<UiState>((set) => ({
   setupOpen: false,
   importOpen: false,
   jobsOpen: false,
+  batchOpen: false,
+  storage: { open: false, focus: null },
+  sharePath: null,
+  archivePath: null,
+  updateOpen: false,
   viewer: null,
   select: (selected) => set({ selected }),
   setTab: (tab) => set({ tab }),
@@ -54,6 +70,12 @@ export const useUi = create<UiState>((set) => ({
   setSetupOpen: (setupOpen) => set({ setupOpen }),
   setImportOpen: (importOpen) => set({ importOpen }),
   setJobsOpen: (jobsOpen) => set({ jobsOpen }),
+  setBatchOpen: (batchOpen) => set({ batchOpen }),
+  openStorage: (focus = null) => set({ storage: { open: true, focus } }),
+  closeStorage: () => set({ storage: { open: false, focus: null } }),
+  setSharePath: (sharePath) => set({ sharePath }),
+  setArchivePath: (archivePath) => set({ archivePath }),
+  setUpdateOpen: (updateOpen) => set({ updateOpen }),
   openViewer: (images, index = 0, compareWith = null) => set({ viewer: { images, index, compareWith } }),
   closeViewer: () => set({ viewer: null })
 }))

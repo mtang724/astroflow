@@ -22,7 +22,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import jobctx, jsonfile, metrics, objects, pi, wbpp
+from . import frameio, jobctx, jsonfile, metrics, objects, pi, wbpp
 
 # --------------------------------------------------------------------------- recipes
 # Step dicts are passed verbatim to pjsr/steps.js (op = function name). "id" lets overrides address a step.
@@ -207,6 +207,10 @@ class Work:
         self.recipe = RECIPES[self.state["recipe"]]
         names = self.stage_names()                 # drop records of stages an older recipe version had
         self.state["stages"] = {k: v for k, v in self.state["stages"].items() if k in names}
+        if stages_stale(self.target, self.state):  # re-stacked since: every stage starts from the new master
+            self.state["stages"] = {}
+            for key in RESULT_KEYS:
+                self.state.pop(key, None)
 
     def save(self):
         jsonfile.write(self.state_path, self.state)
@@ -239,6 +243,29 @@ class Work:
 
     def stage_names(self):
         return [s["stage"] for s in self.recipe]
+
+
+RESULT_KEYS = ("finished", "object", "colorCalibrated", "unscreen")   # what the stages found or decided
+
+
+def start_image(target_dir, state):
+    """The image the recipe starts from: the recorded master (comet stack ...), else WBPP's master light; None yet."""
+    if state.get("master") and Path(state["master"]).exists():
+        return Path(state["master"])
+    masters = wbpp.masters(target_dir)
+    return masters[0] if masters else None
+
+
+def stages_stale(target_dir, state):
+    """The start image was made again (WBPP re-run after frames were excluded, a new comet stack) after the recipe's
+    stages ran: their results no longer follow from it."""
+    records = state.get("stages") or {}
+    first = next((records[s["stage"]] for s in RECIPES.get(state.get("recipe"), []) if s["stage"] in records), None)
+    start = start_image(target_dir, state) if first and first.get("time") else None
+    if start is None:
+        return False
+    made = datetime.fromtimestamp(start.stat().st_mtime, timezone.utc)
+    return made > datetime.fromisoformat(first["time"])
 
 
 def _fmt(obj, mapping):
@@ -289,14 +316,13 @@ def merge_step(step, override):
 
 def solve_hints(target_dir):
     """RA/Dec/focal/pixel size from a raw light, for plate solving when the master has no solution."""
-    from astropy.io import fits
-    lights = sorted((Path(target_dir) / "Light").glob("*.fit*"))
+    lights = frameio.frame_files(Path(target_dir) / "Light")
     if not lights:
         return {}
-    h = fits.getheader(lights[0])
+    h = frameio.header(lights[0])
     out = {}
     for k_src, k_dst in (("RA", "ra"), ("DEC", "dec"), ("FOCALLEN", "focal"), ("XPIXSZ", "pixelSize")):
-        if k_src in h:
+        if h.get(k_src) is not None:
             out[k_dst] = float(h[k_src])
     return out
 
@@ -461,6 +487,7 @@ def run(target_dir, recipe=None, start=None, only=None, overrides=None, master=N
     names = work.stage_names()
     todo = [only] if only else names[names.index(start):] if start else \
         [n for n in names if n not in work.state["stages"]]
+    todo = with_missing_inputs(work, todo)
     out = []
     for i, n in enumerate(todo):
         jobctx.check_cancelled()
@@ -469,6 +496,24 @@ def run(target_dir, recipe=None, start=None, only=None, overrides=None, master=N
         jobctx.emit("stage.finished", stage=n, index=i, total=len(todo), seconds=out[-1]["seconds"],
                     previews=out[-1].get("previews", []))
     return out
+
+
+def with_missing_inputs(work, todo):
+    """`todo` plus the stages that make an input it lacks (checkpoints deleted to free space: astroflow.storage), in
+    recipe order."""
+    made_by = {s[k]: s["stage"] for s in work.recipe for k in ("output", "stars_output") if k in s}
+    need = set(todo)
+    grew = True
+    while grew:
+        grew = False
+        for stage in list(need):
+            spec = work.stage(stage)
+            for name in [spec["input"], *(spec.get("aux") or {}).values()]:
+                maker = made_by.get(name)
+                if maker and maker not in need and not work.checkpoint(name).exists():
+                    need.add(maker)
+                    grew = True
+    return [n for n in work.stage_names() if n in need]
 
 
 def parse_sets(sets):

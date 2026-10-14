@@ -6,7 +6,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
 
-from .. import config, doctor, settings
+from .. import config, doctor, i18n, settings
 from ..agent.llm import LLM
 from .models import KeyIn, LLMTestIn, LLMTestOut, Ok, Provider, ProviderRenameIn, SettingsOut, SettingsPatch
 
@@ -20,7 +20,8 @@ def _out(s):
                        checks={"astro_root": Path(s.astro_root).is_dir(),
                                "pixinsight_exe": Path(s.pixinsight_exe).is_file(),
                                "pixinsight_scripts": Path(s.pixinsight_scripts).is_dir(),
-                               "runs_dir": config.pixinsight_path_ok(config.RUNS)})
+                               "runs_dir": config.pixinsight_path_ok(config.RUNS)},
+                       language=i18n.language())
 
 
 @router.get("", response_model=SettingsOut)

@@ -12,7 +12,8 @@ from fastapi.staticfiles import StaticFiles
 
 from .. import pi
 from ..services.jobs import JobManager
-from . import routes_agent, routes_files, routes_jobs, routes_settings, routes_setup, routes_targets
+from . import (routes_agent, routes_files, routes_frames, routes_jobs, routes_presets, routes_settings, routes_setup,
+               routes_share, routes_targets)
 from .agents import AgentService
 from .hub import EventHub
 
@@ -123,7 +124,8 @@ def create_app(token, static_dir=None, dev_origins=(), services=None):
                 t.cancel()
             services.hub.unsubscribe(q)
 
-    for module in (routes_settings, routes_setup, routes_targets, routes_jobs, routes_agent, routes_files):
+    for module in (routes_settings, routes_setup, routes_targets, routes_frames, routes_presets, routes_share, routes_jobs,
+                   routes_agent, routes_files):
         app.include_router(module.router)
 
     if static_dir and Path(static_dir, "index.html").exists():

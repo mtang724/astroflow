@@ -12,8 +12,9 @@ import { keys, usePatchSettings, useSetup } from '@/api/hooks'
 import { pickFile, pickFolder } from '@/lib/desktop'
 import { useUi } from '@/state/ui'
 import { cn } from 'cn'
+import { mark, tr } from '@/lib/i18n'
 
-const LEVEL_LABELS: Record<SetupCheck['level'], string> = { required: '必需', recommended: '推荐', optional: '可选' }
+const LEVEL_LABELS: Record<SetupCheck['level'], string> = { required: mark('必需'), recommended: mark('推荐'), optional: mark('可选') }
 
 let autoOpened = false // once per launch: closing the dialog means "later", not "ask again on every refocus"
 
@@ -33,14 +34,14 @@ function StatusIcon({ check }: { check: SetupCheck }): React.JSX.Element {
 function CopyLine({ text }: { text: string }): React.JSX.Element {
   const copy = (): void => {
     navigator.clipboard.writeText(text).then(
-      () => toast.success('已复制', { description: text }),
-      () => toast.error('没能复制，请手动选中复制')
+      () => toast.success(tr('已复制'), { description: text }),
+      () => toast.error(tr('没能复制，请手动选中复制'))
     )
   }
   return (
     <div className="flex items-center gap-1 rounded-md bg-muted py-0.5 pr-0.5 pl-2 font-mono text-[11px]">
       <span className="min-w-0 flex-1 truncate select-all">{text}</span>
-      <Button variant="ghost" size="icon" className="size-6" aria-label="复制" onClick={copy}>
+      <Button variant="ghost" size="icon" className="size-6" aria-label={tr('复制')} onClick={copy}>
         <Copy className="size-3" />
       </Button>
     </div>
@@ -71,9 +72,9 @@ function useRunAction(): (action: SetupAction) => Promise<void> {
           qc.setQueryData(keys.setup, await call(api.POST('/api/setup/data-root', { body: { path } })))
           void qc.invalidateQueries({ queryKey: keys.settings })
           void qc.invalidateQueries({ queryKey: keys.targets })
-          toast.success('已创建数据根目录', { description: path })
+          toast.success(tr('已创建数据根目录'), { description: path })
         } catch (e) {
-          toast.error('没能创建文件夹', { description: (e as Error).message })
+          toast.error(tr('没能创建文件夹'), { description: (e as Error).message })
         }
     }
   }
@@ -92,7 +93,7 @@ function CheckRow({ check }: { check: SetupCheck }): React.JSX.Element {
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium">{check.title}</span>
             <Badge variant="outline" className="h-4 px-1.5 text-[10px] text-muted-foreground">
-              {LEVEL_LABELS[check.level]}
+              {tr(LEVEL_LABELS[check.level])}
             </Badge>
           </div>
           <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">{check.summary}</p>
@@ -158,17 +159,20 @@ export function SetupDialog(): React.JSX.Element {
     <Dialog open={setupOpen} onOpenChange={setSetupOpen}>
       <DialogContent className="max-h-[88vh] grid-cols-1 overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>检查运行环境</DialogTitle>
+          <DialogTitle>{tr('检查运行环境')}</DialogTitle>
           <DialogDescription>
-            astroflow 驱动你电脑上的 PixInsight 来处理图像。缺的组件按下面的步骤装好，再点“重新检查”。
+            {tr('astroflow 驱动你电脑上的 PixInsight 来处理图像。缺的组件按下面的步骤装好，再点“重新检查”。')}
           </DialogDescription>
         </DialogHeader>
         {report && (
           <div className={cn('rounded-lg border px-3 py-2 text-xs leading-relaxed',
             report.ready ? 'border-ok/40 bg-ok/10 text-ok' : 'border-destructive/40 bg-destructive/10')}>
             {report.ready
-              ? '必需组件都齐了，可以导入、叠加和出图。'
-              : `还缺 ${blocking.length} 项必需组件：${blocking.map((c) => c.title.replace(/（.*）$/, '')).join('、')}。补齐之前，叠加和出图会失败。`}
+              ? tr('必需组件都齐了，可以导入、叠加和出图。')
+              : tr('还缺 {n} 项必需组件：{names}。补齐之前，叠加和出图会失败。', {
+                  n: blocking.length,
+                  names: blocking.map((c) => c.title.replace(/\s*[（(].*[）)]$/, '')).join(tr('、'))
+                })}
           </div>
         )}
         {report?.notes?.map((note) => (
@@ -177,9 +181,9 @@ export function SetupDialog(): React.JSX.Element {
         <ul className="divide-y">{report?.checks.map((c) => <CheckRow key={c.id} check={c} />)}</ul>
         <div className="flex items-center justify-between gap-2">
           <Button variant="outline" size="sm" disabled={isFetching} onClick={() => void refetch()}>
-            <RefreshCw className={cn(isFetching && 'animate-spin')} /> 重新检查
+            <RefreshCw className={cn(isFetching && 'animate-spin')} /> {tr('重新检查')}
           </Button>
-          <Button size="sm" onClick={() => setSetupOpen(false)}>{report?.ready ? '开始使用' : '稍后再说'}</Button>
+          <Button size="sm" onClick={() => setSetupOpen(false)}>{report?.ready ? tr('开始使用') : tr('稍后再说')}</Button>
         </div>
       </DialogContent>
     </Dialog>

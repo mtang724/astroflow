@@ -69,7 +69,7 @@ class Settings:
     preferences: dict = field(default_factory=lambda: {
         "subject_chroma_ratio": [0.8, 1.2],             # colourfulness vs peer references (user feedback 2026-10-10)
         "export_formats": ["png", "jpg", "tif"],
-        "language": "zh-CN"})
+        "language": "auto"})                            # auto (the system's) | zh | en: astroflow.i18n
 
     def provider(self, name=None):
         name = name or self.llm_active

@@ -1,26 +1,30 @@
 """What is on disk: processing targets, their status, previews and finished images.
 
 A target is a folder with Light/ (+ Dark/Bias/Flat) and, once processed, Post/ (state.json, checkpoints, previews,
-finals). Targets live in <data root>/In Processing/<night>/<name>; any other folder can be opened as well (the comet
-was organised by hand in <data root>/C2025-R3).
+finals). Targets live in <data root>/In Processing/<night>/<name>, targets of several nights stacked together in
+In Processing/Multi-night/<name> (astroflow.multinight); any other folder can be opened as well (the comet was
+organised by hand in <data root>/C2025-R3).
 """
 import json
 from collections import Counter
 from pathlib import Path
 
-from .. import config, objects, pipeline, references, wbpp
+from .. import config, frameio, multinight, objects, pipeline, references, wbpp
 
 FINAL_EXTS = (".png", ".jpg", ".tif")
 
 
 def _state(d):
+    """Post/state.json as the pipeline will see it: stage records made before the latest stack do not count."""
     sp = Path(d) / "Post" / "state.json"
-    return json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else {}
+    st = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else {}
+    if pipeline.stages_stale(d, st):
+        st = {k: v for k, v in st.items() if k not in pipeline.RESULT_KEYS and k != "stages"}
+    return st
 
 
 def _count(d, sub):
-    p = Path(d) / sub
-    return len(list(p.glob("*.fit*"))) if p.is_dir() else 0
+    return len(frameio.frame_files(Path(d) / sub))
 
 
 def summary(d):
@@ -30,12 +34,16 @@ def summary(d):
     st = _state(d)
     session = objects.session_info(d)
     recipe, typ = objects.recipe_for(d.name, filter_class=session.get("filter_class"))
-    in_staging = d.parent.parent == config.IN_PROCESSING
+    combined = multinight.info(d)
+    staged = d.parent.parent == config.IN_PROCESSING          # a night's or a multi-night target in In Processing
+    in_staging = staged and combined is None
+    nights = [n["night"] for n in combined["nights"]] if combined else [d.parent.name] if in_staging else []
     if typ == "comet":
         master = (d / "Post" / "comet_stack.fits").exists()
     else:
         master = bool(wbpp.masters(d)) or bool(st.get("master"))
-    return {"name": d.name, "path": d.as_posix(), "night": d.parent.name if in_staging else "",
+    return {"name": d.name, "path": d.as_posix(), "night": d.parent.name if in_staging else "", "nights": nights,
+            "staged": staged,
             "lights": _count(d, "Light"), "darks": _count(d, "Dark"), "bias": _count(d, "Bias"),
             "flats": _count(d, "Flat"), "master": master, "registered": _registered(d),
             "type": typ, "recipe": st.get("recipe") or recipe, "stages_done": list((st.get("stages") or {}).keys()),
@@ -59,25 +67,28 @@ def list_targets(extra=()):
 
 
 def acquisition(d, max_headers=60):
-    """Acquisition summary from the light frames' FITS headers."""
-    from astropy.io import fits
-    lights = sorted((Path(d) / "Light").glob("*.fit*"))
+    """Acquisition summary from the light frames' headers (FITS, or a camera RAW file's EXIF)."""
+    lights = frameio.frame_files(Path(d) / "Light")
+    step = max(1, len(lights) // max_headers)          # spread over the whole set (multi-night targets: every night)
     hdrs = []
-    for p in lights[:max_headers]:
+    for p in lights[::step]:
         try:
-            hdrs.append(fits.getheader(p))
+            hdrs.append(frameio.header(p))
         except (OSError, ValueError):          # a truncated or corrupt frame must not break the target page
             continue
     if not hdrs:
         return {}
     h0 = hdrs[0]
-    return {"object": h0.get("OBJECT"), "frames": len(lights),
-            "exposures_s": dict(Counter(float(h.get("EXPTIME", 0)) for h in hdrs)),
-            "total_h": round(sum(float(h.get("EXPTIME", 0)) for h in hdrs) / 3600, 2),
-            "camera": h0.get("INSTRUME"), "gain": h0.get("GAIN"), "offset": h0.get("OFFSET"),
+    sampled = Counter(float(h.get("EXPTIME") or 0) for h in hdrs)
+    scale = len(lights) / len(hdrs)                    # headers sampled: scale the counts to every frame
+    exposures = {e: round(n * scale) for e, n in sampled.items()}
+    return {"object": h0.get("OBJECT"), "frames": len(lights), "exposures_s": exposures,
+            "total_h": round(sum(e * n for e, n in exposures.items()) / 3600, 2),
+            "camera": h0.get("INSTRUME"), "gain": h0.get("GAIN"), "iso": h0.get("ISO") or h0.get("ISOSPEED"),
+            "offset": h0.get("OFFSET"),
             "set_temp": h0.get("SET-TEMP"), "focal_mm": h0.get("FOCALLEN"), "pixel_um": h0.get("XPIXSZ"),
             "filter": h0.get("FILTER", "none (OSC broadband)"), "bayer": h0.get("BAYERPAT"),
-            "date_obs": h0.get("DATE-OBS")}
+            "date_obs": h0.get("DATE-OBS"), "date_local": h0.get("DATE-LOC")}
 
 
 def calibration_warnings(d):

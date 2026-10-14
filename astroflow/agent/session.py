@@ -20,6 +20,7 @@ import uuid
 from types import SimpleNamespace
 
 from .. import config, jobctx, settings
+from ..i18n import language, tr
 from . import skills, tools
 from .llm import LLM
 
@@ -52,7 +53,7 @@ def system_prompt(target=None):
     e = s.equipment
     p = s.preferences
     lo, hi = p.get("subject_chroma_ratio", [0.8, 1.2])
-    lang = {"zh-CN": "中文", "en": "English"}.get(p.get("language", "zh-CN"), "中文")
+    lang = "English" if language() == "en" else "中文"
     gear = (f"## 用户器材\n相机 {e.get('camera')}（{e.get('sensor')}，像元 {e.get('pixel_um')} µm），"
             f"{e.get('telescope')}，焦距约 {e.get('focal_mm')} mm。数据根目录：{config.ASTRO_ROOT}。")
     taste = (f"## 用户偏好\n- 颜色要明显：主体色度对比同类参考作品（compare_with_references 的 subject_chroma.ratio）"
@@ -97,7 +98,7 @@ class AgentSession:
                 return self._loop()
         except jobctx.Cancelled:
             self._event("cancelled", {})
-            return "已取消。"
+            return tr("已取消。")
         except Exception as e:
             self._event("error", {"message": f"{type(e).__name__}: {e}"})
             raise
@@ -140,7 +141,7 @@ class AgentSession:
                     raise
                 self._answer(call, result)
         self._event("error", {"message": f"stopped after {self.max_turns} turns"})
-        return "达到最大轮数，已停止。请查看日志。"
+        return tr("达到最大轮数，已停止。请查看日志。")
 
     def _answer(self, call, text):
         if self.native:

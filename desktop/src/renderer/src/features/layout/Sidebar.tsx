@@ -7,6 +7,7 @@ import { useJobs, useTargets } from '@/api/hooks'
 import type { TargetSummary } from '@/api/client'
 import { TYPE_LABELS, label } from '@/lib/labels'
 import { useUi } from '@/state/ui'
+import { mark, tr } from '@/lib/i18n'
 import { cn } from 'cn'
 
 const TYPE_COLORS: Record<string, string> = {
@@ -18,14 +19,18 @@ const TYPE_COLORS: Record<string, string> = {
   comet: 'bg-emerald-400'
 }
 
+const MULTI = mark('多晚合并')
+const OTHER = mark('其他文件夹')
+
 function groupByNight(targets: TargetSummary[]): [string, TargetSummary[]][] {
   const groups = new Map<string, TargetSummary[]>()
   for (const t of targets) {
-    const key = t.night || '其他文件夹'
+    const key = t.night || ((t.nights ?? []).length > 1 ? MULTI : OTHER)
     groups.set(key, [...(groups.get(key) ?? []), t])
   }
-  // newest night first, "other folders" last
-  return [...groups.entries()].sort(([a], [b]) => (a === '其他文件夹' ? 1 : b === '其他文件夹' ? -1 : b.localeCompare(a)))
+  // several nights stacked together first, then the newest night first, other folders last
+  const rank = (k: string): number => (k === MULTI ? 0 : k === OTHER ? 2 : 1)
+  return [...groups.entries()].sort(([a], [b]) => rank(a) - rank(b) || b.localeCompare(a))
 }
 
 export function Sidebar(): React.JSX.Element {
@@ -49,7 +54,7 @@ export function Sidebar(): React.JSX.Element {
       <div className="p-3">
         <div className="relative">
           <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜索目标" className="h-8 pl-8" />
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={tr('搜索目标')} className="h-8 pl-8" />
         </div>
       </div>
       <ScrollArea className="min-h-0 flex-1">
@@ -59,7 +64,7 @@ export function Sidebar(): React.JSX.Element {
           {groups.map(([night, items]) => (
             <div key={night} className="mb-2">
               <div className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wide text-muted-foreground">
-                {night}
+                {tr(night)}
               </div>
               {items.map((t) => (
                 <button
@@ -74,7 +79,8 @@ export function Sidebar(): React.JSX.Element {
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm">{t.name}</span>
                     <span className="block truncate text-[11px] text-muted-foreground">
-                      {label(TYPE_LABELS, t.type)} · {t.lights} 帧
+                      {label(TYPE_LABELS, t.type)} · {tr('{n} 帧', { n: t.lights })}
+                      {(t.nights ?? []).length > 1 ? ' · ' + tr('{n} 晚', { n: (t.nights ?? []).length }) : ''}
                     </span>
                   </span>
                   {busy.has(t.path) ? (
@@ -83,7 +89,7 @@ export function Sidebar(): React.JSX.Element {
                     <CircleCheck className="size-3.5 text-ok" />
                   ) : (
                     <span className="text-[10px] text-muted-foreground tabular-nums">
-                      {t.stages_done.length > 0 ? `${t.stages_done.length} 阶段` : ''}
+                      {t.stages_done.length > 0 ? tr('{n} 阶段', { n: t.stages_done.length }) : ''}
                     </span>
                   )}
                 </button>
@@ -92,7 +98,7 @@ export function Sidebar(): React.JSX.Element {
           ))}
           {!isLoading && groups.length === 0 && (
             <p className="px-3 py-8 text-center text-xs text-muted-foreground">
-              还没有目标。用“导入新数据”整理一晚拍摄的文件夹，或在设置里指定数据根目录。
+              {tr('还没有目标。用“导入新数据”整理一晚拍摄的文件夹，或在设置里指定数据根目录。')}
             </p>
           )}
         </div>

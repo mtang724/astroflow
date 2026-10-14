@@ -218,3 +218,112 @@ def test_agent_session_over_api(env, monkeypatch):
     events = c.get(f"/api/agent/sessions/{s['sid']}", headers=H).json()["events"]
     assert [e["kind"] for e in events] == ["user", "assistant", "done"]
     assert c.post("/api/agent/sessions/nope/messages", json={"text": "x"}, headers=H).status_code == 404
+
+
+def _done(c, job, timeout=20):
+    t0 = time.time()
+    while (state := c.get(f"/api/jobs/{job['id']}", headers=H).json())["state"] in ("queued", "running"):
+        assert time.time() - t0 < timeout
+        time.sleep(0.05)
+    return state
+
+
+def test_frame_check_over_api(env):
+    c = env.client
+    from tests.test_frames import star_field
+    light = env.target / "Light"
+    for p in light.iterdir():
+        p.unlink()
+    for i in range(3):
+        star_field(light / f"L{i}.fits", seed=i, shape=(300, 400), stars=80)
+    job = c.post("/api/actions/frames", json={"path": env.target.as_posix()}, headers=H).json()
+    assert _done(c, job)["result"] == {"total": 3, "measured": 3, "suspicious": 0}
+    r = c.get("/api/frames", params={"path": env.target.as_posix()}, headers=H).json()
+    assert [f["name"] for f in r["frames"]] == ["L0.fits", "L1.fits", "L2.fits"] and r["fwhm_unit"] == "px"
+    assert c.get("/api/files", params={"path": r["frames"][0]["thumb"]}, headers=H).status_code == 200
+    r = c.post("/api/frames/exclude", json={"path": env.target.as_posix(), "names": ["L1.fits"]}, headers=H).json()
+    assert r["summary"]["excluded"] == 1
+    r = c.post("/api/frames/restore", json={"path": env.target.as_posix(), "names": ["L1.fits"]}, headers=H).json()
+    assert r["summary"]["excluded"] == 0
+    assert c.get("/api/frames", params={"path": (env.tmp / "nowhere").as_posix()}, headers=H).status_code == 404
+
+
+def test_disk_space_cleanup_and_archive_over_api(env):
+    c = env.client
+    reg = env.target / "Output" / "registered" / "L_r.xisf"
+    reg.parent.mkdir(parents=True)
+    reg.write_bytes(b"x" * 2000)
+    (env.target / "Post" / "10_linear.xisf").write_bytes(b"x" * 500)
+    (row,) = c.get("/api/storage", headers=H).json()
+    assert row["name"] == "NGC 7293" and row["removable"] == 2500
+    job = c.post("/api/actions/cleanup", json={"paths": [env.target.as_posix()]}, headers=H).json()
+    assert _done(c, job)["result"]["freed"] == 2500 and not reg.exists()
+    job = c.post("/api/actions/archive", json={"path": env.target.as_posix(), "clean": True}, headers=H).json()
+    dest = env.root / "Processed" / "2026Oct09" / "NGC 7293"
+    assert _done(c, job)["result"]["path"] == dest.as_posix() and dest.is_dir()
+    assert c.get("/api/targets", headers=H).json() == []
+    outside = env.tmp / "elsewhere" / "M1"
+    (outside / "Light").mkdir(parents=True)
+    for url, body in (("/api/actions/archive", {"path": outside.as_posix()}),
+                      ("/api/actions/cleanup", {"paths": [outside.as_posix()]}),
+                      ("/api/frames/exclude", {"path": outside.as_posix(), "names": ["x.fit"]}),
+                      ("/api/actions/frames", {"path": outside.as_posix()})):
+        assert c.post(url, json=body, headers=H).status_code == 403, url      # only the folders astroflow works in
+    sneaky = (env.root / "In Processing" / ".." / ".." / "elsewhere" / "M1").as_posix()
+    assert c.post("/api/actions/cleanup", json={"paths": [sneaky]}, headers=H).status_code == 403
+
+
+def test_nights_presets_and_process_everything_over_api(env, monkeypatch):
+    c = env.client
+    other = env.root / "In Processing" / "2026Oct12" / "NGC 7293"
+    (other / "Light").mkdir(parents=True)
+    (other / "Light" / "Light_NGC7293_2.fit").write_bytes(b"")
+    r = c.get("/api/targets/nights", params={"path": env.target.as_posix()}, headers=H).json()
+    assert [n["night"] for n in r["nights"]] == ["2026Oct09", "2026Oct12"] and r["combined"] is None
+    job = c.post("/api/actions/combine", json={"nights": [env.target.as_posix(), other.as_posix()]}, headers=H).json()
+    combined = env.root / "In Processing" / "Multi-night" / "NGC 7293"
+    assert _done(c, job)["result"]["path"] == combined.as_posix()
+    r = c.get("/api/targets/nights", params={"path": other.as_posix()}, headers=H).json()
+    assert r["combined"] == combined.as_posix() and r["included"] == ["2026Oct09", "2026Oct12"]
+    assert c.post("/api/actions/combine", json={"nights": [env.target.as_posix()]}, headers=H).status_code == 400
+
+    path = env.target.as_posix()
+    assert c.post("/api/presets", json={"path": path, "name": "柔和"}, headers=H).status_code == 400   # no edits yet
+    c.put("/api/params", json={"path": path, "stage": "starless", "step_id": "sat", "key": "boost", "value": 0.5},
+          headers=H)
+    assert c.post("/api/presets", json={"path": path, "name": "柔和"}, headers=H).json()["edits"] == 1
+    assert [p["name"] for p in c.get("/api/presets", params={"recipe": "osc_multiband_nebula"}, headers=H).json()] == ["柔和"]
+    c.post("/api/targets/session", json={"path": other.as_posix(), "filter_class": "osc_multiband"}, headers=H)
+    assert c.post("/api/presets/apply", json={"path": other.as_posix(), "name": "柔和"}, headers=H).json()["ok"]
+    assert c.post("/api/presets/apply", json={"path": other.as_posix(), "name": "没有"}, headers=H).status_code == 404
+    assert c.delete("/api/presets", params={"name": "柔和"}, headers=H).json()["ok"]
+
+    from astroflow.services import actions
+    ran = []
+    monkeypatch.setattr(actions, "run_all", lambda d: ran.append(d.name) or {"stages": []})
+    plan = {r["name"] + "@" + (r["night"] or "multi"): r for r in c.get("/api/batch/plan", headers=H).json()}
+    assert plan["NGC 7293@multi"]["steps"] == ["stack", "process"] and plan["NGC 7293@multi"]["nights"] == [
+        "2026Oct09", "2026Oct12"]
+    assert plan["NGC 7293@2026Oct09"]["skip"].startswith("已合并")         # the merged target stacks its nights
+    out = c.post("/api/actions/batch", json={"paths": [r["path"] for r in plan.values()]}, headers=H).json()
+    for job in out["jobs"]:
+        _done(c, job)
+    assert ran == ["NGC 7293"] and len(out["skipped"]) == 2
+
+
+def test_share_over_api(env):
+    c = env.client
+    path = env.target.as_posix()
+    assert c.get("/api/share/info", params={"path": path}, headers=H).json()["source"] is None
+    assert c.post("/api/share/preview", json={"path": path}, headers=H).status_code == 400
+    Image.new("RGB", (300, 200), (30, 30, 60)).save(env.target / "Post" / "NGC 7293_20261012.png")
+    info = c.get("/api/share/info", params={"path": path}, headers=H).json()
+    assert (info["width"], info["height"]) == (300, 200) and info["caption"][0] == "NGC 7293 螺旋星云"
+    assert set(info["crops"]) == {"3:4", "4:5", "1:1", "16:9", "original"}
+    r = c.post("/api/share/preview", json={"path": path, "aspect": "16:9", "caption": info["caption"]}, headers=H)
+    assert r.status_code == 200 and r.headers["content-type"] == "image/jpeg"
+    out = c.post("/api/share/export", json={"path": path, "aspect": "1:1", "signature": "© Ming"}, headers=H).json()
+    assert (out["width"], out["height"]) == (200, 200) and out["file"].endswith(".jpg")
+    assert c.get("/api/share/info", params={"path": path}, headers=H).json()["signature"] == "© Ming"
+    bad = c.post("/api/share/preview", json={"path": path, "crop": [0, 1]}, headers=H)
+    assert bad.status_code == 422

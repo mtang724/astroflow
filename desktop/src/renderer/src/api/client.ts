@@ -3,6 +3,7 @@
 import createClient from 'openapi-fetch'
 import type { components, paths } from './schema'
 import { authHeaders } from './session'
+import { tr } from '@/lib/i18n'
 
 export type Schemas = components['schemas']
 export type TargetSummary = Schemas['TargetSummary']
@@ -22,6 +23,14 @@ export type AgentEvent = Schemas['AgentEvent']
 export type SetupReport = Schemas['SetupReport']
 export type SetupCheck = Schemas['SetupCheck']
 export type SetupAction = Schemas['SetupAction']
+export type FrameReport = Schemas['FrameReport']
+export type FrameRow = Schemas['FrameRow']
+export type StorageUsage = Schemas['StorageUsage']
+export type BatchRow = Schemas['BatchRow']
+export type NightsOut = Schemas['NightsOut']
+export type Preset = Schemas['Preset']
+export type ShareInfo = Schemas['ShareInfo']
+export type ShareSpec = Schemas['ShareSpec']
 
 export const api = createClient<paths>({ baseUrl: '' })
 
@@ -51,7 +60,9 @@ export async function call<T>(promise: Promise<{ data?: T; error?: unknown; resp
         ? detail
         : detail !== undefined
           ? JSON.stringify(detail)
-          : `本地服务没有响应（HTTP ${response.status}${response.statusText ? ' ' + response.statusText : ''}）`
+          : tr('本地服务没有响应（HTTP {status}）', {
+              status: `${response.status}${response.statusText ? ' ' + response.statusText : ''}`
+            })
     throw new ApiError(message, response.status)
   }
   return data

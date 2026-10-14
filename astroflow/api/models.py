@@ -32,6 +32,7 @@ class SettingsOut(BaseModel):
     extra_targets: list[str]
     settings_file: str
     checks: dict[str, bool]                # do the configured paths exist?
+    language: Literal["zh", "en"]          # the language in use (preferences.language, "auto" resolved)
 
 
 class SettingsPatch(BaseModel):
@@ -107,6 +108,8 @@ class TargetSummary(BaseModel):
     name: str
     path: str
     night: str
+    nights: list[str] = []                 # the nights it holds (several: a multi-night target)
+    staged: bool = False                   # in In Processing (can be archived to Processed)
     lights: int
     darks: int
     bias: int
@@ -267,6 +270,158 @@ class OrganizePlan(BaseModel):
 class ReferencesIn(BaseModel):
     path: str
     refresh: bool = False
+
+
+# ----------------------------------------------------------------------------------------------- frame check
+class FrameRow(BaseModel):
+    name: str                              # path under Light/ (multi-night: NIGHT_<night>/<file>)
+    path: str
+    excluded: bool
+    measured: bool
+    error: str | None = None
+    thumb: str
+    time: str | None = None
+    exptime: float | None = None
+    stars: int | None = None
+    fwhm: float | None = None              # arcsec when the pixel scale is known, else pixels (fwhm_unit)
+    ecc: float | None = None
+    background: float | None = None        # median sky, fraction of the sensor's full scale
+    flags: list[str]                       # why the frame looks worse than the others
+
+
+class FrameSummary(BaseModel):
+    total: int
+    measured: int
+    excluded: int
+    suspicious: int
+    stars: float | None = None             # medians of the kept frames
+    fwhm: float | None = None
+    ecc: float | None = None
+    background: float | None = None
+
+
+class FrameReport(BaseModel):
+    frames: list[FrameRow]
+    fwhm_unit: Literal["arcsec", "px"]
+    scale: float | None = None
+    restack: bool                          # frames were excluded or restored after the master was made
+    summary: FrameSummary
+
+
+class FrameCheckIn(BaseModel):
+    path: str
+    force: bool = False                    # measure every frame again, not only new ones
+
+
+class FramesIn(BaseModel):
+    path: str
+    names: list[str]
+
+
+# ----------------------------------------------------------------------------------------------- disk space
+class StoragePart(BaseModel):
+    id: Literal["frames", "masters", "wbpp_frames", "checkpoints", "results"]
+    bytes: int
+    files: int
+    removable: bool
+
+
+class StorageUsage(BaseModel):
+    path: str
+    name: str
+    night: str
+    nights: list[str] = []
+    total: int
+    removable: int
+    parts: list[StoragePart]
+
+
+class CleanupIn(BaseModel):
+    paths: list[str]
+
+
+class ArchiveIn(BaseModel):
+    path: str
+    clean: bool = False                    # also delete what can be made again
+
+
+# ----------------------------------------------------------------------------------------------- process everything
+class BatchRow(BaseModel):
+    path: str
+    name: str
+    night: str
+    nights: list[str] = []
+    steps: list[Literal["stack", "comet", "process"]]
+    skip: str | None = None                # why nothing will be done
+
+
+class BatchIn(BaseModel):
+    paths: list[str]
+
+
+class BatchOut(BaseModel):
+    jobs: list[Job]
+    skipped: list[BatchRow]
+
+
+# ----------------------------------------------------------------------------------------------- several nights
+class NightInfo(BaseModel):
+    night: str
+    path: str
+    lights: int
+
+
+class NightsOut(BaseModel):
+    name: str
+    nights: list[NightInfo]                # the target's nights in In Processing
+    combined: str | None = None            # its multi-night target, when made
+    included: list[str] = []               # the nights that one holds
+    missing: list[str] = []                # of those, nights whose folders are gone (their frames stay in it)
+
+
+class CombineIn(BaseModel):
+    nights: list[str]                      # night target folders (same target name)
+
+
+# ----------------------------------------------------------------------------------------------- styles
+class Preset(BaseModel):
+    name: str
+    recipe: str
+    source: str | None = None              # the target it was saved from
+    saved: str | None = None
+    edits: int
+
+
+class PresetIn(BaseModel):
+    path: str
+    name: str
+
+
+# ----------------------------------------------------------------------------------------------- sharing
+Aspect = Literal["3:4", "4:5", "1:1", "16:9", "original"]
+
+
+class ShareInfo(BaseModel):
+    source: str | None                     # the finished image (None: not processed yet)
+    width: int = 0
+    height: int = 0
+    caption: list[str] = []                # suggested lines
+    signature: str = ""                    # the one used last time
+    crops: dict[str, list[float]] = {}     # default crop per aspect, fractions [x0, y0, x1, y1]
+
+
+class ShareSpec(BaseModel):
+    path: str
+    aspect: Aspect = "3:4"
+    crop: list[float] | None = Field(None, min_length=4, max_length=4)
+    caption: list[str] = []
+    signature: str = ""
+
+
+class ShareOut(BaseModel):
+    file: str
+    width: int
+    height: int
 
 
 # ----------------------------------------------------------------------------------------------- agent
