@@ -22,7 +22,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import frameio, jobctx, jsonfile, metrics, mono, objects, pi, wbpp
+from . import dualband, frameio, jobctx, jsonfile, metrics, mono, objects, pi, wbpp
 
 # --------------------------------------------------------------------------- recipes
 # Step dicts are passed verbatim to pjsr/steps.js (op = function name). "id" lets overrides address a step.
@@ -47,6 +47,7 @@ NEBULA_EP1 = [
         {"id": "sxt", "op": "sxt", "unscreen": True},
     ]},
     {"stage": "starless", "input": "30_starless", "output": "40_starless_final", "linear_in": False, "steps": [
+        {"id": "hdr", "op": "hdr", "layers": 5, "amount": 0.3, "ifBright": 0.001},     # a burnt-out core (M42); else skipped
         {"id": "lhe", "op": "lhe", "params": {"radius": 162, "slopeLimit": 1.3, "amount": 0.8}},
         {"id": "sat", "op": "saturation", "boost": 0.72, "mask": "lum", "maskClip": 0.10, "passes": 2, "rgb": {}},
         {"id": "ht", "op": "ht", "shadows": "auto", "clipFraction": 0.0004, "midtones": 0.46},
@@ -106,43 +107,44 @@ GALAXY_EP2 = [
     ]},
 ]
 
-# OSC + multiband (Antlia Quad Band, Ha+[NII]+[SII] / [OIII]) nebulae. Provisional until a narrowband tutorial
-# video is added: BNCC instead of broadband SPCC, LHE scaled to the object, stronger non-linear NXT for the
-# usually lower SNR, magenta removal on narrowband stars. See knowledge/filters.md.
+# Colour camera + dual-band / multiband filter (Ha + OIII; video ep4b, the Veil with an L-eXtreme): the stack already is
+# HOO (R = Ha, G and B = OIII). Background with DBE (GC took nebula away), SPCC in narrowband mode on the two lines
+# (BNCC if that fails), a harder stretch, then the narrowband colour work: OIII from cyan to blue through a blue mask,
+# saturation through an L mask, green removed, the background balanced per channel and darkened. Stars as they are.
 MULTIBAND_NEB = [
     {"stage": "linear", "input": "master", "output": "10_linear", "linear_in": True, "steps": [
         {"id": "locate", "op": "locate_object", "optional": True},
         {"id": "bg", "op": "find_background"},
-        {"id": "gc", "op": "gradient_correction", "params": {}, "saveModel": "{previews}/10_gc_model.jpg"},
+        {"id": "dbe", "op": "dbe_auto", "degree": 2, "objectScale": 1.3, "saveModel": "{previews}/10_dbe_model.jpg"},
         {"id": "bg2", "op": "find_background"},
-        {"id": "cc", "op": "color_calibration", "method": "bncc"},
+        {"id": "cc", "op": "color_calibration", "narrowband": "HOO", "bandwidth": 7.0},
         {"id": "pv_cc", "op": "preview", "path": "{previews}/10a_after_cc.jpg", "size": 1600},
         {"id": "bxt", "op": "bxt", "params": {}},
-        {"id": "nxt", "op": "nxt", "params": {"denoise": 0.30, "denoise_color": 0.45, "iterations": 2}},
+        {"id": "nxt", "op": "nxt", "params": {"denoise": 0.30, "denoise_color": 0.40, "iterations": 2}},
     ]},
     {"stage": "stretch", "input": "10_linear", "output": "20_stretched", "linear_in": True, "steps": [
-        {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.20, "expandLow": 0.05,
-         "aggressiveness": 5},
+        {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.24, "expandLow": 0.05,
+         "aggressiveness": 16.3},
     ]},
     {"stage": "stars", "input": "20_stretched", "output": "30_starless", "stars_output": "31_stars",
      "linear_in": False, "steps": [
         {"id": "sxt", "op": "sxt", "unscreen": True},
     ]},
     {"stage": "starless", "input": "30_starless", "output": "40_starless_final", "linear_in": False, "steps": [
-        {"id": "lhe", "op": "lhe", "params": {"radius": "auto", "slopeLimit": 1.3, "amount": 0.7}, "radiusMax": 200},
-        {"id": "sat", "op": "saturation", "boost": 0.72, "mask": "lum", "maskClip": 0.10, "passes": 2},
-        {"id": "ht", "op": "ht", "shadows": "auto", "clipFraction": 0.0004, "midtones": 0.46},
-        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.70, "denoise_color": 0.90, "iterations": 2}},
-        {"id": "usm", "op": "usm", "params": {"sigma": 2.0, "amount": 0.5}},
+        {"id": "oiii_blue", "op": "curves", "mask": "color", "maskColor": "blue", "maskBlur": 15,
+         "channels": {"B": [[0, 0], [0.424, 0.571], [1, 1]], "G": [[0, 0], [0.558, 0.450], [1, 1]]}},
+        {"id": "sat", "op": "saturation", "boost": 0.72, "mask": "lum", "maskClip": 0.07, "maskMidtones": 0.5},
+        {"id": "balance", "op": "ht", "channelShadows": "sky", "shadows": "none"},
+        {"id": "scnr", "op": "scnr", "params": {"amount": 1.0}},
+        {"id": "sat2", "op": "saturation", "boost": 0.64, "mask": "lum", "maskClip": 0.0, "maskMidtones": 0.5},
+        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.65, "denoise_color": 0.90, "iterations": 2}},
+        {"id": "dark_sky", "op": "curves", "mask": "inverse_lum", "maskClip": 0.0, "maskMidtones": 0.5,
+         "channels": {"S": [[0, 0], [0.532, 0.455], [1, 1]], "K": [[0, 0], [0.556, 0.444], [1, 1]]}},
+        {"id": "ht", "op": "ht", "shadows": "auto", "clipFraction": 0.000002, "midtones": 0.42},
     ]},
-    {"stage": "stars_color", "input": "31_stars", "output": "41_stars_final", "linear_in": False, "steps": [
-        {"id": "star_sat", "op": "saturation", "boost": 0.52, "mask": False},
-        {"id": "scnr", "op": "scnr", "params": {"amount": 0.81}},
-        {"id": "demagenta", "op": "scnr", "color": "magenta", "params": {"amount": 0.5}},
-    ]},
-    {"stage": "combine", "input": "40_starless_final", "aux": {"stars": "41_stars_final"}, "output": "50_final",
+    {"stage": "combine", "input": "40_starless_final", "aux": {"stars": "31_stars"}, "output": "50_final",
      "linear_in": False, "final": True, "steps": [
-        {"id": "recombine", "op": "recombine", "mode": "screen", "starsAmount": 0.9},
+        {"id": "recombine", "op": "recombine", "mode": "screen", "starsAmount": 1.0},
     ]},
 ]
 
@@ -253,8 +255,179 @@ MONO_LRGB_NEBULA = _mono_front(
     {},
     []) + copy.deepcopy(NEBULA_EP1[2:])
 
+# ---------------------------------------------------------------- narrowband (videos ep4, ep5)
+# Mono masters per line (H, O, S) and, when shot, R, G and B for star colour: everything is registered onto H and
+# cropped to the shared area, then combined into a palette image (HOO: R = H, G = B = O; SHO: R = S, G = H, B = O).
+def _nb_channels(lines, combine):
+    windows = ["main", *lines, "R", "G", "B"]
+    return {"stage": "channels", "input": "master:H", "aux": {c: f"master:{c}" for c in lines},
+            "optional_aux": {c: f"master:{c}" for c in "RGB"}, "output": "10_nb", "outputs": {"RGB": "10_rgb"},
+            "linear_in": True, "steps": [
+        {"id": "align", "op": "align_channels", "reference": "main", "windows": windows},
+        {"id": "crop", "op": "crop_common", "windows": windows, "margin": 4},
+        {"id": "rgb", "op": "combine_rgb", "red": "R", "green": "G", "blue": "B", "lum": False, "output": "RGB",
+         "optional": True},
+        {"id": "combine", "op": "combine_rgb", **combine, "lum": False},
+        {"id": "solve", "op": "plate_solve", "optional": True},
+        {"id": "locate", "op": "locate_object", "optional": True},
+    ]}
+
+
+# Broadband stars for a narrowband image (video ep4): narrowband stars come out red, blue or white, a real star's colour
+# needs the broadband R, G, B. The RGB image gets its own gradient removal, colour calibration, deconvolution and
+# stretch; only its stars are kept and later replace the narrowband ones.
+RGB_STARS = {"stage": "rgb_stars", "input": "10_rgb", "requires": ["master:R", "master:G", "master:B"], "output": None,
+             "stars_output": "32_rgb_stars", "linear_in": True, "steps": [
+    {"id": "dbe", "op": "dbe_auto", "degree": 2, "objectScale": 1.6},
+    {"id": "gc", "op": "gradient_correction", "params": {}},
+    {"id": "bg", "op": "find_background"},
+    {"id": "cc", "op": "color_calibration", "method": "bncc"},
+    {"id": "bxt", "op": "bxt", "params": {}},
+    {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.23, "expandLow": 0.05, "aggressiveness": 5},
+    {"id": "sxt", "op": "sxt", "unscreen": True},
+]}
+
+
+def _nb_back(starless, stars_steps, stars_per_channel=False):
+    """Stars split off, the starless palette work, star colour (RGB stars when there are, else stars_steps), combine."""
+    return [
+        {"stage": "stars", "input": "20_stretched", "output": "30_starless", "stars_output": "31_stars",
+         "linear_in": False, "steps": [
+            {"id": "sxt", "op": "sxt", "unscreen": True, "perChannel": stars_per_channel},
+        ]},
+        {"stage": "starless", "input": "30_starless", "output": "40_starless_final", "linear_in": False,
+         "steps": starless},
+        {"stage": "stars_color", "input": "31_stars", "optional_aux": {"rgbstars": "32_rgb_stars"},
+         "output": "41_stars_final", "linear_in": False, "steps": [
+            {"id": "rgb_stars", "op": "use_window", "from": "rgbstars"},
+            *stars_steps,
+        ]},
+        {"stage": "combine", "input": "40_starless_final", "aux": {"stars": "41_stars_final"}, "output": "50_final",
+         "linear_in": False, "final": True, "steps": [
+            {"id": "recombine", "op": "recombine", "mode": "screen", "starsAmount": 1.0},
+            {"id": "balance", "op": "ht", "channelShadows": "sky", "shadows": "none"},
+        ]},
+    ]
+
+
+# Video ep4a (NGC 6992, mono Ha + OIII, R/G/B for stars): SPCC in narrowband mode works for HOO; stars removed per
+# channel (on the colour image SXT took red nebula for stars); OIII turned from cyan to blue through a blue mask;
+# saturation through an L mask; the background balanced per channel. No LHE (enable it for targets without much
+# structure), no sharpening.
+MONO_HOO_NEBULA = [
+    _nb_channels(["O"], {"red": "main", "green": "O", "blue": "O"}),
+    {"stage": "linear", "input": "10_nb", "output": "11_nb", "linear_in": True, "steps": [
+        {"id": "gc", "op": "gradient_correction", "params": {}, "saveModel": "{previews}/11_gc_model.jpg"},
+        {"id": "bg", "op": "find_background"},
+        {"id": "cc", "op": "color_calibration", "narrowband": "HOO", "bandwidth": 7.0},
+        {"id": "pv_cc", "op": "preview", "path": "{previews}/11a_after_cc.jpg", "size": 1600},
+        {"id": "bxt", "op": "bxt", "params": {}},
+        {"id": "nxt", "op": "nxt", "params": {"denoise": 0.25, "denoise_color": 0.40, "iterations": 2}},
+    ]},
+    RGB_STARS,
+    {"stage": "stretch", "input": "11_nb", "output": "20_stretched", "linear_in": True, "steps": [
+        {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.25, "expandLow": 0.05,
+         "aggressiveness": 44.9},
+    ]},
+    *_nb_back([
+        {"id": "lhe", "op": "lhe", "enabled": False, "params": {"radius": 280, "slopeLimit": 1.3, "amount": 1.0}},
+        {"id": "oiii_blue", "op": "curves", "mask": "color", "maskColor": "blue", "maskBlur": 15, "passes": 2,
+         "channels": {"B": [[0, 0], [0.44, 0.55], [1, 1]], "G": [[0, 0], [0.53, 0.47], [1, 1]]}},
+        {"id": "sat", "op": "saturation", "boost": 0.65, "mask": "lum", "maskClip": 0.12, "maskMidtones": 0.5,
+         "passes": 2},
+        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.60, "denoise_color": 0.90, "iterations": 2}},
+        {"id": "ht", "op": "ht", "channelShadows": "sky", "shadows": "auto", "clipFraction": 0.000001,
+         "midtones": 0.5},
+        {"id": "usm", "op": "usm", "enabled": False, "params": {"sigma": 2.0, "amount": 0.5}},
+    ], [
+        {"id": "star_sat", "op": "saturation", "boost": 0.74, "mask": False},
+    ], stars_per_channel=True),
+]
+
+# Video ep5a (M16, mono SII + Ha + OIII): no SPCC (SHO is false colour: it would make the image green and the stars
+# white); BNCC with the bright nebula as white reference. HDR and LHE for the bright core, then the Hubble look: green
+# held back through an L mask, the SII+Ha mix pushed to gold through a yellow mask and OIII to blue through a blue mask,
+# a contrast curve, the background balanced per channel. Stars without RGB get natural colours from the three lines.
+SHO_STARS = [
+    {"id": "nb_colors", "op": "nb_star_colors", "target": "main", "palette": "SHO"},
+    {"id": "star_sat", "op": "saturation", "boost": 0.68, "mask": False},
+]
+MONO_SHO_NEBULA = [
+    _nb_channels(["S", "O"], {"red": "S", "green": "main", "blue": "O"}),
+    {"stage": "linear", "input": "10_nb", "output": "11_nb", "linear_in": True, "steps": [
+        {"id": "locate", "op": "locate_object", "optional": True},
+        {"id": "gc", "op": "gradient_correction", "params": {}, "saveModel": "{previews}/11_gc_model.jpg"},
+        {"id": "bg", "op": "find_background"},
+        {"id": "cc", "op": "color_calibration", "method": "bncc",
+         "bncc": {"whiteROI": "bright", "structureDetection": False}},
+        {"id": "pv_cc", "op": "preview", "path": "{previews}/11a_after_cc.jpg", "size": 1600},
+        {"id": "bxt", "op": "bxt", "params": {}},
+        {"id": "nxt", "op": "nxt", "params": {"denoise": 0.30, "denoise_color": 0.40, "iterations": 2}},
+    ]},
+    RGB_STARS,
+    {"stage": "stretch", "input": "11_nb", "output": "20_stretched", "linear_in": True, "steps": [
+        {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.23, "expandLow": 0.05,
+         "aggressiveness": 46.6},
+    ]},
+    *_nb_back([
+        {"id": "hdr", "op": "hdr", "layers": 5, "amount": 0.3},
+        {"id": "lhe", "op": "lhe", "params": {"radius": 164, "slopeLimit": 1.3, "amount": 0.76}},
+        {"id": "sat", "op": "saturation", "boost": 0.72, "mask": "lum", "maskClip": 0.165, "maskMidtones": 0.5,
+         "rgb": {"G": -0.05, "R": 0.02}},
+        {"id": "gold", "op": "curves", "mask": "color", "maskColor": "yellow", "maskBlur": 15,
+         "channels": {"R": [[0, 0], [0.486, 0.517], [1, 1]], "G": [[0, 0], [0.5, 0.465], [1, 1]],
+                      "S": [[0, 0], [0.5, 0.65], [1, 1]]}},
+        {"id": "oiii_blue", "op": "curves", "mask": "color", "maskColor": "blue", "maskBlur": 15,
+         "channels": {"B": [[0, 0], [0.5, 0.55], [1, 1]], "G": [[0, 0], [0.5, 0.47], [1, 1]],
+                      "S": [[0, 0], [0.5, 0.66], [1, 1]]}},
+        {"id": "contrast", "op": "curves", "channels": {"K": [[0, 0], [0.27, 0.23], [0.718, 0.708], [1, 1]]}},
+        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.60, "denoise_color": 0.90, "iterations": 2}},
+        {"id": "ht", "op": "ht", "channelShadows": "sky", "shadows": "auto", "clipFraction": 0.0004, "midtones": 0.5},
+    ], SHO_STARS),
+]
+
+# Video ep5b (C 50, colour camera, one master through an Ha+OIII filter and one through an SII+OIII filter): the two
+# are registered and cropped, then SII = the SO master's red, Ha = the HO master's red, OIII = the mean of all four
+# green and blue channels; from there as mono SHO, with that video's values.
+OSC_SHO_NEBULA = [
+    {"stage": "channels", "input": "master:HO", "aux": {"SO": "master:SO"}, "output": "10_nb", "linear_in": True,
+     "steps": [
+        {"id": "align", "op": "align_channels", "reference": "main", "windows": ["main", "SO"]},
+        {"id": "crop", "op": "crop_common", "windows": ["main", "SO"], "margin": 4},
+        {"id": "combine", "op": "combine_rgb", "red": "SO[0]", "green": "main[0]",
+         "blue": "(main[1] + main[2] + SO[1] + SO[2]) / 4", "lum": False, "close": ["main", "SO"]},
+        {"id": "solve", "op": "plate_solve", "optional": True},
+        {"id": "locate", "op": "locate_object", "optional": True},
+    ]},
+    {"stage": "linear", "input": "10_nb", "output": "11_nb", "linear_in": True, "steps": [
+        {"id": "gc", "op": "gradient_correction", "params": {}, "saveModel": "{previews}/11_gc_model.jpg"},
+        {"id": "bg", "op": "find_background"},
+        {"id": "cc", "op": "color_calibration", "method": "bncc",
+         "bncc": {"whiteROI": "bright", "structureDetection": False}},
+        {"id": "pv_cc", "op": "preview", "path": "{previews}/11a_after_cc.jpg", "size": 1600},
+        {"id": "bxt", "op": "bxt", "params": {}},
+        {"id": "nxt", "op": "nxt", "params": {"denoise": 0.25, "denoise_color": 0.40, "iterations": 2}},
+    ]},
+    {"stage": "stretch", "input": "11_nb", "output": "20_stretched", "linear_in": True, "steps": [
+        {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.25, "expandLow": 0.05,
+         "aggressiveness": 5},
+    ]},
+    *_nb_back([
+        {"id": "lhe", "op": "lhe", "params": {"radius": 222, "slopeLimit": 1.3, "amount": 0.82}},
+        {"id": "sat", "op": "saturation", "boost": 0.74, "mask": "lum", "maskClip": 0.14, "maskMidtones": 0.5,
+         "rgb": {"G": -0.065}},
+        {"id": "contrast", "op": "curves", "channels": {"K": [[0, 0], [0.32, 0.28], [0.65, 0.69], [1, 1]]}},
+        {"id": "gold", "op": "curves", "mask": "color", "maskColor": "yellow", "maskBlur": 15,
+         "channels": {"R": [[0, 0], [0.44, 0.58], [1, 1]], "S": [[0, 0], [0.486, 0.525], [1, 1]]}},
+        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.65, "denoise_color": 0.90, "iterations": 2}},
+        {"id": "ht", "op": "ht", "channelShadows": "sky", "shadows": "auto", "clipFraction": 0.0004,
+         "midtones": 0.487},
+    ], SHO_STARS),
+]
+
 RECIPES = {"osc_broadband_nebula": NEBULA_EP1, "osc_galaxy": GALAXY_EP2, "osc_multiband_nebula": MULTIBAND_NEB,
-           "comet": COMET, "mono_lrgb_galaxy": MONO_LRGB_GALAXY, "mono_lrgb_nebula": MONO_LRGB_NEBULA}
+           "comet": COMET, "mono_lrgb_galaxy": MONO_LRGB_GALAXY, "mono_lrgb_nebula": MONO_LRGB_NEBULA,
+           "mono_hoo_nebula": MONO_HOO_NEBULA, "mono_sho_nebula": MONO_SHO_NEBULA, "osc_sho_nebula": OSC_SHO_NEBULA}
 
 
 # --------------------------------------------------------------------------- state
@@ -265,7 +438,7 @@ class Work:
         self.session = objects.session_info(self.target)
         if recipe is None:
             recipe, _ = default_recipe(self.target)
-            recipe = recipe or ("mono_lrgb_nebula" if is_mono(self.target) else "osc_broadband_nebula")
+            recipe = recipe or FALLBACK.get(detected_class(self.target), "osc_broadband_nebula")
         self.dir = self.target / "Post"
         self.previews = self.dir / "previews"
         self.metrics = self.dir / "metrics"
@@ -276,7 +449,7 @@ class Work:
         self.state.setdefault("recipe", recipe)
         self.state.setdefault("stages", {})
         self.state.setdefault("history", [])
-        self.recipe = RECIPES[self.state["recipe"]]
+        self.recipe = recipe_stages(self.state["recipe"], self.target, self.state)
         names = self.stage_names()                 # drop records of stages an older recipe version had
         self.state["stages"] = {k: v for k, v in self.state["stages"].items() if k in names}
         if stages_stale(self.target, self.state):  # re-stacked since: every stage starts from the new master
@@ -294,11 +467,13 @@ class Work:
         self.save()
 
     def master(self, channel=None):
-        """The start image: WBPP's master light (or the recorded one: a comet stack ...). channel 'L' / 'R' / 'G' / 'B':
-        that filter's master of a mono target; without a channel a mono target gives L (else R)."""
-        mono_masters = mono.masters(self.target, self.state.get("masters"))
-        if channel or mono.is_rgb(mono_masters):
-            found = mono_masters.get(channel) or (None if channel else mono_masters.get("L") or mono_masters["R"])
+        """The start image: WBPP's master light (or the recorded one: a comet stack ...). channel: one filter's master
+        (a mono camera's 'L' ... 'H', 'O', 'S'; a colour camera's dual-band 'HO' / 'SO'); without a channel a target
+        with masters per filter gives the first that the recipes start from."""
+        named = named_masters(self.target, self.state.get("masters"))
+        if channel or detected_class(self.target, self.state):
+            first = next((named[c] for c in ("H", "HO", "L", "R") if c in named), None)
+            found = named.get(channel) if channel else first
             if not found:
                 raise FileNotFoundError(f"no {channel} master in {self.target / 'Output' / 'master'}; run wbpp first")
             return found
@@ -329,24 +504,45 @@ RESULT_KEYS = ("finished", "object", "colorCalibrated", "unscreen")   # what the
 
 
 def start_images(target_dir, state):
-    """The images the recipe starts from: the recorded master (comet stack ...) or masters (mono, made elsewhere), else
-    WBPP's master lights (one per filter for a mono camera); [] before stacking."""
+    """The images the recipe starts from: the recorded master (comet stack ...) or masters (per filter, made
+    elsewhere), else WBPP's master lights (one per filter for a mono camera); [] before stacking."""
     if state.get("master") and Path(state["master"]).exists():
         return [Path(state["master"])]
-    recorded = mono.masters(target_dir, state.get("masters"))
+    recorded = named_masters(target_dir, state.get("masters")) if state.get("masters") else {}
     return list(recorded.values()) if recorded else wbpp.masters(target_dir)
 
 
+def named_masters(target_dir, recorded=None):
+    """The masters a recipe can ask for by name (master:<name>): a mono camera's per filter (L, R, G, B, H, O, S) and a
+    colour camera's per dual-band filter set (HO, SO)."""
+    return {**mono.masters(target_dir, recorded), **dualband.masters(target_dir, recorded)}
+
+
+def detected_class(target_dir, state=None):
+    """What the masters say about the data: 'mono_sho' / 'mono_hoo' (mono Ha + OIII, with SII), 'mono_lrgb' (mono R, G,
+    B), 'osc_sho' (a colour camera's Ha+OIII and SII+OIII masters); None for one colour master."""
+    found = named_masters(target_dir, (state or {}).get("masters"))
+    if dualband.is_sho(found):
+        return "osc_sho"
+    if "H" in found and "O" in found:
+        return "mono_sho" if "S" in found else "mono_hoo"
+    return "mono_lrgb" if mono.is_rgb(found) else None
+
+
 def is_mono(target_dir, state=None):
-    """The target's masters are a mono camera's, one per filter (R, G and B at least)."""
-    return mono.is_rgb(mono.masters(target_dir, (state or {}).get("masters")))
+    """The target's masters are a mono camera's, one per filter."""
+    return (detected_class(target_dir, state) or "").startswith("mono")
+
+
+FALLBACK = {"mono_lrgb": "mono_lrgb_nebula", "mono_hoo": "mono_hoo_nebula", "mono_sho": "mono_sho_nebula",
+            "osc_sho": "osc_sho_nebula"}
 
 
 def default_recipe(target_dir):
-    """(recipe, object type) unless the user picks a recipe: by object type and the filters, the mono LRGB recipes for
-    a mono camera's masters (objects.recipe_for)."""
+    """(recipe, object type) unless the user picks a recipe: by object type and the filters - what the masters say
+    (detected_class), else the night's filter (session.json) - see objects.recipe_for."""
     target_dir = Path(target_dir)
-    fc = "mono_lrgb" if is_mono(target_dir) else objects.session_info(target_dir).get("filter_class")
+    fc = detected_class(target_dir) or objects.session_info(target_dir).get("filter_class")
     return objects.recipe_for(target_dir.name, filter_class=fc)
 
 
@@ -443,6 +639,9 @@ def run_stage(work, name, overrides=None, timeout=3600):
             s.setdefault("solve", {}).update({k: v for k, v in solve_hints(work.target).items() if k not in s["solve"]})
         if s["op"] == "plate_solve":
             s.update({k: v for k, v in solve_hints(work.target).items() if k not in s})
+            cat = objects.lookup(work.state.get("object_name") or work.target.name) or {}
+            if "ra" not in s and cat.get("ra") is not None:     # no lights to read it from: the catalogue position
+                s.update(ra=cat["ra"], dec=cat["dec"])
         if s["op"] == "locate_object":
             cat = objects.lookup(work.state.get("object_name") or work.target.name) or {}
             for k in ("ra", "dec", "diameter", "axisRatio", "posAngle"):
@@ -457,19 +656,22 @@ def run_stage(work, name, overrides=None, timeout=3600):
         s.pop("radiusMax", None)
         steps.append(_fmt(s, prev))
 
-    out_name = spec["output"]
+    out_name = spec["output"]                     # None: the stage keeps only other windows (e.g. RGB stars)
     job = {"input": work.checkpoint(spec["input"]).as_posix(), "linear": spec.get("linear_in", False),
            "colorCalibrated": work.state.get("colorCalibrated", False), "unscreen": work.state.get("unscreen"),
-           "object": work.state.get("object"), "steps": steps,
-           "save": [{"window": "main", "path": (work.dir / f"{out_name}.xisf").as_posix()}],
-           "previews": [{"window": "main", "path": (work.previews / f"{out_name}.jpg").as_posix(), "size": 1600}],
-           "metrics": [{"window": "main", "path": (work.metrics / f"{out_name}.tif").as_posix(), "size": 2048}]}
+           "object": work.state.get("object"), "steps": steps, "save": [], "previews": [], "metrics": []}
+    if out_name:
+        job["save"].append({"window": "main", "path": (work.dir / f"{out_name}.xisf").as_posix()})
+        job["previews"].append({"window": "main", "path": (work.previews / f"{out_name}.jpg").as_posix(), "size": 1600})
+        job["metrics"].append({"window": "main", "path": (work.metrics / f"{out_name}.tif").as_posix(), "size": 2048})
     aux = {k: work.checkpoint(v).as_posix() for k, v in (spec.get("aux") or {}).items()}
-    for k, v in (spec.get("optional_aux") or {}).items():     # e.g. a mono target's L: not every target has one
+    for k, v in (spec.get("optional_aux") or {}).items():     # a mono target's L, RGB stars: not every target has them
         try:
-            aux[k] = work.checkpoint(v).as_posix()
+            path = work.checkpoint(v)
         except FileNotFoundError:
-            pass
+            continue
+        if path.exists():
+            aux[k] = path.as_posix()
     if aux:
         job["aux"] = aux
     if spec.get("stars_output"):
@@ -610,7 +812,18 @@ def run(target_dir, recipe=None, start=None, only=None, overrides=None, master=N
 
 def stage_outputs(spec):
     """The checkpoints a stage writes: its output, the stars split off, and further windows (a mono target's L)."""
-    return [spec[k] for k in ("output", "stars_output") if k in spec] + list((spec.get("outputs") or {}).values())
+    return [spec[k] for k in ("output", "stars_output") if spec.get(k)] + list((spec.get("outputs") or {}).values())
+
+
+def recipe_stages(recipe, target_dir, state=None):
+    """The recipe's stages that apply to this target: a stage with `requires` (e.g. RGB stars: master:R, G, B) only when
+    those exist."""
+    def have(name):
+        try:
+            return named_masters(target_dir, (state or {}).get("masters")).get(name.partition(":")[2]) is not None
+        except OSError:
+            return False
+    return [s for s in RECIPES[recipe] if all(have(n) for n in s.get("requires", ()))]
 
 
 def with_missing_inputs(work, todo):

@@ -1,4 +1,6 @@
 """Importing frames: recognised by their headers in any layout, each target with matching calibration frames."""
+from pathlib import Path
+
 import numpy as np
 import pytest
 from astropy.io import fits
@@ -184,3 +186,11 @@ def test_refresh_completes_staged_targets_from_the_library(astro):
           SET_TEMP=-10.0, **ASI)
     _, rows, _ = _rows(refresh=True)
     assert [(r["kind"], r["darks"]["origin"]) for r in rows] == [("fill", "library")]
+
+
+def test_one_object_typed_differently_on_two_nights_is_one_target():
+    def name(obj):
+        return organize.target_of({"object": obj, "path": Path("x/y.fits"), "root": Path("x")})
+    assert {name(o) for o in ("M 42", "m42", "Messier 42", "M42")} == {"M42"}
+    assert name("ngc 6334") == "NGC 6334" and name("NGC6334") == "NGC6334" and name("sh2-240") == "Sh2-240"
+    assert name("IC1805 Heart") == "IC1805 Heart" and name("Comet C/2025 R3") == "Comet C2025 R3"

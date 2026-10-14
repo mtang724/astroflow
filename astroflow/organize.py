@@ -35,6 +35,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import numpy as np
 from astropy.io import fits
 
 from . import config, frameio, jobctx, multinight
@@ -227,8 +228,13 @@ _GENERIC_DIR = re.compile(r"^(autorun|plan|preview|live|captures?|sharpcap captu
                           r"\d{4}-?\d{2}-?\d{2}.*|\d{4}[a-z]{3}\d{2})$", re.I)
 
 
+CATALOGUE_NAME = re.compile(r"^(NGC|IC|SH2|LDN|LBN|VDB|UGC|ARP|ABELL)(\s*-?\s*)(\d+.*)$", re.I)
+
+
 def target_of(m):
-    """Folder-safe target name: OBJECT ('M 51' -> 'M51'), else the nearest folder that is not a frame type or a date."""
+    """Folder-safe target name: OBJECT, else the nearest folder that is not a frame type or a date. Catalogue names are
+    written one way whatever the capture program got typed ('M 42', 'm42', 'Messier 42' -> 'M42'; 'ngc 6334' ->
+    'NGC 6334'), so the nights of one object end up in the same target."""
     name = m["object"]
     if not name:
         for d in [m["path"].parent, *m["path"].parent.parents]:
@@ -237,7 +243,10 @@ def target_of(m):
                 break
             if d == m["root"]:
                 break
-    name = re.sub(r"^M\s+(\d+)$", r"M\1", name.strip())
+    name = re.sub(r"^(?:M|Messier)\s*(\d+)$", r"M\1", name.strip(), flags=re.I)
+    cat = CATALOGUE_NAME.match(name)
+    if cat:
+        name = cat.group(1).upper().replace("SH2", "Sh2") + cat.group(2) + cat.group(3)
     return re.sub(r'[<>:"/\\|?*]', "", name).strip(" .") or "Unknown"
 
 
@@ -296,6 +305,23 @@ def _bias_for(ref, c):
     return c["type"] == "bias" and _same_sensor(ref, c)
 
 
+FLAT_LEVEL = (0.2, 0.8)          # median of a flat as a share of full scale (video ep6: about half)
+
+
+def _flat_level(flats):
+    """Median of the middle flat of a set as a share of full scale; None when it cannot be read, or when the data never
+    exceed 12 bits (a camera whose values were not scaled to 16 bits: the share would be meaningless)."""
+    if not flats:
+        return None
+    try:
+        img, _ = frameio.read_luminance(flats[len(flats) // 2]["path"])
+    except (OSError, ValueError):
+        return None
+    if float(img.max()) < 4096 / 65535:
+        return None
+    return float(np.median(img))
+
+
 def _flat_for(ref, c):
     return (c["type"] == "flat" and _same_sensor(ref, c, gain=False) and c["filter"] == ref["filter"]
             and c["night"] == ref["night"])
@@ -346,6 +372,13 @@ def match_calibration(lights, sources):
                             if ref["filter"] else tr("缺少这一晚的平场：{night}", night=ref["night"]))
         found["flats"] += flats
         flat_sets += _distinct(flats, ("camera", "size", "bin", "gain", "offset", "exptime"))
+        level = _flat_level(flats)
+        if level is not None and not FLAT_LEVEL[0] <= level <= FLAT_LEVEL[1]:
+            warnings.append(tr("这一组平场的亮度只有满量程的 {level}（{night}，滤镜 {filter}），可能欠曝；平场一般拍到一半左右",
+                               level=f"{level:.0%}", night=flats[0]["night"], filter=flats[0]["filter"] or "—")
+                            if level < FLAT_LEVEL[0] else
+                            tr("这一组平场的亮度到了满量程的 {level}（{night}，滤镜 {filter}），可能过曝；平场一般拍到一半左右",
+                               level=f"{level:.0%}", night=flats[0]["night"], filter=flats[0]["filter"] or "—"))
     dark_flats = [c for f in flat_sets for c in _first_match(sources, f, _darkflat_for, _closest)]
     found["darks"] += dark_flats
     for ref in _distinct(lights, ("camera", "size", "bin", "gain", "offset", "settemp")):

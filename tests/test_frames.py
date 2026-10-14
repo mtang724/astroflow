@@ -151,6 +151,19 @@ def test_bad_frames_are_flagged_and_can_be_excluded(target):
     assert (target / "Light" / "L8_moon.fits").exists() and targets.summary(target)["lights"] == 8
 
 
+def test_mono_frames_are_compared_within_their_filter(tmp_path):
+    """L lets through far more sky than R: L frames are not "brighter than the others", only an odd R frame is."""
+    d = tmp_path / "In Processing" / "2026Jan01" / "M42"
+    hdr = {"XPIXSZ": 3.76, "FOCALLEN": 560.0, "EXPTIME": 300.0}
+    for i in range(6):
+        star_field(d / "Light" / f"L{i}.fits", seed=i, sky=6000, header={**hdr, "FILTER": "L"})
+        star_field(d / "Light" / f"R{i}.fits", seed=10 + i, sky=1500, header={**hdr, "FILTER": "R"})
+    star_field(d / "Light" / "R6_moon.fits", seed=16, sky=3000, header={**hdr, "FILTER": "R"})
+    r = framecheck.analyze(d, workers=2)
+    assert {f["name"] for f in r["frames"] if f["flags"]} == {"R6_moon.fits"}
+    assert {f["filter"] for f in r["frames"]} == {"L", "R"}
+
+
 def test_excluding_after_stacking_asks_for_a_new_stack(target):
     framecheck.analyze(target, workers=1)
     master = target / "Output" / "master" / "masterLight_BIN-1.xisf"

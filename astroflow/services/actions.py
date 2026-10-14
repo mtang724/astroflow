@@ -24,11 +24,15 @@ def comet_stack(target_dir, reuse_sxt=False):
             "weights_preview": (post / "weights.jpg").as_posix()}
 
 
+NARROWBAND_CLASSES = {"osc_multiband", "osc_so", "osc_sho", "mono_hoo", "mono_sho"}
+
+
 def references_for(target_dir, refresh=False):
     """The target's reference works (AstroBin), fetched when missing, when asked to refresh, or when the cached ones
     were picked for the other kind of night (broadband vs multiband peers)."""
     d = Path(target_dir)
-    mode = "multiband" if objects.session_info(d).get("filter_class") == "osc_multiband" else "broadband"
+    kind = pipeline.detected_class(d) or objects.session_info(d).get("filter_class")
+    mode = "multiband" if kind in NARROWBAND_CLASSES else "broadband"
     doc = None if refresh else references.load(d.name)
     if doc is None or doc.get("peer_mode", "broadband") != mode:
         doc = references.fetch(d.name, n=6, fov_radius=1.44, peer=mode)
@@ -41,7 +45,8 @@ def batch_step(summary):
     restack = summary["master"] and framecheck.restack_needed(summary["path"])   # frames left out since stacking
     if summary["finished"] and not restack:
         return [], tr("已完成")
-    if not restack and summary["recipe"] in pipeline.RECIPES and summary["master"] and             {s["stage"] for s in pipeline.RECIPES[summary["recipe"]]} <= set(summary["stages_done"]):
+    stages = pipeline.recipe_stages(summary["recipe"], summary["path"]) if summary["recipe"] in pipeline.RECIPES else None
+    if not restack and stages and summary["master"] and {s["stage"] for s in stages} <= set(summary["stages_done"]):
         return [], tr("已出图")
     if not summary["recipe"]:
         return [], tr("认不出是什么天体，先在“处理流程”里选配方")

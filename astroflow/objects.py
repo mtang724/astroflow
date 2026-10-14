@@ -90,10 +90,15 @@ def object_type(name):
 NEBULA_TYPES = {"emission_nebula", "reflection_nebula", "planetary_nebula", "supernova_remnant", "dark_nebula"}
 
 
+NARROWBAND = {"mono_hoo": "mono_hoo_nebula", "mono_sho": "mono_sho_nebula", "osc_sho": "osc_sho_nebula"}
+
+
 def recipe_for(name, type_hint=None, filter_class=None):
     """Recipe from object type and the filters: the night's filter for a colour camera (session.json filter_class
     osc_broadband | osc_multiband), or mono_lrgb for a mono camera's L/R/G/B masters (pipeline.default_recipe)."""
     t = type_hint or object_type(name)
+    if filter_class in NARROWBAND and t != "comet":          # narrowband palettes are for emission nebulae
+        return NARROWBAND[filter_class], t
     if filter_class == "mono_lrgb" and t in NEBULA_TYPES | {"galaxy"}:
         return ("mono_lrgb_galaxy" if t == "galaxy" else "mono_lrgb_nebula"), t
     if filter_class == "osc_multiband" and t in NEBULA_TYPES:

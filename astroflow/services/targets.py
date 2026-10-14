@@ -33,7 +33,7 @@ def summary(d):
     d = Path(d)
     st = _state(d)
     session = objects.session_info(d)
-    mono = pipeline.is_mono(d, st)
+    detected = pipeline.detected_class(d, st)
     recipe, typ = pipeline.default_recipe(d)
     combined = multinight.info(d)
     staged = d.parent.parent == config.IN_PROCESSING          # a night's or a multi-night target in In Processing
@@ -49,7 +49,7 @@ def summary(d):
             "flats": _count(d, "Flat"), "master": master, "registered": _registered(d),
             "type": typ, "recipe": st.get("recipe") or recipe, "stages_done": list((st.get("stages") or {}).keys()),
             "finished": bool(st.get("finished")),
-            "filter_class": "mono_lrgb" if mono else session.get("filter_class")}
+            "filter_class": detected or session.get("filter_class")}
 
 
 def _registered(d):
@@ -109,7 +109,7 @@ def stages(d):
         return []
     done = st.get("stages") or {}
     out = []
-    for spec in pipeline.RECIPES[recipe]:
+    for spec in pipeline.recipe_stages(recipe, d, st):
         rec = done.get(spec["stage"])
         out.append({"stage": spec["stage"], "done": rec is not None,
                     "seconds": rec.get("seconds") if rec else None,

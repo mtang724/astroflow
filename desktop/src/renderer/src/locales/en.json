@@ -564,5 +564,15 @@
   "LRGB 合成": "LRGB combination",
   "黑白 LRGB 星系": "Mono LRGB galaxy",
   "黑白 LRGB 星云": "Mono LRGB nebula",
-  "发射星云、反射星云、超新星遗迹等": "Emission and reflection nebulae, supernova remnants and the like"
+  "发射星云、反射星云、超新星遗迹等": "Emission and reflection nebulae, supernova remnants and the like",
+  "RGB 星点": "RGB stars",
+  "窄带星点还原颜色": "Natural colours for narrowband stars",
+  "换用 RGB 星点": "Use the RGB stars",
+  "黑白 HOO 窄带": "Mono HOO narrowband",
+  "黑白 SHO 哈勃色": "Mono SHO (Hubble palette)",
+  "彩色 SHO（双窄带两套）": "Colour SHO (two dual-band filters)",
+  "Hα + OIII 窄带：红 + 蓝的配色": "Hα + OIII narrowband: a red and blue palette",
+  "SII + Hα + OIII 窄带：金 + 蓝的哈勃色": "SII + Hα + OIII narrowband: the gold and blue Hubble palette",
+  "S+O 双窄带（SII / OIII）": "S+O dual-band (SII / OIII)",
+  "S+O 双窄带滤镜": "S+O dual-band filter"
 }

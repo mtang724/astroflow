@@ -10,6 +10,7 @@ export const STAGE_LABELS: Record<string, string> = {
   stars: mark('去星'),
   starless: mark('无星图增强'),
   stars_color: mark('星点色彩'),
+  rgb_stars: mark('RGB 星点'),
   combine: mark('合成成品')
 }
 
@@ -42,7 +43,9 @@ export const STEP_LABELS: Record<string, string> = {
   align_channels: mark('通道对齐'),
   crop_common: mark('裁到共同区域'),
   combine_rgb: mark('合成彩色 (RGB)'),
-  lrgb: mark('LRGB 合成')
+  lrgb: mark('LRGB 合成'),
+  nb_star_colors: mark('窄带星点还原颜色'),
+  use_window: mark('换用 RGB 星点')
 }
 
 export const TYPE_LABELS: Record<string, string> = {
@@ -62,7 +65,10 @@ export const RECIPE_LABELS: Record<string, string> = {
   osc_multiband_nebula: mark('多波段星云'),
   comet: mark('彗星'),
   mono_lrgb_galaxy: mark('黑白 LRGB 星系'),
-  mono_lrgb_nebula: mark('黑白 LRGB 星云')
+  mono_lrgb_nebula: mark('黑白 LRGB 星云'),
+  mono_hoo_nebula: mark('黑白 HOO 窄带'),
+  mono_sho_nebula: mark('黑白 SHO 哈勃色'),
+  osc_sho_nebula: mark('彩色 SHO（双窄带两套）')
 }
 
 export const JOB_STATE_LABELS: Record<string, string> = {

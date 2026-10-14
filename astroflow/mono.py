@@ -7,16 +7,23 @@ from pathlib import Path
 
 from . import wbpp
 
-CHANNELS = ("L", "R", "G", "B")
+CHANNELS = ("L", "R", "G", "B", "H", "O", "S")       # broadband, and the narrowband lines Ha, OIII, SII
 ALIASES = {"l": "L", "lum": "L", "luminance": "L", "clear": "L",
-           "r": "R", "red": "R", "g": "G", "green": "G", "b": "B", "blue": "B"}
-MONO_MASTER = re.compile(r"_FILTER-(.+?)_mono(?:_autocrop)?\.xisf$", re.I)
+           "r": "R", "red": "R", "g": "G", "green": "G", "b": "B", "blue": "B",
+           "h": "H", "ha": "H", "halpha": "H", "o": "O", "oiii": "O", "o3": "O",
+           "s": "S", "sii": "S", "s2": "S"}
+MONO_MASTER = re.compile(r"_FILTER-(.+?)_mono(?:_[^.]+)?\.xisf$", re.I)      # then grouping keywords, _autocrop
 
 
 def channel(filter_name):
-    """A filter's channel: 'Lum', 'Red', 'ZWO B', 'Antlia V-Pro G' ... -> 'L' / 'R' / 'G' / 'B'; None for others (Ha ...)."""
-    words = re.findall(r"[a-z]+", str(filter_name or "").lower())
-    return ALIASES.get(words[-1]) if words else None
+    """A filter's channel: 'Lum', 'Red', 'ZWO B', 'Antlia V-Pro G' -> 'L' / 'R' / 'G' / 'B'; 'Ha 7nm', 'H-alpha',
+    'OIII', 'Antlia SII 3nm' -> 'H' / 'O' / 'S'; None for others."""
+    text = str(filter_name or "").lower().replace("-alpha", "alpha").replace("α", "alpha")
+    words = [w for w in re.findall(r"[a-z]+[0-9]?|[0-9]+", text) if not re.fullmatch(r"[0-9]+(nm)?|nm", w)]
+    for w in reversed(words):                      # the line or colour is usually last: 'Antlia V-Pro R', 'SII 3nm'
+        if w in ALIASES:
+            return ALIASES[w]
+    return None
 
 
 def masters(target_dir, recorded=None):

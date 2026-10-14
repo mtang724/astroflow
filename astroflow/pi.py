@@ -5,6 +5,7 @@ progress lines to a log, because headless PixInsight has no readable console.
 """
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -162,9 +163,11 @@ def run_script(script, args=(), timeout=4 * 3600, require_slot1=True, wait_other
     Jobs are serialised through a lock; with require_slot1, a PixInsight the user has open is reported
     instead of silently pushing the job into settings slot 2 (where RC tools and SPCC fail).
     """
-    for a in args:
+    for a in [script, *args]:
         if "," in str(a):
             raise PIError(f"PixInsight script arguments cannot contain commas: {a}")
+        if not str(a).isascii():             # PixInsight would get it garbled and fail without saying why
+            raise PIError(f"PixInsight cannot take a path with non-ASCII characters on its command line: {a}")
     arg = ",".join([Path(script).as_posix()] + [str(a) for a in args])
     cmd = [str(config.PI_EXE), "-n", "--automation-mode", "--no-splash", f"-r={arg}", "--force-exit"]
     with _Lock():
@@ -191,6 +194,7 @@ def run_script(script, args=(), timeout=4 * 3600, require_slot1=True, wait_other
 def run_job(job, timeout=3600, label="job", idle_limit=600):
     """Run pjsr/runner.js on a job dict. Returns the result dict written by the runner."""
     run_id = time.strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6]
+    label = re.sub(r"[^A-Za-z0-9._-]+", "_", label).strip("_") or "job"     # the path goes on PixInsight's command line
     d = config.RUNS / f"{label}-{run_id}"
     d.mkdir(parents=True, exist_ok=True)
     job = dict(job)

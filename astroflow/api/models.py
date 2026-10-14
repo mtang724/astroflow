@@ -163,7 +163,7 @@ class RecipeIn(BaseModel):
 class SessionIn(BaseModel):
     path: str
     filter: str = ""
-    filter_class: Literal["osc_broadband", "osc_multiband"] = "osc_broadband"
+    filter_class: Literal["osc_broadband", "osc_multiband", "osc_so"] = "osc_broadband"
 
 
 # ----------------------------------------------------------------------------------------------- recipes

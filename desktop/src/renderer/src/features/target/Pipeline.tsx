@@ -19,16 +19,18 @@ const RECIPE_HINTS: Record<string, string> = {
   comet: mark('彗星（先叠加再出图，见概览）')
 }
 
-/** A mono camera's L / R / G / B masters (filter_class mono_lrgb). */
+/** A mono camera's masters per filter (filter_class mono_*). */
 const MONO_RECIPE_HINTS: Record<string, string> = {
   mono_lrgb_nebula: mark('发射星云、反射星云、超新星遗迹等'),
-  mono_lrgb_galaxy: mark('旋涡星系、椭圆星系、星系群')
+  mono_lrgb_galaxy: mark('旋涡星系、椭圆星系、星系群'),
+  mono_hoo_nebula: mark('Hα + OIII 窄带：红 + 蓝的配色'),
+  mono_sho_nebula: mark('SII + Hα + OIII 窄带：金 + 蓝的哈勃色')
 }
 
 /** The type is not in the built-in catalogue: the user says which recipe fits. */
 function RecipePicker({ t }: { t: TargetDetail }): React.JSX.Element {
   const choose = useChooseRecipe(t.path)
-  const hints = t.filter_class === 'mono_lrgb' ? MONO_RECIPE_HINTS : RECIPE_HINTS
+  const hints = t.filter_class?.startsWith('mono') ? MONO_RECIPE_HINTS : RECIPE_HINTS
   return (
     <div className="max-w-xl space-y-3 p-6">
       <p className="text-sm text-muted-foreground">

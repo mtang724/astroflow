@@ -123,11 +123,14 @@ def read_luminance(path):
     mono frames are binned 2x2 as well (stars and background are measured, not detail). Returns (image, bin)."""
     if is_raw(path):
         import rawpy
-        with rawpy.imread(str(path)) as raw:
-            data = raw.raw_image_visible.astype(np.float32)
-            black = float(np.mean(raw.black_level_per_channel))
-            white = float(raw.white_level)
-            xtrans = raw.raw_pattern is not None and raw.raw_pattern.shape == (6, 6)
+        try:
+            with rawpy.imread(str(path)) as raw:
+                data = raw.raw_image_visible.astype(np.float32)
+                black = float(np.mean(raw.black_level_per_channel))
+                white = float(raw.white_level)
+                xtrans = raw.raw_pattern is not None and raw.raw_pattern.shape == (6, 6)
+        except rawpy.LibRawError as e:
+            raise ValueError(f"not a readable RAW file: {e}") from e
         img = (data - black) / max(white - black, 1.0)
         b = 3 if xtrans else 2
     else:

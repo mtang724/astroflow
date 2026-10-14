@@ -1,6 +1,10 @@
 """English messages of the backend (astroflow.i18n). A tuple is (singular, plural), chosen by the value n."""
 
 MESSAGES = {
+    "这一组平场的亮度只有满量程的 {level}（{night}，滤镜 {filter}），可能欠曝；平场一般拍到一半左右":
+        "These flats reach only {level} of full scale ({night}, filter {filter}): probably underexposed; flats are usually exposed to about half",
+    "这一组平场的亮度到了满量程的 {level}（{night}，滤镜 {filter}），可能过曝；平场一般拍到一半左右":
+        "These flats reach {level} of full scale ({night}, filter {filter}): probably overexposed; flats are usually exposed to about half",
     # punctuation used to join lists
     "、": ", ",
     "，": ", ",

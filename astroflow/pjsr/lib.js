@@ -51,6 +51,17 @@ AF.newWindows = function (before) {
    return out;
 };
 
+// Share of pixels above `level` in the brightest channel (16-bit histogram).
+AF.brightShare = function (view, level) {
+   var H = view.computeOrFetchProperty("Histogram16"), from = Math.round(level * (H.cols - 1)), best = 0;
+   for (var ch = 0; ch < H.rows; ++ch) {
+      var total = 0, bright = 0;
+      for (var k = 0; k < H.cols; ++k) { var n = H.at(ch, k); total += n; if (k >= from) bright += n; }
+      best = Math.max(best, total ? bright / total : 0);
+   }
+   return best;
+};
+
 AF.round = function (x, n) { var p = Math.pow(10, n || 6); return Math.round(x * p) / p; };
 
 // Per-channel statistics of a view (optionally inside a rectangle).

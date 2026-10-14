@@ -22,7 +22,8 @@ function afApply(P, params) {
 function afRect(r) { return new Rect(r.x0, r.y0, r.x1, r.y1); }
 
 // Masks: "lum" (CIE L*, shadows clipped), "range" (RangeSelection, video ep2: low 0.16, smoothness 65),
-// "object" (soft ellipse around the catalogued object, needs locate_object); prefix "inverse_" to invert.
+// "object" (soft ellipse around the catalogued object, needs locate_object), "color" (one hue of a narrowband palette:
+// maskColor red|yellow|green|cyan|blue|magenta, maskBlur sigma, videos ep4/ep5); prefix "inverse_" to invert.
 function afWithMask(ctx, w, p, fn) {
    var mask = null;
    if (p.mask) {
@@ -31,6 +32,7 @@ function afWithMask(ctx, w, p, fn) {
       else if (kind == "range") mask = AF.rangeMask(w.mainView, p.rangeLow == undefined ? 0.16 : p.rangeLow,
                                                      p.rangeHigh || 1.0, p.rangeFuzziness || 0, p.rangeSmoothness || 65);
       else if (kind == "object") mask = AF.objectMask(ctx, w.mainView, p.objectScale || 1.2, p.feather || 0.35);
+      else if (kind == "color") mask = AF.colorMask(w.mainView, p.maskColor || "blue", p.maskBlur == undefined ? 15 : p.maskBlur);
       else throw new Error("unknown mask " + p.mask);
       w.setMask(mask, /^inverse_/.test(String(p.mask)));
       w.maskEnabled = true;
@@ -52,6 +54,31 @@ AF.rangeMask = function (view, low, high, fuzziness, smoothness) {
    for (var i = 1; i < nws.length; ++i) nws[i].forceClose();
    nws[0].hide();
    return nws[0];
+};
+
+// One hue of the image: CIE chroma where the CIE hue (PixelMath's CIEh, 0..1) is within 1/6 of the colour's hue, falling
+// off linearly to 0 there, rescaled to 0..1 and blurred so curves through it leave no edges. In HOO the OIII is cyan to
+// blue, in SHO the SII+Ha mix is yellow to orange.
+AF.HUES = { red: 0, yellow: 1 / 6, green: 1 / 3, cyan: 1 / 2, blue: 2 / 3, magenta: 5 / 6 };
+AF.colorMask = function (view, color, blur) {
+   var hue = AF.HUES[color];
+   if (hue == undefined) throw new Error("unknown mask colour " + color + " (" + Object.keys(AF.HUES).join(", ") + ")");
+   var d = "abs(CIEh($T) - " + hue + ")";
+   var PM = new PixelMath;
+   PM.expression = "max(0, 1 - 6*min(" + d + ", 1 - " + d + ")) * CIEc($T)";
+   PM.useSingleExpression = true; PM.createNewImage = true; PM.showNewImage = false; PM.newImageId = "af_color_mask";
+   PM.newImageColorSpace = PixelMath.prototype.Gray; PM.newImageSampleFormat = PixelMath.prototype.f32;
+   PM.rescale = true; PM.truncate = true;
+   PM.executeOn(view, false);
+   var m = AF.windowById("af_color_mask");
+   if (blur > 0) {
+      var B = new PixelMath;
+      B.expression = "gconv($T, " + blur + ", 1, 0)";
+      B.useSingleExpression = true; B.createNewImage = false; B.rescale = false; B.truncate = true;
+      B.executeOn(m.mainView, false);
+   }
+   m.hide();
+   return m;
 };
 
 // Soft-edged ellipse (scale x catalogue size, linear fall-off over `feather` x semi-axes).
@@ -201,6 +228,14 @@ STEPS.spcc = function (ctx, p) {
       var r = ctx.bgRect;
       S.backgroundUseROI = true; S.backgroundROIX0 = r.x0; S.backgroundROIY0 = r.y0; S.backgroundROIX1 = r.x1; S.backgroundROIY1 = r.y1;
    }
+   if (p.narrowband) {
+      // narrowband palettes (video ep4): no filter curves, the lines' wavelengths and the filters' bandwidth instead
+      var bw = p.bandwidth || 7, lines = { HOO: [656.3, 500.7, 500.7], SHO: [671.6, 656.3, 500.7] }[p.narrowband];
+      if (!lines) throw new Error("unknown narrowband palette " + p.narrowband);
+      S.narrowbandMode = true; S.narrowbandOptimizeStars = false;
+      S.redFilterWavelength = lines[0]; S.greenFilterWavelength = lines[1]; S.blueFilterWavelength = lines[2];
+      S.redFilterBandwidth = S.greenFilterBandwidth = S.blueFilterBandwidth = bw;
+   }
    afApply(S, p.hasOwnProperty("params") ? p.params : null);
    var before = AF.windowIds();
    var st0 = AF.stats(w.mainView);
@@ -235,14 +270,26 @@ STEPS.bncc = function (ctx, p) {
    CC.whiteReferenceViewId = ""; CC.whiteUseROI = false;
    CC.whiteLow = p.whiteLow || Math.max(0.005, st2.median[1] + 20 * noise[1]);
    CC.whiteHigh = 0.9; CC.structureDetection = p.structureDetection != false; CC.structureLayers = 5; CC.noiseLayers = 1;
-   if (p.whiteROI == "object") {
-      // galaxies (video ep2): white reference = a medium box on the galaxy body, structure detection OFF
-      var o = ctx.object;
-      if (!o) throw new Error("whiteROI=object needs locate_object first");
-      var img = w.mainView.image, hw = Math.max(32, o.a * (p.whiteScale || 0.6)), hh = Math.max(32, Math.max(o.b, o.a * 0.35) * (p.whiteScale || 0.6));
+   var o = ctx.object, img = w.mainView.image, box = null;
+   if (p.whiteROI == "object" && o) {
+      // galaxies (video ep2): white reference = a box on the object's body, structure detection OFF
+      var hw = Math.max(32, o.a * (p.whiteScale || 0.6)), hh = Math.max(32, Math.max(o.b, o.a * 0.35) * (p.whiteScale || 0.6));
+      box = [o.cx - hw, o.cy - hh, o.cx + hw, o.cy + hh];
+   } else if (p.whiteROI == "bright" || (p.whiteROI == "object" && p.whiteFallback == "bright")) {
+      // SHO (video ep5): white reference = the bright nebula core, found without astrometry: the brightest cell of a
+      // 5 x 4 grid (by median, so stars do not count)
+      var gw = img.width / 5, gh = img.height / 4, best = -1;
+      for (var gy = 0; gy < 4; ++gy) for (var gx = 0; gx < 5; ++gx) {
+         var cell = new Rect(Math.round(gx * gw), Math.round(gy * gh), Math.round((gx + 1) * gw), Math.round((gy + 1) * gh));
+         var m = AF.stats(w.mainView, cell).median, lum = 0;
+         for (c = 0; c < m.length; ++c) lum += m[c] / m.length;
+         if (lum > best) { best = lum; box = [cell.x0, cell.y0, cell.x1, cell.y1]; }
+      }
+   } else if (p.whiteROI == "object") AF.log("bncc: object not located (no astrometric solution): white reference = whole image");
+   if (box) {
       CC.whiteUseROI = true;
-      CC.whiteROIX0 = Math.max(0, Math.round(o.cx - hw)); CC.whiteROIY0 = Math.max(0, Math.round(o.cy - hh));
-      CC.whiteROIX1 = Math.min(img.width, Math.round(o.cx + hw)); CC.whiteROIY1 = Math.min(img.height, Math.round(o.cy + hh));
+      CC.whiteROIX0 = Math.max(0, Math.round(box[0])); CC.whiteROIY0 = Math.max(0, Math.round(box[1]));
+      CC.whiteROIX1 = Math.min(img.width, Math.round(box[2])); CC.whiteROIY1 = Math.min(img.height, Math.round(box[3]));
       CC.whiteLow = p.whiteLow || 0; CC.structureDetection = p.structureDetection == true;
    }
    CC.backgroundUseROI = true; CC.backgroundROIX0 = r.x0; CC.backgroundROIY0 = r.y0; CC.backgroundROIX1 = r.x1; CC.backgroundROIY1 = r.y1;
@@ -255,16 +302,24 @@ STEPS.bncc = function (ctx, p) {
 };
 
 // SPCC when the image is (or can be) plate-solved, otherwise the manual BN+CC route (video: prefer SPCC).
+// p.narrowband ("HOO") + p.bandwidth (nm): SPCC in narrowband mode. p.target reaches the steps it calls.
 STEPS.color_calibration = function (ctx, p) {
    var w = afWin(ctx, p);
    var errors = [];
+   function sub(q, extra) {
+      var o = {};
+      for (var k in (q || {})) o[k] = q[k];
+      for (k in (extra || {})) if (extra[k] != undefined) o[k] = extra[k];
+      if (p.target) o.target = p.target;
+      return o;
+   }
    if (p.method != "bncc") {
       try {
          if (!w.hasAstrometricSolution) {
-            var ps = STEPS.plate_solve(ctx, p.solve || {});
+            var ps = STEPS.plate_solve(ctx, sub(p.solve));
             if (!ps.solved) throw new Error("plate solve failed");
          }
-         var r = STEPS.spcc(ctx, p.spcc || {});
+         var r = STEPS.spcc(ctx, sub(p.spcc, { narrowband: p.narrowband, bandwidth: p.bandwidth }));
          r.method = "spcc";
          return r;
       } catch (e) {
@@ -272,7 +327,7 @@ STEPS.color_calibration = function (ctx, p) {
          AF.log("SPCC route failed, falling back to BN+CC: " + e);
       }
    }
-   var b = STEPS.bncc(ctx, p.bncc || {});
+   var b = STEPS.bncc(ctx, sub(p.bncc));
    b.method = "bncc";
    b.errors = errors;
    return b;
@@ -299,11 +354,13 @@ STEPS.nxt = function (ctx, p) {
    return { noiseBefore: n0, noiseAfter: AF.noise(w.mainView), denoise: N.denoise, denoise_color: N.denoise_color };
 };
 
+// p.perChannel: each colour channel on its own (video ep4: on the whole HOO image SXT took red nebula for stars).
 STEPS.sxt = function (ctx, p) {
    var w = afWin(ctx, p);
    var S = new StarXTerminator;
    S.stars = true; S.unscreen = p.unscreen != false; S.overlap = p.largeOverlap ? 0.5 : 0.2;
    afApply(S, p.hasOwnProperty("params") ? p.params : null);
+   if (p.perChannel && w.mainView.image.isColor) return afSxtChannels(ctx, w, S);
    var before = AF.windowIds();
    if (!S.executeOn(w.mainView, false)) throw new Error("StarXTerminator did not run (see console.txt)");
    var nws = AF.newWindows(before), starsWin = null;
@@ -318,6 +375,69 @@ STEPS.sxt = function (ctx, p) {
    ctx.win.stars = starsWin;
    ctx.unscreen = S.unscreen;
    return { starsId: "stars", unscreen: S.unscreen };
+};
+
+function afSxtChannels(ctx, w, S) {
+   var CE = new ChannelExtraction;
+   CE.colorSpace = ChannelExtraction.prototype.RGB; CE.sampleFormat = ChannelExtraction.prototype.SameAsSource;
+   CE.channels = [[true, "af_c0"], [true, "af_c1"], [true, "af_c2"]];
+   CE.executeOn(w.mainView, false);
+   for (var c = 0; c < 3; ++c) {
+      var cw = AF.windowById("af_c" + c), before = AF.windowIds();
+      cw.hide();
+      if (!S.executeOn(cw.mainView, false)) throw new Error("StarXTerminator did not run on channel " + c);
+      var nws = AF.newWindows(before);
+      if (!nws.length) throw new Error("StarXTerminator produced no star image for channel " + c);
+      nws[0].mainView.id = "af_s" + c;
+      nws[0].hide();
+      for (var i = 1; i < nws.length; ++i) nws[i].forceClose();
+   }
+   function merge(prefix, target, id) {
+      var PM = new PixelMath;
+      PM.expression = prefix + "0"; PM.expression1 = prefix + "1"; PM.expression2 = prefix + "2";
+      PM.useSingleExpression = false; PM.rescale = false; PM.truncate = true;
+      PM.createNewImage = !!id; PM.showNewImage = false;
+      if (id) { PM.newImageId = id; PM.newImageColorSpace = PixelMath.prototype.RGB; PM.newImageSampleFormat = PixelMath.prototype.f32; }
+      PM.executeOn(target, false);
+   }
+   merge("af_c", w.mainView, null);
+   if (ctx.win.stars) ctx.win.stars.forceClose();
+   merge("af_s", w.mainView, "af_stars");
+   for (c = 0; c < 3; ++c) { AF.windowById("af_c" + c).forceClose(); AF.windowById("af_s" + c).forceClose(); }
+   var sw = AF.windowById("af_stars");
+   sw.mainView.id = "stars";
+   sw.hide();
+   ctx.win.stars = sw;
+   ctx.unscreen = S.unscreen;
+   return { starsId: "stars", unscreen: S.unscreen, perChannel: true };
+}
+
+// Natural star colours from narrowband stars (videos ep5): a star's light spans the spectrum, so R takes Ha (with SII),
+// G mixes Ha and OIII, B is OIII; then green is removed. palette: the star image's channels, "SHO" (R = SII, G = Ha,
+// B = OIII) or "HOO" (R = Ha, G = B = OIII).
+STEPS.nb_star_colors = function (ctx, p) {
+   var w = afWin(ctx, { target: p.target || "stars" });
+   var e = (p.palette || "SHO") == "HOO" ? ["$T[0]", "0.3*$T[0] + 0.7*$T[1]", "$T[2]"]
+                                         : ["0.5*$T[1] + 0.5*$T[0]", "0.3*$T[1] + 0.7*$T[2]", "$T[2]"];
+   var PM = new PixelMath;
+   PM.expression = e[0]; PM.expression1 = e[1]; PM.expression2 = e[2];
+   PM.useSingleExpression = false; PM.createNewImage = false; PM.rescale = false; PM.truncate = true;
+   PM.executeOn(w.mainView, false);
+   var N = new SCNR;
+   N.colorToRemove = 1; N.protectionMethod = 2; N.amount = p.scnr == undefined ? 1.0 : p.scnr; N.preserveLightness = true;
+   N.executeOn(w.mainView, false);
+   return { palette: p.palette || "SHO", expressions: e };
+};
+
+// Another window takes p.target's place, when there is one (video ep4: RGB stars replace the narrowband stars).
+STEPS.use_window = function (ctx, p) {
+   var name = p.target || "main", src = ctx.win[p.from];
+   if (!src) return { used: false };
+   if (ctx.win[name]) ctx.win[name].forceClose();
+   delete ctx.win[p.from];
+   src.mainView.id = name;
+   ctx.win[name] = src;
+   return { used: true, from: p.from };
 };
 
 // ---------------------------------------------------------------- stretching
@@ -402,15 +522,25 @@ STEPS.ht = function (ctx, p) {
       var u = Math.mtf(1 - m, p.skyTarget || 0.09);         // input value that this midtones balance maps to the target
       c0 = Math.max(0, (med - u) / (1 - u));
       if (p.maxShadows) c0 = Math.min(c0, p.maxShadows);
-   } else {
+   } else if (c0 == "none") c0 = 0;
+   else {
       if (c0 == undefined || c0 == "auto") c0 = AF.shadowsForClipFraction(w.mainView, p.clipFraction || 0.0004);
       c0 = Math.min(c0, p.maxShadows || 0.08);
    }
+   // channelShadows "sky": each colour channel's black point lifts that channel's sky to the darkest one, so a red or
+   // yellow cast in the background goes (videos ep4/ep5 did it by hand on the R, G, B rows)
+   var rows = [[0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1]], channelShadows = null;
+   if (p.channelShadows == "sky" && w.mainView.image.isColor) {
+      if (!ctx.bgRect) STEPS.find_background(ctx, {});
+      var sky = AF.stats(w.mainView, afRect(ctx.bgRect)).median;
+      var low = Math.min(sky[0], sky[1], sky[2]);
+      channelShadows = [];
+      for (var k = 0; k < 3; ++k) rows[k][0] = channelShadows[k] = AF.round(Math.max(0, (sky[k] - low) / (1 - low)), 6);
+   }
    var HT = new HistogramTransformation;
-   HT.H = [[0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1], [0, 0.5, 1, 0, 1],
-           [c0, m, p.highlights || 1.0, 0, 1], [0, 0.5, 1, 0, 1]];
+   HT.H = [rows[0], rows[1], rows[2], [c0, m, p.highlights || 1.0, 0, 1], [0, 0.5, 1, 0, 1]];
    HT.executeOn(w.mainView, false);
-   return { shadows: AF.round(c0, 6), midtones: m, medianAfter: AF.stats(w.mainView).median };
+   return { shadows: AF.round(c0, 6), midtones: m, channelShadows: channelShadows, medianAfter: AF.stats(w.mainView).median };
 };
 
 // ---------------------------------------------------------------- nonlinear enhancement
@@ -665,8 +795,14 @@ STEPS.dbe_auto = function (ctx, p) {
 
 // EZ HDR (port of EZ_HDR.js by S. Dimant): HDRMultiscaleTransform on a copy, blended back through an
 // inverted background range mask so only the bright parts (galaxy core) are compressed.
+// p.ifBright: only when more than this share of pixels is above 0.97 (a burnt-out core such as M42's; on the starless
+// image stars do not count).
 STEPS.hdr = function (ctx, p) {
    var w = afWin(ctx, p);
+   if (p.ifBright) {
+      var share = AF.brightShare(w.mainView, 0.97);
+      if (share < p.ifBright) return { skipped: "no bright core", brightShare: AF.round(share, 6) };
+   }
    var layers = p.layers || 5, amount = p.amount == undefined ? 0.3 : p.amount;
    var PM = new PixelMath;
    PM.expression = w.mainView.image.isColor ? "CIEL($T)" : "$T";
@@ -758,21 +894,28 @@ STEPS.crop_common = function (ctx, p) {
    return { cropped: true, rect: rect, from: [W, H] };
 };
 
-// R, G and B windows -> one colour image that becomes "main" (video ep3: ChannelCombination). The astrometric
-// solution comes from p.solution (the plate-solved L). Without an L window (R, G and B only) the mean of the three
-// channels becomes L, so the luminance work (deconvolution, noise reduction) still happens on one channel.
+// R, G and B -> one colour image (video ep3: ChannelCombination). red / green / blue: a window name, or a PixelMath
+// expression over window names (two dual-band colour masters, video ep5: "SO[0]", "(main[1] + main[2]) / 2"); one
+// window may feed two channels (HOO: O makes G and B). output: the new window ("main" by default). The windows used are
+// closed, or those in p.close. lum: the L window to make from the mean of the channels when there is none (mono R, G, B
+// without L); false for narrowband palettes. solution: the window whose astrometric solution the result gets.
 STEPS.combine_rgb = function (ctx, p) {
-   var r = afWin(ctx, { target: p.red || "main" }), g = afWin(ctx, { target: p.green || "G" }),
-       b = afWin(ctx, { target: p.blue || "B" });
+   var used = [];
+   var exprs = [p.red || "main", p.green || "G", p.blue || "B"].map(function (e) {
+      if (ctx.win[e]) { if (used.indexOf(e) < 0) used.push(e); return ctx.win[e].mainView.id; }
+      if (/^[A-Za-z_]\w*$/.test(e)) throw new Error("combine_rgb: no window '" + e + "'");
+      return e;
+   });
+   var geometry = ctx.win[used[0] || "main"];
    var PM = new PixelMath;
-   PM.expression = r.mainView.id; PM.expression1 = g.mainView.id; PM.expression2 = b.mainView.id;
+   PM.expression = exprs[0]; PM.expression1 = exprs[1]; PM.expression2 = exprs[2];
    PM.useSingleExpression = false; PM.createNewImage = true; PM.showNewImage = false; PM.newImageId = "af_rgb";
    PM.newImageColorSpace = PixelMath.prototype.RGB; PM.newImageSampleFormat = PixelMath.prototype.f32;
    PM.rescale = false; PM.truncate = true;
-   PM.executeOn(r.mainView, false);
+   PM.executeOn(geometry.mainView, false);
    var rgb = AF.windowById("af_rgb");
-   var lumName = p.lum || "L", made = false;
-   if (!ctx.win[lumName]) {
+   var lumName = p.lum === false ? null : (p.lum || "L"), made = false;
+   if (lumName && !ctx.win[lumName]) {
       var LM = new PixelMath;
       LM.expression = "(af_rgb[0] + af_rgb[1] + af_rgb[2]) / 3";
       LM.useSingleExpression = true; LM.createNewImage = true; LM.showNewImage = false; LM.newImageId = "af_lum";
@@ -783,17 +926,21 @@ STEPS.combine_rgb = function (ctx, p) {
       ctx.win[lumName] = lw;
       made = true;
    }
+   rgb.keywords = geometry.keywords;      // focal length, pixel size, coordinates: what plate solving starts from
    var src = p.solution ? ctx.win[p.solution] : null;
    if (src && src.hasAstrometricSolution) rgb.copyAstrometricSolution(src);
-   [r, g, b].forEach(function (w) {
-      for (var k in ctx.win) if (ctx.win[k] === w) delete ctx.win[k];
+   var output = p.output || "main";
+   (p.close || used).concat(ctx.win[output] && used.indexOf(output) < 0 ? [output] : []).forEach(function (name) {
+      var w = ctx.win[name];
+      if (!w) return;
+      delete ctx.win[name];
       w.forceClose();
    });
-   rgb.mainView.id = "main";
+   rgb.mainView.id = output;
    rgb.hide();
-   ctx.win.main = rgb;
+   ctx.win[output] = rgb;
    if (made) ctx.win[lumName].mainView.id = lumName;
-   return { lumFromRGB: made, solved: rgb.hasAstrometricSolution };
+   return { output: output, from: exprs, lumFromRGB: made, solved: rgb.hasAstrometricSolution };
 };
 
 // Put the stretched L into the stretched colour image (video ep3: LRGBCombination with only L enabled). Saturation

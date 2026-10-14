@@ -40,6 +40,10 @@ pictures to share.
 - **Mono cameras (LRGB)**: when WBPP stacks one master per filter (L/R/G/B), the mono recipes take over: align the
   channels and crop to the shared area, remove each channel's background, combine the colour, sharpen and denoise L on
   its own, then merge L back at matching brightness (tutorial episode 3).
+- **Narrowband**: mono Hα + OIII (HOO, with the stars from R/G/B when shot), mono SII + Hα + OIII (SHO, the Hubble
+  palette), a colour camera's Hα + OIII dual-band filter, and a colour camera's two dual-band filter sets (Hα + OIII and
+  SII + OIII, stacked apart and combined into SHO). The palette is combined from the aligned lines, balanced (SPCC in
+  narrowband mode for HOO), and turned to red/blue or gold/blue through colour masks (tutorial episodes 4 and 5).
 - **Process all**: queues every target that has no result yet and stacks and processes them one after another, with a
   system notification when the queue finishes in the background.
 - **Job bar**: one PixInsight job at a time, a live log, and Stop at any moment (it ends the PixInsight process).
@@ -124,10 +128,10 @@ python -m astroflow video "<tutorial.mp4>" # a new tutorial video -> transcript 
 | Setup check (missing components and how to install them; reads PixInsight's settings slot 1 without starting it) | `astroflow/doctor.py` |
 | Organising | `astroflow/organize.py` (the root `organize.py` keeps the old command working); FITS and camera RAW reading: `astroflow/frameio.py` |
 | Frame check, multi-night stacking, disk space and archiving, share pictures | `astroflow/framecheck.py`, `multinight.py`, `storage.py`, `share.py` |
-| Mono cameras: one master per filter | `astroflow/mono.py` |
+| Mono cameras: one master per filter; colour cameras' two dual-band filter sets | `astroflow/mono.py`, `astroflow/dualband.py` |
 | One command-line entry point | `python -m astroflow` (`astroflow/__main__.py`) |
 | Stacking (WBPP command-line automation) | `astroflow/wbpp.py` |
-| Post-processing recipes (broadband nebula / galaxy / multiband nebula / comet / mono LRGB) | `astroflow/pipeline.py` + `astroflow/pjsr/*.js` (the step library on the PixInsight side) |
+| Post-processing recipes (broadband nebula / galaxy / multiband nebula / comet / mono LRGB / narrowband HOO and SHO) | `astroflow/pipeline.py` + `astroflow/pjsr/*.js` (the step library on the PixInsight side) |
 | Comet stacking (clouds, satellite trails, nucleus motion, star removal) | `astroflow/comet.py`; methods and lessons in `knowledge/comets.md` |
 | Headless PixInsight runner (one at a time, watchdog, cancellable) | `astroflow/pi.py`, `astroflow/jobctx.py` |
 | Metrics / reference works / catalogue / dark import | `astroflow/metrics.py`, `references.py`, `objects.py`, `darks.py` |
@@ -146,9 +150,7 @@ only for local comparison; `refs.json` keeps title, author and link); run logs i
 ## Thanks
 
 The recipes' steps and default settings follow the Bilibili series 《PixInsight 进阶教程》 (advanced PixInsight
-tutorials) by 氪化金: episode 1 ([BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh)), episode 2
-([BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD)) and episode 3
-([BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu)). Thank you for sharing them.
+tutorials) by 氪化金, episodes 1–6: colour-camera nebula [BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh), colour-camera galaxy [BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD), mono LRGB [BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu), HOO narrowband [BV1uimABGEEA](https://www.bilibili.com/video/BV1uimABGEEA), SHO narrowband [BV1vD2CBcEg8](https://www.bilibili.com/video/BV1vD2CBcEg8), several nights and frame selection [BV1cxqpBsEFK](https://www.bilibili.com/video/BV1cxqpBsEFK). Thank you for sharing them.
 
 ## Copyright
 

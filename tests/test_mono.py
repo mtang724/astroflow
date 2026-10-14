@@ -19,15 +19,17 @@ def stacked(d, filters, kind="mono", autocrop=False):
 
 
 def test_filter_names_map_to_channels():
-    assert [mono.channel(f) for f in ("L", "Lum", "Luminance", "Red", "ZWO G", "Antlia V-Pro B", "Ha", "OIII", "")] == \
-        ["L", "L", "L", "R", "G", "B", None, None, None]
+    assert [mono.channel(f) for f in ("L", "Lum", "Luminance", "Red", "ZWO G", "Antlia V-Pro B", "Duo", "")] == \
+        ["L", "L", "L", "R", "G", "B", None, None]
+    assert [mono.channel(f) for f in ("Ha", "H-alpha", "Ha 7nm", "OIII", "O3", "Antlia SII 3nm", "S2")] == \
+        ["H", "H", "H", "O", "O", "S", "S"]
 
 
 def test_masters_by_channel_prefer_autocrop_and_skip_other_filters(tmp_path):
     d = stacked(tmp_path / "M51", ["Lum", "Red", "Green", "Blue"], autocrop=True)
-    stacked(d, ["Ha"])
+    stacked(d, ["Ha", "Duo"])
     found = mono.masters(d)
-    assert sorted(found) == ["B", "G", "L", "R"] and all(p.name.endswith("_autocrop.xisf") for p in found.values())
+    assert sorted(found) == ["B", "G", "H", "L", "R"] and found["L"].name.endswith("_autocrop.xisf")
     assert mono.is_rgb(found)
 
 

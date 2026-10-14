@@ -9,7 +9,9 @@ In Processing/Multi-night/<target> holds links to their frames, one folder per n
 
 WBPP reads NIGHT_<value> in a path as the grouping keyword NIGHT. Passed as keywords=NIGHT pre, it makes calibration
 frames serve only the lights of their own night (frames without it serve every night) and leaves integration alone, so
-all nights end up in one master. Links are hard links where the file system allows them (no extra disk space), copies
+all nights end up in one master. Nights of a colour camera through different dual-band filters (session.json: Ha+OIII
+osc_multiband, SII+OIII osc_so; astroflow.dualband) are stacked per filter set instead: their lights and flats go under
+BAND_HO/ or BAND_SO/ (Light/BAND_HO/NIGHT_2026May17/...), and keywords=...;BAND post makes one master of each. Links are hard links where the file system allows them (no extra disk space), copies
 elsewhere. Running combine() again brings the target up to date (a night added or removed, frames excluded in a night);
 frames excluded in the combined target itself (its Excluded/ folder) stay out. combined.json lists the nights (written
 first, so a run cut short still belongs to astroflow).
@@ -20,7 +22,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-from . import config, frameio, jobctx, jsonfile
+from . import config, dualband, frameio, jobctx, jsonfile
 
 FOLDER = "Multi-night"           # In Processing/Multi-night/<target>
 KEYWORD = "NIGHT"
@@ -84,12 +86,12 @@ def combine(nights, log=print):
     _write_info(dest, srcs, gone, complete=False)          # first: a run cut short is still recognised as ours
     excluded = dest / "Excluded"
     wanted = {rel: src for rel, src in _layout(srcs).items() if not (excluded / rel).exists()}
-    keep = {f"{KEYWORD}_{n['night']}" for n in gone}
+    keep = {f"{KEYWORD}_{n['night']}" for n in gone}       # (under Light/<night> or Light/BAND_<set>/<night>)
     elsewhere = [Path(n["path"]) for n in previous] + srcs
     for kind in KINDS:                                     # frames of nights or files no longer chosen
         for p in frameio.frame_files(dest / kind):
             rel = p.relative_to(dest)
-            if rel not in wanted and not (len(rel.parts) > 2 and rel.parts[1] in keep):
+            if rel not in wanted and not (len(rel.parts) > 2 and keep & set(rel.parts[1:3])):
                 _drop(dest, p, elsewhere, log)
     for i, (rel, src) in enumerate(sorted(wanted.items())):
         if i % 50 == 0:
@@ -130,14 +132,33 @@ def _drop(dest, p, nights, log):
     log(f"kept {rel} in Excluded (no other copy of it)")
 
 
+def bands(srcs):
+    """{night folder: 'HO' / 'SO'} when the nights used different dual-band filters, else {} (one master)."""
+    found = {s: dualband.band_of(_session(s).get("filter_class")) for s in srcs}
+    return found if None not in found.values() and len(set(found.values())) > 1 else {}
+
+
+def has_bands(d):
+    """The combined target is stacked per dual-band filter set (BAND_ folders)."""
+    return any((Path(d) / "Light").glob(f"{dualband.KEYWORD}_*"))
+
+
+def _session(night_target):
+    p = Path(night_target).parent / "session.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
 def _layout(srcs):
     """{path in the combined target: source file} for every frame of these nights."""
     out = {}
+    band = bands(srcs)
     for kind in KINDS:
         per_night = {s: frameio.frame_files(s / kind) for s in srcs}
         shared = kind in SHARABLE and _same_frames(per_night.values())
         for s, files in per_night.items():
             sub = Path(kind) if shared else Path(kind) / f"{KEYWORD}_{s.parent.name}"
+            if band and kind in ("Light", "Flat"):
+                sub = Path(kind) / f"{dualband.KEYWORD}_{band[s]}" / f"{KEYWORD}_{s.parent.name}"
             for f in files:
                 out[sub / f.relative_to(s / kind)] = f
             if shared:
@@ -167,15 +188,22 @@ def _link(src, dst, drop):
 
 
 def _prune_empty(dest):
+    """Remove the folders left empty (a night no longer chosen, BAND_ folders when the filters became the same),
+    deepest first."""
     for kind in KINDS:
         folder = dest / kind
-        for d in [d for d in folder.iterdir() if d.is_dir()] if folder.is_dir() else []:
+        subs = sorted((d for d in folder.rglob("*") if d.is_dir()), key=lambda d: len(d.parts), reverse=True)             if folder.is_dir() else []
+        for d in subs:
             if not any(d.iterdir()):
                 d.rmdir()
 
 
 def _write_session(dest, srcs):
-    """The filter of the first night that has one recorded (objects.session_info reads it)."""
+    """The filter of the first night that has one recorded (objects.session_info reads it); osc_sho when the nights
+    used both dual-band filter sets."""
+    if bands(srcs):
+        jsonfile.write(dest / "session.json", {"filter": "HO + SO", "filter_class": "osc_sho"})
+        return
     for s in srcs:
         p = s.parent / "session.json"
         if p.exists():

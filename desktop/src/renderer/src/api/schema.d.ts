@@ -1431,7 +1431,7 @@ export interface components {
              * @default osc_broadband
              * @enum {string}
              */
-            filter_class?: "osc_broadband" | "osc_multiband";
+            filter_class?: "osc_broadband" | "osc_multiband" | "osc_so";
         };
         /** SettingsOut */
         SettingsOut: {

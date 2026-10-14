@@ -13,7 +13,7 @@ import { basename, runningText } from '@/lib/labels'
 import { openPath, showInFolder } from '@/lib/desktop'
 import { useUi, type ViewerImage } from '@/state/ui'
 import { NightsCard } from './NightsCard'
-import { tr } from '@/lib/i18n'
+import { mark, tr } from '@/lib/i18n'
 
 /** The best image to show for a target: a final, else the newest stage preview. */
 export function heroImage(t: TargetDetail): string | null {
@@ -139,9 +139,16 @@ function NextStep({ t }: { t: TargetDetail }): React.JSX.Element {
   )
 }
 
+/** What the night's session.json records as the filter's name. */
+const FILTER_NAMES: Record<string, string> = {
+  osc_multiband: mark('多波段滤镜'),
+  osc_so: mark('S+O 双窄带滤镜')
+}
+
 function NightFilter({ t }: { t: TargetDetail }): React.JSX.Element | null {
   const qc = useQueryClient()
-  if (!t.staged || t.filter_class === 'mono_lrgb') return null      // mono: every frame has its own filter
+  // mono: every frame has its own filter; colour SHO: its nights used two filter sets
+  if (!t.staged || t.filter_class?.startsWith('mono') || t.filter_class === 'osc_sho') return null
   const value = (t.session?.filter_class as string | undefined) ?? 'osc_broadband'
   const save = async (filter_class: string): Promise<void> => {
     try {
@@ -149,8 +156,8 @@ function NightFilter({ t }: { t: TargetDetail }): React.JSX.Element | null {
         api.POST('/api/targets/session', {
           body: {
             path: t.path,
-            filter: filter_class === 'osc_multiband' ? tr('多波段滤镜') : tr('无滤镜'),
-            filter_class: filter_class as 'osc_broadband' | 'osc_multiband'
+            filter: FILTER_NAMES[filter_class] ? tr(FILTER_NAMES[filter_class]) : tr('无滤镜'),
+            filter_class: filter_class as 'osc_broadband' | 'osc_multiband' | 'osc_so'
           }
         })
       )
@@ -171,6 +178,7 @@ function NightFilter({ t }: { t: TargetDetail }): React.JSX.Element | null {
         <SelectContent>
           <SelectItem value="osc_broadband">{tr('无滤镜（宽带）')}</SelectItem>
           <SelectItem value="osc_multiband">{tr('多波段 / 窄带')}</SelectItem>
+          <SelectItem value="osc_so">{tr('S+O 双窄带（SII / OIII）')}</SelectItem>
         </SelectContent>
       </Select>
     </div>

@@ -7,7 +7,7 @@ description: 总流程——任何“处理/重新处理/调整某个目标”�
 
 ## 1. 摸清目标
 1. `inspect_target`：拍摄概况（曝光、总时长、温度）、校准帧是否齐全（calibration_warnings）、星表信息、**类型**和建议配方、已经跑过的阶段。
-2. 按类型加载技能：发射/反射星云、行星状星云、超新星遗迹 → `nebula-broadband`；那晚用了多波段滤镜（session.filter_class = osc_multiband）→ `nebula-multiband`；星系 → `galaxy`；彗星 → `comet`；黑白相机（每个滤镜一个主帧，target.filter_class = mono_lrgb）→ 再加载 `mono-lrgb`。类型是 unknown 时按天体常识判断，第一次 `run_stage` 用 `recipe` 指定。
+2. 按类型加载技能：发射/反射星云、行星状星云、超新星遗迹 → `nebula-broadband`；那晚用了多波段滤镜（session.filter_class = osc_multiband）→ `nebula-multiband`；星系 → `galaxy`；彗星 → `comet`；黑白相机（每个滤镜一个主帧，target.filter_class = mono_lrgb）→ 再加载 `mono-lrgb`；窄带（mono_hoo、mono_sho、osc_sho）→ `narrowband`。类型是 unknown 时按天体常识判断，第一次 `run_stage` 用 `recipe` 指定。
 3. `get_references`：同目标高赞作品（best = IOTD/Top Pick，peer = 同类器材）与数值指纹；有 notes 就读。参考作品用来校准“应该长什么样”，不是照抄配色。
 4. 读 `read_knowledge('targets/<目标>/agent')`（以前跑这个目标的经验），有就照着避坑。
 

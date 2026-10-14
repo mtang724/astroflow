@@ -21,6 +21,7 @@
   - AI 助手：用一句话说想要的效果，它会调用工具处理，过程逐步可见
   - 分享图：裁成 3:4（小红书）、16:9（B站）等比例，可加拍摄信息和署名
 - **黑白相机 LRGB**：WBPP 按滤镜叠出 L/R/G/B 主帧后自动用黑白配方：通道对齐与裁切、各自去背景、合成彩色、L 单独去卷积降噪，再按亮度合成（教程第 3 期）。
+- **窄带**：黑白 Hα + OIII（HOO，拍了 R/G/B 时换用它们的星点）、黑白 SII + Hα + OIII（SHO 哈勃色）、彩色相机 Hα + OIII 双窄带，以及彩色相机两套双窄带（Hα + OIII 和 SII + OIII 分别叠加后合成 SHO）。各条谱线对齐后合成调色板，做色彩平衡（HOO 用 SPCC 窄带模式），再用颜色蒙版调出红蓝或金蓝（教程第 4、5 期）。
 - **全部处理**：把还没出图的目标排队，一个接一个叠加、出图；在后台跑完时弹出系统通知。
 - **任务栏**：一次只跑一个 PixInsight 任务，实时日志，随时停止（会结束 PixInsight 进程）。
 - **中文 / English 界面**：设置里切换，默认跟随系统；AI 助手也用同一种语言回答。
@@ -85,10 +86,10 @@ python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截
 | 环境检查（缺什么组件、怎么装；不启动 PixInsight，读它的设置槽 1） | `astroflow/doctor.py` |
 | 整理 | `astroflow/organize.py`（根目录 `organize.py` 兼容旧命令），读 FITS 和相机 RAW：`astroflow/frameio.py` |
 | 单帧检查、多晚合并、磁盘空间与归档、分享图 | `astroflow/framecheck.py`、`multinight.py`、`storage.py`、`share.py` |
-| 黑白相机：每个滤镜一张主帧 | `astroflow/mono.py` |
+| 黑白相机每个滤镜一张主帧；彩色相机两套双窄带各一张 | `astroflow/mono.py`、`astroflow/dualband.py` |
 | 统一命令行入口 | `python -m astroflow`（`astroflow/__main__.py`） |
 | 叠加（WBPP 命令行自动化） | `astroflow/wbpp.py` |
-| 后期配方（宽带星云 / 星系 / 多波段星云 / 彗星 / 黑白 LRGB） | `astroflow/pipeline.py` + `astroflow/pjsr/*.js`（PixInsight 端步骤库） |
+| 后期配方（宽带星云 / 星系 / 多波段星云 / 彗星 / 黑白 LRGB / 窄带 HOO、SHO） | `astroflow/pipeline.py` + `astroflow/pjsr/*.js`（PixInsight 端步骤库） |
 | 彗星叠加（云、卫星轨迹、彗核运动、去星） | `astroflow/comet.py`，方法与教训见 `knowledge/comets.md` |
 | 无界面 PixInsight 运行器（串行锁、看门狗、可取消） | `astroflow/pi.py`，`astroflow/jobctx.py` |
 | 指标 / 参考作品 / 星表 / 暗场导入 | `astroflow/metrics.py`、`references.py`、`objects.py`、`darks.py` |
@@ -105,7 +106,7 @@ python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截
 
 ## 致谢
 
-后期配方的流程和默认参数整理自 B 站 UP 主氪化金的《PixInsight 进阶教程》第 1 期（[BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh)）、第 2 期（[BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD)）和第 3 期（[BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu)），感谢作者的分享。
+后期配方的流程和默认参数整理自 B 站 UP 主氪化金的《PixInsight 进阶教程》第 1–6 期：彩机宽带星云（[BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh)）、彩机星系（[BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD)）、黑白 LRGB（[BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu)）、HOO 窄带（[BV1uimABGEEA](https://www.bilibili.com/video/BV1uimABGEEA)）、SHO 哈勃色（[BV1vD2CBcEg8](https://www.bilibili.com/video/BV1vD2CBcEg8)）、多天素材叠加与筛片（[BV1cxqpBsEFK](https://www.bilibili.com/video/BV1cxqpBsEFK)），感谢作者的分享。
 
 ## 版权
 

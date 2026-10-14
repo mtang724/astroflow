@@ -8,6 +8,11 @@ agent（`read_knowledge` 工具）和人都从这里查：后期流程、参数�
 | `videos/ep1-osc-broadband-nebula.md` | 进阶教程第1期：彩机宽带星云全流程与参数（IC 434） |
 | `videos/ep2-osc-galaxy.md` | 进阶教程第2期：彩机星系全流程与差异（M31） |
 | `videos/ep3-mono-lrgb-broadband.md` | 进阶教程第3期：黑白相机 LRGB（M51）：通道对齐合成、L 与 RGB 分开处理、LRGB 合成 |
+| `videos/ep4a-mono-hoo.md` | 第4期上：黑白 HOO（NGC 6992）：SPCC 窄带模式、RGB 星点、逐通道去星、蓝色蒙版调 OIII |
+| `videos/ep4b-osc-ho-dualband.md` | 第4期下：彩机 Hα+OIII 双窄带（NGC 6960）：DBE、蓝色蒙版、分通道配平背景 |
+| `videos/ep5a-mono-sho.md` | 第5期上：黑白 SHO 哈勃色（M16）：不做 SPCC、黄/蓝蒙版调金蓝、窄带星点还原色 |
+| `videos/ep5b-osc-sho.md` | 第5期下：彩机两套双窄带合成 SHO（C 50）：两张主帧怎么拆成 S/H/O |
+| `videos/ep6-multinight-selection.md` | 第6期：多晚素材叠加与筛片（M42）：按晚分组的平场、筛片、WBPP 设置，及与 astroflow 的对照 |
 | `videos/<ep>/transcript.txt`, `sheets/`, `keyframes/` | 视频原始材料：转写、每10秒截图、读参数用的关键帧 |
 | `filters.md` | 每晚滤镜对处理的影响（宽带 / Antlia 四通道多波段） |
 | `comets.md` | 彗星：少帧混合曝光、云、卫星轨迹、SXT 吃彗发等的处理方法与教训（`astroflow/comet.py` + `comet` 配方） |

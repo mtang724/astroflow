@@ -7,8 +7,9 @@ left out before stacking.
     framecheck.exclude(target, names)       move frames to <target>/Excluded/Light (WBPP never sees them)
     framecheck.restore(target, names)       move them back
 
-Frames are compared with the target's own frames (median and spread of the set), so the flags work for any camera,
-exposure and sky. Measurements are made on binned luminance (astroflow.frameio): stars are local maxima well above the
+Frames are compared with the target's own frames of the same filter and exposure (median and spread of that set),
+so the flags work for any camera, exposure and sky, and a mono camera's L frames are not compared with its R, G or B
+frames. Measurements are made on binned luminance (astroflow.frameio): stars are local maxima well above the
 background noise, their size and elongation come from adaptive second moments of the brightest unsaturated ones (within
 ~10 % of Gaussian fits on ZWO, Nikon and Fujifilm X-Trans frames). Names are paths relative to Light/ (multi-night
 targets have a folder per night there).
@@ -177,6 +178,8 @@ def analyze(d, workers=None, force=False):
         rec = known.get(name)
         if force or not rec or rec.get("size") != st.st_size or rec.get("mtime") != int(st.st_mtime):
             todo.append((name, p))
+        elif "filter" not in rec and "error" not in rec:        # measured before filters were recorded: header only
+            rec.update(_when(p))
     (d / THUMBS).mkdir(parents=True, exist_ok=True)
 
     def one(name, p):
@@ -208,14 +211,18 @@ def analyze(d, workers=None, force=False):
 
 
 def _when(p):
-    """Exposure and local capture time (what the user saw on the clock that night)."""
+    """Exposure, filter and local capture time (what the user saw on the clock that night)."""
     from .organize import local_time
     try:
         h = frameio.header(p)
-        when = local_time(p, h).isoformat(timespec="seconds")
     except (OSError, ValueError):
         return {}
-    return {"exptime": float(h.get("EXPTIME") or 0) or None, "time": when}
+    out = {"exptime": float(h.get("EXPTIME") or 0) or None, "filter": str(h.get("FILTER") or "").strip() or None}
+    try:
+        out["time"] = local_time(p, h).isoformat(timespec="seconds")
+    except (OSError, ValueError, TypeError):        # no usable capture time: the frame is still compared
+        pass
+    return out
 
 
 def pixel_scale(d):
@@ -243,7 +250,8 @@ def report(d):
         fwhm = rec.get("fwhm_px")
         rows.append({"name": name, "path": p.as_posix(), "excluded": excluded, "measured": "stars" in rec,
                      "error": rec.get("error"), "thumb": _thumb_path(d, name).as_posix(),
-                     "time": rec.get("time"), "exptime": rec.get("exptime"), "stars": rec.get("stars"),
+                     "time": rec.get("time"), "exptime": rec.get("exptime"), "filter": rec.get("filter"),
+                     "stars": rec.get("stars"),
                      "fwhm": round(fwhm * scale, 2) if fwhm and scale else fwhm, "ecc": rec.get("ecc"),
                      "background": rec.get("background"), "flags": []})
     kept = [r for r in rows if r["measured"] and not r["excluded"]]
@@ -261,20 +269,32 @@ def restack_needed(d):
     return bool(master and changed and datetime.fromtimestamp(master[0].stat().st_mtime).isoformat() < changed)
 
 
-def _flag(rows, kept):
-    """Mark frames that stand out from the kept, measured ones; returns the medians."""
+def _medians(kept):
     def med(key):
         v = [r[key] for r in kept if r[key] is not None]
         if not v:
             return None, None
         m = float(np.median(v))
         return m, 1.4826 * float(np.median(np.abs(np.array(v) - m)))
+    return med("stars"), med("fwhm"), med("ecc"), med("background")
 
-    (stars, _), (fwhm, fwhm_sd), (ecc, ecc_sd), (bg, bg_sd) = med("stars"), med("fwhm"), med("ecc"), med("background")
+
+def _peers(r, kept):
+    """The kept frames a frame is compared with: same filter and exposure; when there are too few of those, same
+    filter; then all."""
+    same = [k for k in kept if k["filter"] == r["filter"]]
+    exact = [k for k in same if k["exptime"] == r["exptime"]]
+    return exact if len(exact) >= MIN_FRAMES else same if len(same) >= MIN_FRAMES else kept
+
+
+def _flag(rows, kept):
+    """Mark frames that stand out from the kept, measured ones of their filter and exposure; returns the medians of
+    all kept frames."""
     if len(kept) >= MIN_FRAMES:
         for r in rows:
             if not r["measured"]:
                 continue
+            (stars, _), (fwhm, fwhm_sd), (ecc, ecc_sd), (bg, bg_sd) = _medians(_peers(r, kept))
             if stars and r["stars"] is not None and r["stars"] < FLAG_STARS * stars:
                 r["flags"].append(tr("星点只有其他帧的 {share}（云、雾或结露）", share=f"{r['stars'] / stars:.0%}"))
             if fwhm and r["fwhm"] and r["fwhm"] > fwhm + max(3 * fwhm_sd, FLAG_FWHM * fwhm):
@@ -286,6 +306,7 @@ def _flag(rows, kept):
     for r in rows:
         if r["error"]:
             r["flags"].append(tr("读不了这一帧：{error}", error=r["error"]))
+    (stars, _), (fwhm, _), (ecc, _), (bg, _) = _medians(kept)
     return {"stars": stars, "fwhm": fwhm, "ecc": ecc, "background": bg}
 
 
