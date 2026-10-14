@@ -6,7 +6,7 @@
 
 从“拍完的一晚数据”到“成品图”：导入整理 → 单帧检查 → 叠加（几晚也能合成一张）→ 按目标类型的配方出片（每一步参数可调）→ 和高赞作品对比 → AI 助手判断与调参 → 分享图。
 
-**[下载](https://github.com/mtang724/astroflow/releases) · [使用说明](docs/user-guide.md) · [0.2.1 发布说明](docs/releases/v0.2.1.md)**
+**[下载](https://github.com/mtang724/astroflow/releases) · [使用说明](docs/user-guide.md) · [0.3.0 发布说明](docs/releases/v0.3.0.md)**
 
 ![astroflow 主界面](docs/images/overview.png)
 

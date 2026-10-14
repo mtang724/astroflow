@@ -14,7 +14,7 @@ recipe for the object type (every parameter adjustable) → comparison with top-
 pictures to share.
 
 **[Download](https://github.com/mtang724/astroflow/releases) · [User guide (Chinese)](docs/user-guide.md) ·
-[0.2.1 release notes (Chinese)](docs/releases/v0.2.1.md)**
+[0.3.0 release notes (Chinese)](docs/releases/v0.3.0.md)**
 
 ![The astroflow main window](docs/images/overview.png)
 
