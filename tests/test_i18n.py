@@ -129,6 +129,7 @@ def test_messages_come_in_english(english, tmp_settings, monkeypatch):
     assert notes == ["No usable images found (FITS or camera RAW files)"]
     text = json.dumps(doctor.run(), ensure_ascii=False)
     assert not CJK.search(text), "Chinese left in the English setup check"
+    monkeypatch.setattr(share.objects, "lookup", lambda name: {"common_name": "Lagoon Nebula"})   # catalogue: PixInsight's
     cap = share.suggest(tmp / "M8", {"exposures_s": {300.0: 11}, "total_h": 0.92, "camera": "ZWO ASI2600MC"},
                         ["2026May17", "2026May20"])
     assert cap[0] == "M8 Lagoon Nebula" and "(55 min)" in cap[1] and cap[2] == "2026-05-17 to 2026-05-20 (2 nights)"
