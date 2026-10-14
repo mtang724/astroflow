@@ -1,6 +1,7 @@
 # PixInsight 步骤参考（astroflow/pjsr/steps.js）
 
-每个步骤是 `{"id": "...", "op": "<名称>", ...参数}`。`target` 选窗口（默认 `main`；去星后有 `stars`）。
+每个步骤是 `{"id": "...", "op": "<名称>", ...参数}`。`target` 选窗口（默认 `main`；去星后有 `stars`；也可以是列表，用第一个存在的，如 `["L", "main"]`）。
+`each: ["L", "main", "G", "B"]`：同一个步骤对每个存在的窗口各做一次（字符串参数里的 `{window}` 换成窗口名）。
 `params` 里的键直接写入对应 PixInsight 进程（名称必须与进程参数一致，否则报错）。`optional: true` 失败不中断。
 蒙版参数（lhe/curves/saturation/usm 支持）：`mask`: `"lum"` | `"range"` | `"object"`，前缀 `inverse_` 反相；
 `maskClip`（lum 蒙版黑点，默认 0.10），`rangeLow`/`rangeHigh`/`rangeSmoothness`/`rangeFuzziness`（默认 0.16/1/65/0），`objectScale`/`feather`（object 蒙版，默认 1.2/0.35）。
@@ -20,10 +21,18 @@
 | `bxt` | BlurXTerminator | `params`：`sharpen_stars` 0.5，`adjust_halos` 0，`sharpen_nonstellar` 0.5，`correct_only` false |
 | `nxt` | NoiseXTerminator（AI3，明度/彩色分离） | `params`：`denoise`（明度），`denoise_color`，`iterations` 2 |
 
+## 黑白相机（第3期）
+| op | 作用 | 主要参数（默认） |
+|---|---|---|
+| `align_channels` | StarAlignment：把各通道配准到参考窗口（目标作为 View 全局执行，生成的配准图替换原窗口） | `reference` "L"，`windows`，`params` |
+| `crop_common` | 裁到所有窗口都有数据的区域（配准留下的空边），所有窗口同一个裁切 | `windows`，`margin` 4，`maxFraction` 0.25 |
+| `combine_rgb` | R/G/B 窗口合成彩色图，成为新的 `main`；没有 L 窗口时用三通道平均生成 L | `red` "main"，`green` "G"，`blue` "B"，`lum` "L"，`solution`（复制哪个窗口的星图解析） |
+| `lrgb` | LRGBCombination：只用 L 窗口替换彩色图的明度，之后关闭 L 窗口 | `lum` "L"，`lightness` 0.5，`saturation` 0.40（<0.5 更浓） |
+
 ## 拉伸与非线性
 | op | 作用 | 主要参数（默认） |
 |---|---|---|
-| `stretch` | `method`: `ez_soft`（EZ Soft Stretch 移植）/ `stf`（AutoSTF 转 HT）/ `mas`（MultiscaleAdaptiveStretch） | `targetMedian` 0.20，`expandLow` 0.05，`aggressiveness` 5 |
+| `stretch` | `method`: `ez_soft`（EZ Soft Stretch 移植）/ `stf`（AutoSTF 转 HT）/ `mas`（MultiscaleAdaptiveStretch） | `targetMedian` 0.20，`expandLow` 0.05，`aggressiveness` 5；`matchLightnessOf`: 窗口名 → 目标中值取该彩色图的 CIE L* 中值 × `matchScale`（默认 1；黑白 L 通道） |
 | `sxt` | StarXTerminator：主图变无星，星点图放到 `stars` 窗口 | `unscreen` true，`largeOverlap` false |
 | `hdr` | EZ HDR 移植：HDRMT 后经反相背景蒙版混合 | `layers` 5，`amount` 0.3 |
 | `lhe` | LocalHistogramEqualization | `params`：`radius` 162（`auto` = clamp(0.35×天体半长轴, 24, `radiusMax`)），`slopeLimit` 1.3，`amount` 0.8；可加蒙版 |
@@ -46,4 +55,6 @@
 ## 星云/星系配方阶段（pipeline.py）
 `linear`（10_linear）→ `stretch`（20_stretched）→ `stars`（30_starless + 31_stars）→ `starless`（40_starless_final）→ `stars_color`（41_stars_final）→ `combine`（50_final + 成品 tif/jpg/png）。
 配方：`osc_broadband_nebula`（第1期）、`osc_galaxy`（第2期）、`osc_multiband_nebula`（多波段滤镜，暂定，见 filters.md）。
+
+黑白相机（`mono_lrgb_galaxy` 第3期、`mono_lrgb_nebula`）：`channels`（10_rgb + 10_lum）→ `color`（11_rgb）→ `lum`（11_lum）→ `stretch`（20_stretched，含 LRGB 合成）→ 之后同上。起点是每个滤镜一个主帧（`master:L` 等）。
 重跑某阶段会让其后的阶段失效。

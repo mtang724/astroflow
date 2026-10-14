@@ -553,5 +553,16 @@
   "还有 {n} 个": [
     "and {n} more",
     "and {n} more"
-  ]
+  ],
+  "通道对齐与合成": "Align and combine channels",
+  "色彩校准": "Colour calibration",
+  "亮度通道 (L)": "Luminance (L)",
+  "板解析": "Plate solving",
+  "通道对齐": "Align channels",
+  "裁到共同区域": "Crop to the common area",
+  "合成彩色 (RGB)": "Combine colour (RGB)",
+  "LRGB 合成": "LRGB combination",
+  "黑白 LRGB 星系": "Mono LRGB galaxy",
+  "黑白 LRGB 星云": "Mono LRGB nebula",
+  "发射星云、反射星云、超新星遗迹等": "Emission and reflection nebulae, supernova remnants and the like"
 }

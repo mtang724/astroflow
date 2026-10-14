@@ -22,7 +22,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import frameio, jobctx, jsonfile, metrics, objects, pi, wbpp
+from . import frameio, jobctx, jsonfile, metrics, mono, objects, pi, wbpp
 
 # --------------------------------------------------------------------------- recipes
 # Step dicts are passed verbatim to pjsr/steps.js (op = function name). "id" lets overrides address a step.
@@ -182,8 +182,79 @@ COMET = [
     ]},
 ]
 
+# Video ep3 (M51, mono camera, L/R/G/B masters). The channels are registered onto L and cropped to their common area,
+# each loses its gradient on its own, then R+G+B make the colour image. Colour calibration is BNCC (SPCC would need the
+# curves of the very filters used). BXT and NXT run on L only: L's sharpness reaches the colour image through
+# LRGBCombination. The colour image is stretched (EZ, median 0.24), L to the colour image's lightness. LRGBCombination
+# then puts L in, with saturation 0.40 making up for the colour a bright L washes out. From there on it is the colour
+# camera's work: the galaxy's with video ep3's values, the nebula's with video ep1's.
+def _mono_front(background, cc, lum_steps):
+    return [
+        {"stage": "channels", "input": "master:R", "aux": {"G": "master:G", "B": "master:B"},
+         "optional_aux": {"L": "master:L"}, "output": "10_rgb", "outputs": {"L": "10_lum"}, "linear_in": True,
+         "steps": [
+            {"id": "align", "op": "align_channels", "reference": "L", "windows": ["L", "main", "G", "B"]},
+            {"id": "crop", "op": "crop_common", "windows": ["L", "main", "G", "B"], "margin": 4},
+            {"id": "solve", "op": "plate_solve", "target": ["L", "main"], "optional": True},
+            {"id": "locate", "op": "locate_object", "target": ["L", "main"], "optional": True},
+            {**background, "each": ["L", "main", "G", "B"]},
+            {"id": "combine", "op": "combine_rgb", "solution": "L"},
+        ]},
+        {"stage": "color", "input": "10_rgb", "output": "11_rgb", "linear_in": True, "steps": [
+            {"id": "bg", "op": "find_background"},
+            {"id": "cc", "op": "color_calibration", "method": "bncc", **cc},
+            {"id": "pv_cc", "op": "preview", "path": "{previews}/11a_after_cc.jpg", "size": 1600},
+        ]},
+        {"stage": "lum", "input": "10_lum", "output": "11_lum", "linear_in": True, "steps": [
+            *lum_steps,
+            {"id": "bxt", "op": "bxt", "params": {}},
+            {"id": "nxt", "op": "nxt", "params": {"denoise": 0.25, "denoise_color": 0.0, "iterations": 2}},
+        ]},
+        {"stage": "stretch", "input": "11_rgb", "aux": {"L": "11_lum"}, "output": "20_stretched", "linear_in": True,
+         "steps": [
+            {"id": "stretch", "op": "stretch", "method": "ez_soft", "targetMedian": 0.24, "expandLow": 0.05,
+             "aggressiveness": 5},
+            {"id": "stretch_l", "op": "stretch", "target": "L", "method": "ez_soft", "matchLightnessOf": "main",
+             "matchScale": 1.0, "expandLow": 0.05, "aggressiveness": 5},   # matchScale < 1: L darker than the colour
+            {"id": "lrgb", "op": "lrgb", "lightness": 0.5, "saturation": 0.40},
+        ]},
+    ]
+
+
+MONO_LRGB_GALAXY = _mono_front(
+    {"id": "dbe", "op": "dbe_auto", "degree": 2, "objectScale": 1.8, "nx": 24, "ny": 16,
+     "saveModel": "{previews}/10_dbe_model_{window}.jpg"},
+    {"bncc": {"whiteROI": "object", "structureDetection": False}},
+    [{"id": "gc", "op": "gradient_correction", "params": {}}]) + [   # video: GC once more for what ADBE left on L
+    {"stage": "stars", "input": "20_stretched", "output": "30_starless", "stars_output": "31_stars",
+     "linear_in": False, "steps": [
+        {"id": "sxt", "op": "sxt", "unscreen": True},
+    ]},
+    {"stage": "starless", "input": "30_starless", "output": "40_starless_final", "linear_in": False, "steps": [
+        {"id": "lhe", "op": "lhe", "params": {"radius": "auto", "slopeLimit": 1.3, "amount": 1.0},
+         "mask": "range", "rangeLow": 0.23, "rangeSmoothness": 65},
+        {"id": "sat", "op": "saturation", "boost": 0.75, "mask": "lum", "maskClip": 0.10, "passes": 2},
+        {"id": "ht", "op": "ht", "shadows": "sky", "skyTarget": 0.10, "midtones": 0.50},   # video's final: sky ~0.10
+        {"id": "nxt2", "op": "nxt", "params": {"denoise": 0.15, "denoise_color": 0.90, "iterations": 2}},
+        {"id": "usm", "op": "usm", "enabled": False, "params": {"sigma": 2.0, "amount": 0.57}},   # video: looked fake
+    ]},
+    {"stage": "stars_color", "input": "31_stars", "output": "41_stars_final", "linear_in": False, "steps": [
+        {"id": "star_sat", "op": "saturation", "boost": 0.54, "mask": False},
+        {"id": "scnr", "op": "scnr", "params": {"amount": 0.53}},
+    ]},
+    {"stage": "combine", "input": "40_starless_final", "aux": {"stars": "41_stars_final"}, "output": "50_final",
+     "linear_in": False, "final": True, "steps": [
+        {"id": "recombine", "op": "recombine", "mode": "screen", "starsAmount": 1.0},
+    ]},
+]
+
+MONO_LRGB_NEBULA = _mono_front(
+    {"id": "gc", "op": "gradient_correction", "params": {}},
+    {},
+    []) + copy.deepcopy(NEBULA_EP1[2:])
+
 RECIPES = {"osc_broadband_nebula": NEBULA_EP1, "osc_galaxy": GALAXY_EP2, "osc_multiband_nebula": MULTIBAND_NEB,
-           "comet": COMET}
+           "comet": COMET, "mono_lrgb_galaxy": MONO_LRGB_GALAXY, "mono_lrgb_nebula": MONO_LRGB_NEBULA}
 
 
 # --------------------------------------------------------------------------- state
@@ -193,7 +264,8 @@ class Work:
         self.target = Path(target_dir)
         self.session = objects.session_info(self.target)
         if recipe is None:
-            recipe = objects.recipe_for(self.target.name, filter_class=self.session.get("filter_class"))[0]                 or "osc_broadband_nebula"
+            recipe, _ = default_recipe(self.target)
+            recipe = recipe or ("mono_lrgb_nebula" if is_mono(self.target) else "osc_broadband_nebula")
         self.dir = self.target / "Post"
         self.previews = self.dir / "previews"
         self.metrics = self.dir / "metrics"
@@ -221,7 +293,15 @@ class Work:
             self.state["recipe"], self.recipe, self.state["stages"] = name, RECIPES[name], {}
         self.save()
 
-    def master(self):
+    def master(self, channel=None):
+        """The start image: WBPP's master light (or the recorded one: a comet stack ...). channel 'L' / 'R' / 'G' / 'B':
+        that filter's master of a mono target; without a channel a mono target gives L (else R)."""
+        mono_masters = mono.masters(self.target, self.state.get("masters"))
+        if channel or mono.is_rgb(mono_masters):
+            found = mono_masters.get(channel) or (None if channel else mono_masters.get("L") or mono_masters["R"])
+            if not found:
+                raise FileNotFoundError(f"no {channel} master in {self.target / 'Output' / 'master'}; run wbpp first")
+            return found
         if self.state.get("master"):
             return Path(self.state["master"])
         ms = wbpp.masters(self.target)
@@ -231,8 +311,8 @@ class Work:
         return ms[0]
 
     def checkpoint(self, name):
-        if name == "master":
-            return self.master()
+        if name == "master" or name.startswith("master:"):
+            return self.master(name.partition(":")[2] or None)
         return self.dir / (name if Path(name).suffix.lower() in (".xisf", ".fits", ".fit", ".tif") else f"{name}.xisf")
 
     def stage(self, name):
@@ -248,29 +328,48 @@ class Work:
 RESULT_KEYS = ("finished", "object", "colorCalibrated", "unscreen")   # what the stages found or decided
 
 
-def start_image(target_dir, state):
-    """The image the recipe starts from: the recorded master (comet stack ...), else WBPP's master light; None yet."""
+def start_images(target_dir, state):
+    """The images the recipe starts from: the recorded master (comet stack ...) or masters (mono, made elsewhere), else
+    WBPP's master lights (one per filter for a mono camera); [] before stacking."""
     if state.get("master") and Path(state["master"]).exists():
-        return Path(state["master"])
-    masters = wbpp.masters(target_dir)
-    return masters[0] if masters else None
+        return [Path(state["master"])]
+    recorded = mono.masters(target_dir, state.get("masters"))
+    return list(recorded.values()) if recorded else wbpp.masters(target_dir)
+
+
+def is_mono(target_dir, state=None):
+    """The target's masters are a mono camera's, one per filter (R, G and B at least)."""
+    return mono.is_rgb(mono.masters(target_dir, (state or {}).get("masters")))
+
+
+def default_recipe(target_dir):
+    """(recipe, object type) unless the user picks a recipe: by object type and the filters, the mono LRGB recipes for
+    a mono camera's masters (objects.recipe_for)."""
+    target_dir = Path(target_dir)
+    fc = "mono_lrgb" if is_mono(target_dir) else objects.session_info(target_dir).get("filter_class")
+    return objects.recipe_for(target_dir.name, filter_class=fc)
 
 
 def stages_stale(target_dir, state):
-    """The start image was made again (WBPP re-run after frames were excluded, a new comet stack) after the recipe's
+    """A start image was made again (WBPP re-run after frames were excluded, a new comet stack) after the recipe's
     stages ran: their results no longer follow from it."""
     records = state.get("stages") or {}
     first = next((records[s["stage"]] for s in RECIPES.get(state.get("recipe"), []) if s["stage"] in records), None)
-    start = start_image(target_dir, state) if first and first.get("time") else None
-    if start is None:
+    starts = start_images(target_dir, state) if first and first.get("time") else []
+    if not starts:
         return False
-    made = datetime.fromtimestamp(start.stat().st_mtime, timezone.utc)
+    made = datetime.fromtimestamp(max(p.stat().st_mtime for p in starts), timezone.utc)
     return made > datetime.fromisoformat(first["time"])
+
+
+class _Placeholders(dict):
+    def __missing__(self, key):          # left for the runner ({window} of a step run once per window)
+        return "{" + key + "}"
 
 
 def _fmt(obj, mapping):
     if isinstance(obj, str):
-        return obj.format(**mapping)
+        return obj.format_map(_Placeholders(mapping))
     if isinstance(obj, dict):
         return {k: _fmt(v, mapping) for k, v in obj.items()}
     if isinstance(obj, list):
@@ -340,8 +439,10 @@ def run_stage(work, name, overrides=None, timeout=3600):
         s = merge_step(st, overrides.get(st["id"]))
         if s.pop("enabled", True) is False:
             continue
-        if s["op"] in ("color_calibration", "plate_solve"):
+        if s["op"] == "color_calibration":
             s.setdefault("solve", {}).update({k: v for k, v in solve_hints(work.target).items() if k not in s["solve"]})
+        if s["op"] == "plate_solve":
+            s.update({k: v for k, v in solve_hints(work.target).items() if k not in s})
         if s["op"] == "locate_object":
             cat = objects.lookup(work.state.get("object_name") or work.target.name) or {}
             for k in ("ra", "dec", "diameter", "axisRatio", "posAngle"):
@@ -359,17 +460,26 @@ def run_stage(work, name, overrides=None, timeout=3600):
     out_name = spec["output"]
     job = {"input": work.checkpoint(spec["input"]).as_posix(), "linear": spec.get("linear_in", False),
            "colorCalibrated": work.state.get("colorCalibrated", False), "unscreen": work.state.get("unscreen"),
-           "steps": steps,
+           "object": work.state.get("object"), "steps": steps,
            "save": [{"window": "main", "path": (work.dir / f"{out_name}.xisf").as_posix()}],
            "previews": [{"window": "main", "path": (work.previews / f"{out_name}.jpg").as_posix(), "size": 1600}],
            "metrics": [{"window": "main", "path": (work.metrics / f"{out_name}.tif").as_posix(), "size": 2048}]}
-    if spec.get("aux"):
-        job["aux"] = {k: work.checkpoint(v).as_posix() for k, v in spec["aux"].items()}
+    aux = {k: work.checkpoint(v).as_posix() for k, v in (spec.get("aux") or {}).items()}
+    for k, v in (spec.get("optional_aux") or {}).items():     # e.g. a mono target's L: not every target has one
+        try:
+            aux[k] = work.checkpoint(v).as_posix()
+        except FileNotFoundError:
+            pass
+    if aux:
+        job["aux"] = aux
     if spec.get("stars_output"):
         so = spec["stars_output"]
         job["save"].append({"window": "stars", "path": (work.dir / f"{so}.xisf").as_posix()})
         job["previews"].append({"window": "stars", "path": (work.previews / f"{so}.jpg").as_posix(), "size": 1600,
                                 "linear": False})
+    for window, out in (spec.get("outputs") or {}).items():
+        job["save"].append({"window": window, "path": (work.dir / f"{out}.xisf").as_posix()})
+        job["previews"].append({"window": window, "path": (work.previews / f"{out}.jpg").as_posix(), "size": 1600})
     if spec.get("final"):
         stem = work.dir / f"{work.target.name}_{datetime.now():%Y%m%d}"
         job["save"] += [{"window": "main", "path": f"{stem.as_posix()}.tif", "bits": 16},
@@ -440,7 +550,7 @@ def locate(target_dir):
     cat = objects.lookup(work.target.name)
     if not cat:
         raise ValueError(f"{work.target.name} is not in the catalogue")
-    src = work.dir / "10_linear.xisf"
+    src = work.checkpoint(work.recipe[0]["output"])        # the first stage's result (10_linear, 10_rgb ...)
     if not src.exists():
         src = work.master()
     step = {"op": "locate_object", **{k: cat[k] for k in ("ra", "dec", "diameter", "axisRatio", "posAngle")}}
@@ -498,17 +608,22 @@ def run(target_dir, recipe=None, start=None, only=None, overrides=None, master=N
     return out
 
 
+def stage_outputs(spec):
+    """The checkpoints a stage writes: its output, the stars split off, and further windows (a mono target's L)."""
+    return [spec[k] for k in ("output", "stars_output") if k in spec] + list((spec.get("outputs") or {}).values())
+
+
 def with_missing_inputs(work, todo):
     """`todo` plus the stages that make an input it lacks (checkpoints deleted to free space: astroflow.storage), in
     recipe order."""
-    made_by = {s[k]: s["stage"] for s in work.recipe for k in ("output", "stars_output") if k in s}
+    made_by = {out: s["stage"] for s in work.recipe for out in stage_outputs(s)}
     need = set(todo)
     grew = True
     while grew:
         grew = False
         for stage in list(need):
             spec = work.stage(stage)
-            for name in [spec["input"], *(spec.get("aux") or {}).values()]:
+            for name in [spec["input"], *(spec.get("aux") or {}).values(), *(spec.get("optional_aux") or {}).values()]:
                 maker = made_by.get(name)
                 if maker and maker not in need and not work.checkpoint(name).exists():
                     need.add(maker)

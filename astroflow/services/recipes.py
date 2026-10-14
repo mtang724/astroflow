@@ -13,7 +13,8 @@ import threading
 
 from .. import jsonfile, pipeline
 
-NOT_TUNABLE = {"id", "op", "optional", "path", "saveModel", "size"}
+NOT_TUNABLE = {"id", "op", "optional", "path", "saveModel", "size",
+               "target", "reference", "solution", "matchLightnessOf"}      # which windows a step works on: wiring
 _lock = threading.Lock()                 # API requests run in a thread pool: one read-modify-write at a time
 
 

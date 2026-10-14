@@ -14,6 +14,7 @@ import os
 import re
 import site
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -126,4 +127,5 @@ if __name__ == "__main__":
     ap.add_argument("--out")
     ap.add_argument("--every", type=int, default=10)
     a = ap.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8")     # video titles are Chinese; a Windows console may be cp1252
     print(json.dumps(analyze(a.video, a.out, a.every), ensure_ascii=False, indent=1))

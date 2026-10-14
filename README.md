@@ -22,6 +22,7 @@ model: DeepSeek, OpenAI, or local Ollama / LM Studio) judges each stage and tune
   - 图像：各阶段预览、成品、参考作品，可以缩放、两张图对比
   - AI 助手：用一句话说想要的效果，它会调用工具处理，过程逐步可见
   - 分享图：裁成 3:4（小红书）、16:9（B站）等比例，可加拍摄信息和署名
+- **黑白相机 LRGB**：WBPP 按滤镜叠出 L/R/G/B 主帧后自动用黑白配方：通道对齐与裁切、各自去背景、合成彩色、L 单独去卷积降噪，再按亮度合成（教程第 3 期）。
 - **全部处理**：把还没出图的目标排队，一个接一个叠加、出图；在后台跑完时弹出系统通知。
 - **任务栏**：一次只跑一个 PixInsight 任务，实时日志，随时停止（会结束 PixInsight 进程）。
 - **中文 / English 界面**：设置里切换，默认跟随系统；AI 助手也用同一种语言回答。
@@ -65,7 +66,7 @@ python -m astroflow refs "NGC 7293"        # 抓同目标高赞作品作参考
 python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截图，整理进资料库
 ```
 
-- **每晚用的滤镜**记在 `In Processing\<日期>\session.json`（FITS 头里没有；应用里在目标概览页选）：无滤镜 `osc_broadband`，Antlia 四通道等多波段 `osc_multiband`。它决定配方、色彩校准方式和参考作品分组。
+- **每晚用的滤镜**记在 `In Processing\<日期>\session.json`（FITS 头里没有；应用里在目标概览页选）：无滤镜 `osc_broadband`，Antlia 四通道等多波段 `osc_multiband`。它决定配方、色彩校准方式和参考作品分组。黑白相机不用记：每个滤镜一张主帧（`..._FILTER-L_mono.xisf`），配方据此选 `mono_lrgb_*`。
 - **运行时请关闭 PixInsight 界面**：无界面任务需要独占 PixInsight（第二个实例读不到 Gaia 星表配置，BXT 也会崩溃），任务会自动排队等待。
 
 ## 结果在哪里
@@ -88,7 +89,7 @@ python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截
 | 单帧检查、多晚合并、磁盘空间与归档、分享图 | `astroflow/framecheck.py`、`multinight.py`、`storage.py`、`share.py` |
 | 统一命令行入口 | `python -m astroflow`（`astroflow/__main__.py`） |
 | 叠加（WBPP 命令行自动化） | `astroflow/wbpp.py` |
-| 后期配方（宽带星云 / 星系 / 多波段星云 / 彗星） | `astroflow/pipeline.py` + `astroflow/pjsr/*.js`（PixInsight 端步骤库） |
+| 后期配方（宽带星云 / 星系 / 多波段星云 / 彗星 / 黑白 LRGB） | `astroflow/pipeline.py` + `astroflow/pjsr/*.js`（PixInsight 端步骤库） |
 | 彗星叠加（云、卫星轨迹、彗核运动、去星） | `astroflow/comet.py`，方法与教训见 `knowledge/comets.md` |
 | 无界面 PixInsight 运行器（串行锁、看门狗、可取消） | `astroflow/pi.py`，`astroflow/jobctx.py` |
 | 指标 / 参考作品 / 星表 / 暗场导入 | `astroflow/metrics.py`、`references.py`、`objects.py`、`darks.py` |
@@ -102,6 +103,10 @@ python -m astroflow video "<教程.mp4>"      # 新教程视频 → 转写 + 截
 
 ## 不在仓库里的东西
 教程视频及其截图和转写稿（版权），AstroBin 参考缩略图（他人作品，仅本地比较用；`refs.json` 保留标题、作者和链接），运行日志 `.runs/`，`.env`，打包输出。
+
+## 致谢
+
+后期配方的流程和默认参数整理自 B 站 UP 主氪化金的《PixInsight 进阶教程》第 1 期（[BV14LthzDEyh](https://www.bilibili.com/video/BV14LthzDEyh)）、第 2 期（[BV1C3tozEEAD](https://www.bilibili.com/video/BV1C3tozEEAD)）和第 3 期（[BV1AUbbz5EUu](https://www.bilibili.com/video/BV1AUbbz5EUu)），感谢作者的分享。
 
 ## 版权
 

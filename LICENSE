@@ -15,7 +15,7 @@ Copyright (c) 2026 Ming. All rights reserved.
 
 例外：
 - desktop/src/renderer/src/components/ui/ 下的界面组件来自 shadcn/ui，遵循其 MIT 许可证。
-- knowledge/videos/ 下的笔记整理自 B 站《PixInsight 进阶教程》，相关内容的权利属于原作者。
+- knowledge/videos/ 下的笔记整理自 B 站 UP 主氪化金的《PixInsight 进阶教程》，相关内容的权利属于原作者。
 - 安装包里附带的第三方软件（Electron、Python 及其依赖等）遵循各自的许可证。
 - PixInsight、RC Astro 插件和 AstroBin 上的作品不属于本项目。
 
@@ -28,6 +28,6 @@ including commercial products, paid services and paid image-processing services.
 issue on GitHub.
 
 Exceptions: the UI components in desktop/src/renderer/src/components/ui/ come from shadcn/ui and keep its MIT
-license; the notes in knowledge/videos/ summarise the Bilibili "PixInsight 进阶教程" series, whose rights belong to
-its author; third-party software bundled with the installers keeps its own licenses; PixInsight, the RC Astro tools
+license; the notes in knowledge/videos/ summarise the Bilibili "PixInsight 进阶教程" series by 氪化金, whose rights
+belong to its author; third-party software bundled with the installers keeps its own licenses; PixInsight, the RC Astro tools
 and the works on AstroBin are not part of this project.

@@ -28,7 +28,7 @@ FINAL_OUTPUT = "50_final"                      # every recipe's last stage write
 
 
 def _checkpoint_names():
-    names = {s[k] for stages in pipeline.RECIPES.values() for s in stages for k in ("output", "stars_output") if k in s}
+    names = {out for stages in pipeline.RECIPES.values() for s in stages for out in pipeline.stage_outputs(s)}
     return {f"{n}.xisf" for n in names - {FINAL_OUTPUT}}
 
 

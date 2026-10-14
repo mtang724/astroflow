@@ -7,6 +7,7 @@ agent（`read_knowledge` 工具）和人都从这里查：后期流程、参数�
 |---|---|
 | `videos/ep1-osc-broadband-nebula.md` | 进阶教程第1期：彩机宽带星云全流程与参数（IC 434） |
 | `videos/ep2-osc-galaxy.md` | 进阶教程第2期：彩机星系全流程与差异（M31） |
+| `videos/ep3-mono-lrgb-broadband.md` | 进阶教程第3期：黑白相机 LRGB（M51）：通道对齐合成、L 与 RGB 分开处理、LRGB 合成 |
 | `videos/<ep>/transcript.txt`, `sheets/`, `keyframes/` | 视频原始材料：转写、每10秒截图、读参数用的关键帧 |
 | `filters.md` | 每晚滤镜对处理的影响（宽带 / Antlia 四通道多波段） |
 | `comets.md` | 彗星：少帧混合曝光、云、卫星轨迹、SXT 吃彗发等的处理方法与教训（`astroflow/comet.py` + `comet` 配方） |

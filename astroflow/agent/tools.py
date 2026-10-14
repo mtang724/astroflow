@@ -146,6 +146,7 @@ def read_skill_file(name, path):
 def read_knowledge(name=""):
     k = config.KNOWLEDGE
     alias = {"ep1": "videos/ep1-osc-broadband-nebula.md", "ep2": "videos/ep2-osc-galaxy.md",
+             "ep3": "videos/ep3-mono-lrgb-broadband.md",
              "steps": "pipeline_steps.md", "checklists": "checklists.md", "pitfalls": "pitfalls.md",
              "filters": "filters.md", "comets": "comets.md"}
     if not name:

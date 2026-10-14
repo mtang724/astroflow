@@ -141,7 +141,7 @@ function NextStep({ t }: { t: TargetDetail }): React.JSX.Element {
 
 function NightFilter({ t }: { t: TargetDetail }): React.JSX.Element | null {
   const qc = useQueryClient()
-  if (!t.staged) return null
+  if (!t.staged || t.filter_class === 'mono_lrgb') return null      // mono: every frame has its own filter
   const value = (t.session?.filter_class as string | undefined) ?? 'osc_broadband'
   const save = async (filter_class: string): Promise<void> => {
     try {

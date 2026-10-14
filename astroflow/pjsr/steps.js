@@ -4,11 +4,11 @@
 
 var STEPS = {};
 
+// p.target: a window name, or a list of them (the first one open is used: ["L", "main"] = L if there is one)
 function afWin(ctx, p) {
-   var name = (p && p.target) || "main";
-   var w = ctx.win[name];
-   if (!w) throw new Error("No window named '" + name + "' (have: " + Object.keys(ctx.win).join(",") + ")");
-   return w;
+   var names = [].concat((p && p.target) || "main");
+   for (var i = 0; i < names.length; ++i) if (ctx.win[names[i]]) return ctx.win[names[i]];
+   throw new Error("No window named '" + names.join("' or '") + "' (have: " + Object.keys(ctx.win).join(",") + ")");
 }
 
 function afApply(P, params) {
@@ -322,10 +322,24 @@ STEPS.sxt = function (ctx, p) {
 
 // ---------------------------------------------------------------- stretching
 
+// p.matchLightnessOf: a stretched colour window whose lightness (CIE L*) median, times p.matchScale (default 1),
+// becomes the target median, so an L channel put in with LRGBCombination keeps the image's brightness (video ep3
+// matched them by eye).
 STEPS.stretch = function (ctx, p) {
    var w = afWin(ctx, p);
    var method = p.method || "ez_soft";
    var info = { method: method };
+   if (p.matchLightnessOf) {
+      var PM = new PixelMath;
+      PM.expression = "CIEL($T)";
+      PM.useSingleExpression = true; PM.createNewImage = true; PM.showNewImage = false; PM.newImageId = "af_lightness";
+      PM.newImageColorSpace = PixelMath.prototype.Gray; PM.newImageSampleFormat = PixelMath.prototype.f32;
+      PM.executeOn(afWin(ctx, { target: p.matchLightnessOf }).mainView, false);
+      var lw = AF.windowById("af_lightness");
+      p.targetMedian = AF.round(lw.mainView.image.median() * (p.matchScale || 1), 4);
+      lw.forceClose();
+      info.matchedTo = p.matchLightnessOf;
+   }
    if (method == "ez_soft") {
       var r = AF.ezSoftStretch(w.mainView, p.targetMedian == undefined ? 0.20 : p.targetMedian,
                                p.expandLow == undefined ? 0.05 : p.expandLow, p.aggressiveness || 5, !!p.zeroInWhitePoint);
@@ -676,6 +690,127 @@ STEPS.hdr = function (ctx, p) {
    w.removeMask();
    mask.forceClose(); clone.forceClose();
    return { layers: layers, amount: amount, maskMedian: AF.round(med, 5) };
+};
+
+// ---------------------------------------------------------------- mono cameras (video ep3: one master per filter)
+
+// Register the listed windows onto the reference (StarAlignment with the windows as targets, as in the video; run on a
+// view it leaves the image unchanged). Masters stacked on other nights, or by separate WBPP runs, are shifted and
+// rotated against each other; registration resamples them into the reference's geometry, leaving empty borders that
+// crop_common removes. Each registered image replaces its window under the same name.
+STEPS.align_channels = function (ctx, p) {
+   var names = (p.windows || []).filter(function (n) { return ctx.win[n]; });
+   var ref = ctx.win[p.reference] ? p.reference : names[0];
+   var targets = names.filter(function (n) { return n != ref; });
+   if (!targets.length) return { reference: ref, aligned: [] };
+   var S = new StarAlignment;
+   S.referenceImage = ctx.win[ref].mainView.id; S.referenceIsFile = false;
+   S.targets = targets.map(function (n) { return [true, false, ctx.win[n].mainView.id]; });
+   S.generateDrizzleData = false; S.writeKeywords = false; S.onError = StarAlignment.prototype.Abort;
+   afApply(S, p.hasOwnProperty("params") ? p.params : null);
+   var before = AF.windowIds();
+   if (!S.executeGlobal()) throw new Error("StarAlignment failed");
+   var made = AF.newWindows(before), out = { reference: ref, aligned: [] };
+   for (var i = 0; i < targets.length; ++i) {
+      var id = ctx.win[targets[i]].mainView.id, reg = null;
+      for (var j = 0; j < made.length; ++j) if (made[j].mainView.id.indexOf(id + "_") == 0) reg = made[j];
+      if (!reg) throw new Error("StarAlignment made no registered image of " + targets[i]);
+      ctx.win[targets[i]].forceClose();
+      reg.mainView.id = id;
+      reg.hide();
+      ctx.win[targets[i]] = reg;
+      out.aligned.push(targets[i]);
+   }
+   for (j = 0; j < made.length; ++j) if (out.aligned.every(function (n) { return ctx.win[n] !== made[j]; })) made[j].forceClose();
+   return out;
+};
+
+// Crop every listed window to the area all of them cover: the sides move inwards while a border line of the
+// coverage mask (1 where every channel has data) is not fully covered.
+STEPS.crop_common = function (ctx, p) {
+   var names = (p.windows || []).filter(function (n) { return ctx.win[n]; });
+   var img = ctx.win[names[0]].mainView.image, W = img.width, H = img.height;
+   var PM = new PixelMath;
+   PM.expression = "iif(min(" + names.map(function (n) { return ctx.win[n].mainView.id; }).join(",") + ") > 0, 1, 0)";
+   if (names.length == 1) PM.expression = "iif(" + ctx.win[names[0]].mainView.id + " > 0, 1, 0)";
+   PM.useSingleExpression = true; PM.createNewImage = true; PM.showNewImage = false; PM.newImageId = "af_coverage";
+   PM.newImageColorSpace = PixelMath.prototype.Gray; PM.newImageSampleFormat = PixelMath.prototype.f32;
+   PM.executeOn(ctx.win[names[0]].mainView, false);
+   var cw = AF.windowById("af_coverage"), cov = cw.mainView.image;
+   function covered(x0, y0, x1, y1) { cov.selectedRect = new Rect(x0, y0, x1, y1); var m = cov.mean(); cov.resetSelections(); return m > 0.999; }
+   var r = { x0: 0, y0: 0, x1: W, y1: H }, moved = true, limit = p.maxFraction || 0.25;
+   while (moved) {
+      moved = false;
+      if (!covered(r.x0, r.y0, r.x1, r.y0 + 1)) { r.y0++; moved = true; }
+      if (!covered(r.x0, r.y1 - 1, r.x1, r.y1)) { r.y1--; moved = true; }
+      if (!covered(r.x0, r.y0, r.x0 + 1, r.y1)) { r.x0++; moved = true; }
+      if (!covered(r.x1 - 1, r.y0, r.x1, r.y1)) { r.x1--; moved = true; }
+      if (r.x1 - r.x0 < W * (1 - 2 * limit) || r.y1 - r.y0 < H * (1 - 2 * limit)) {
+         cw.forceClose();
+         throw new Error("the channels hardly overlap (common area " + (r.x1 - r.x0) + "x" + (r.y1 - r.y0) + " of " + W + "x" + H + ")");
+      }
+   }
+   cw.forceClose();
+   if (r.x0 == 0 && r.y0 == 0 && r.x1 == W && r.y1 == H) return { cropped: false, size: [W, H] };
+   var m = p.margin == undefined ? 4 : p.margin;      // interpolation ringing next to the empty border
+   var rect = [r.x0 + m, r.y0 + m, r.x1 - m, r.y1 - m];
+   for (var i = 0; i < names.length; ++i) STEPS.crop(ctx, { target: names[i], rect: rect });
+   return { cropped: true, rect: rect, from: [W, H] };
+};
+
+// R, G and B windows -> one colour image that becomes "main" (video ep3: ChannelCombination). The astrometric
+// solution comes from p.solution (the plate-solved L). Without an L window (R, G and B only) the mean of the three
+// channels becomes L, so the luminance work (deconvolution, noise reduction) still happens on one channel.
+STEPS.combine_rgb = function (ctx, p) {
+   var r = afWin(ctx, { target: p.red || "main" }), g = afWin(ctx, { target: p.green || "G" }),
+       b = afWin(ctx, { target: p.blue || "B" });
+   var PM = new PixelMath;
+   PM.expression = r.mainView.id; PM.expression1 = g.mainView.id; PM.expression2 = b.mainView.id;
+   PM.useSingleExpression = false; PM.createNewImage = true; PM.showNewImage = false; PM.newImageId = "af_rgb";
+   PM.newImageColorSpace = PixelMath.prototype.RGB; PM.newImageSampleFormat = PixelMath.prototype.f32;
+   PM.rescale = false; PM.truncate = true;
+   PM.executeOn(r.mainView, false);
+   var rgb = AF.windowById("af_rgb");
+   var lumName = p.lum || "L", made = false;
+   if (!ctx.win[lumName]) {
+      var LM = new PixelMath;
+      LM.expression = "(af_rgb[0] + af_rgb[1] + af_rgb[2]) / 3";
+      LM.useSingleExpression = true; LM.createNewImage = true; LM.showNewImage = false; LM.newImageId = "af_lum";
+      LM.newImageColorSpace = PixelMath.prototype.Gray; LM.newImageSampleFormat = PixelMath.prototype.f32;
+      LM.executeOn(rgb.mainView, false);
+      var lw = AF.windowById("af_lum");
+      lw.hide();
+      ctx.win[lumName] = lw;
+      made = true;
+   }
+   var src = p.solution ? ctx.win[p.solution] : null;
+   if (src && src.hasAstrometricSolution) rgb.copyAstrometricSolution(src);
+   [r, g, b].forEach(function (w) {
+      for (var k in ctx.win) if (ctx.win[k] === w) delete ctx.win[k];
+      w.forceClose();
+   });
+   rgb.mainView.id = "main";
+   rgb.hide();
+   ctx.win.main = rgb;
+   if (made) ctx.win[lumName].mainView.id = lumName;
+   return { lumFromRGB: made, solved: rgb.hasAstrometricSolution };
+};
+
+// Put the stretched L into the stretched colour image (video ep3: LRGBCombination with only L enabled). Saturation
+// below 0.5 brings back the colour a bright L washes out (video: 0.40). The L window is closed afterwards.
+STEPS.lrgb = function (ctx, p) {
+   var w = afWin(ctx, p), lumName = p.lum || "L", lw = ctx.win[lumName];
+   if (!lw) throw new Error("lrgb: no window '" + lumName + "'");
+   var C = new LRGBCombination;
+   // rows are R, G, B, L (the dialog lists L first): only L enabled
+   C.channels = [[false, "", 1.0], [false, "", 1.0], [false, "", 1.0], [true, lw.mainView.id, 1.0]];
+   C.mL = p.lightness == undefined ? 0.5 : p.lightness; C.mc = p.saturation == undefined ? 0.40 : p.saturation;
+   C.clipHighlights = true; C.noiseReduction = false; C.inheritAstrometricSolution = true;
+   afApply(C, p.hasOwnProperty("params") ? p.params : null);
+   if (!C.executeOn(w.mainView, false)) throw new Error("LRGBCombination failed");
+   lw.forceClose();
+   delete ctx.win[lumName];
+   return { lightness: C.mL, saturation: C.mc };
 };
 
 // ---------------------------------------------------------------- checkpoints & diagnostics

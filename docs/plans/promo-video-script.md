@@ -183,8 +183,8 @@ M51、NGC 246 在 72ED 的视场里太小，不放进成品展示。
 
 **5-3（4:33–5:05）**
 - 画面：M8 阶段演变，每张 1.5 秒，交叉淡化，左上角写阶段名：线性处理（10_linear）→ 拉伸（20_stretched）→ 去星（30_starless 和 31_stars 左右并排）→ 无星图增强（40_starless_final）→ 合成成品（50_final）。
-- 字幕卡（最后 4 秒）：默认参数参考 B 站《PixInsight 进阶教程》（BV14LthzDEyh、BV1C3tozEEAD）
-- 旁白：“每个配方都是六个阶段：线性阶段去梯度、用 SPCC 校色、BlurXTerminator 锐化、NoiseXTerminator 降噪；然后拉伸；StarXTerminator 把星点分出去；在无星图上加强局部对比和颜色；星点单独调色；最后再合回去。默认参数参考了 B 站的《PixInsight 进阶教程》，在这里谢谢作者。”
+- 字幕卡（最后 4 秒）：默认参数参考 B 站 UP 主氪化金的《PixInsight 进阶教程》（BV14LthzDEyh、BV1C3tozEEAD）
+- 旁白：“每个配方都是六个阶段：线性阶段去梯度、用 SPCC 校色、BlurXTerminator 锐化、NoiseXTerminator 降噪；然后拉伸；StarXTerminator 把星点分出去；在无星图上加强局部对比和颜色；星点单独调色；最后再合回去。默认参数参考了 B 站 UP 主氪化金的《PixInsight 进阶教程》，在这里谢谢作者。”
 
 **5-4（5:05–5:30）**
 - 画面：回到概览页，M8 成品显示出来；点“打开所在文件夹”，资源管理器里看到 PNG、JPG、TIF 和 previews 文件夹。
@@ -259,8 +259,8 @@ M51、NGC 246 在 72ED 的视场里太小，不放进成品展示。
 - 旁白：“你需要有 PixInsight 和 RC Astro 的插件。软件免费给个人使用，不能商用，下载地址在简介里。现在还在开发中，Mac 版是预览版，遇到问题欢迎在评论区，或者 GitHub 上告诉我。”
 
 **9-3（10:10–10:30）**
-- 画面：致谢卡（《PixInsight 进阶教程》、PixInsight、RC Astro）→ “接下来”卡片【待填：按你的实际计划】→ 三连动画。
-- 旁白：“最后再谢谢《PixInsight 进阶教程》的作者。接下来我想【待填：比如支持相机 RAW 文件、加黑白相机的配方】。觉得有用的话，一键三连，我们下期见。”
+- 画面：致谢卡（氪化金《PixInsight 进阶教程》、PixInsight、RC Astro）→ “接下来”卡片【待填：按你的实际计划】→ 三连动画。
+- 旁白：“最后再谢谢《PixInsight 进阶教程》的作者氪化金。接下来我想【待填：比如支持相机 RAW 文件、加黑白相机的配方】。觉得有用的话，一键三连，我们下期见。”
 
 ## 四、短视频（60–90 秒）
 
@@ -307,7 +307,7 @@ M51、NGC 246 在 72ED 的视场里太小，不放进成品展示。
 
 免费个人使用，禁止商用。还在开发中，有问题欢迎评论区或 GitHub Issues 反馈。
 
-默认参数参考：B 站《PixInsight 进阶教程》BV14LthzDEyh、BV1C3tozEEAD，感谢作者！
+默认参数参考：B 站 UP 主氪化金的《PixInsight 进阶教程》BV14LthzDEyh、BV1C3tozEEAD，感谢作者！
 
 00:00 开场
 00:25 为什么要做它

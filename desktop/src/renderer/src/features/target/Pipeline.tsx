@@ -19,16 +19,23 @@ const RECIPE_HINTS: Record<string, string> = {
   comet: mark('彗星（先叠加再出图，见概览）')
 }
 
+/** A mono camera's L / R / G / B masters (filter_class mono_lrgb). */
+const MONO_RECIPE_HINTS: Record<string, string> = {
+  mono_lrgb_nebula: mark('发射星云、反射星云、超新星遗迹等'),
+  mono_lrgb_galaxy: mark('旋涡星系、椭圆星系、星系群')
+}
+
 /** The type is not in the built-in catalogue: the user says which recipe fits. */
 function RecipePicker({ t }: { t: TargetDetail }): React.JSX.Element {
   const choose = useChooseRecipe(t.path)
+  const hints = t.filter_class === 'mono_lrgb' ? MONO_RECIPE_HINTS : RECIPE_HINTS
   return (
     <div className="max-w-xl space-y-3 p-6">
       <p className="text-sm text-muted-foreground">
         {tr('认不出“{name}”是什么天体（不在内置星表里）。选一个配方，之后就可以调参数和出图：', { name: t.name })}
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
-        {Object.entries(RECIPE_HINTS).map(([recipe, hint]) => (
+        {Object.entries(hints).map(([recipe, hint]) => (
           <button
             key={recipe}
             disabled={choose.isPending}

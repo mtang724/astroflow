@@ -7,7 +7,7 @@ description: 总流程——任何“处理/重新处理/调整某个目标”�
 
 ## 1. 摸清目标
 1. `inspect_target`：拍摄概况（曝光、总时长、温度）、校准帧是否齐全（calibration_warnings）、星表信息、**类型**和建议配方、已经跑过的阶段。
-2. 按类型加载技能：发射/反射星云、行星状星云、超新星遗迹 → `nebula-broadband`；那晚用了多波段滤镜（session.filter_class = osc_multiband）→ `nebula-multiband`；星系 → `galaxy`；彗星 → `comet`。类型是 unknown 时按天体常识判断，第一次 `run_stage` 用 `recipe` 指定。
+2. 按类型加载技能：发射/反射星云、行星状星云、超新星遗迹 → `nebula-broadband`；那晚用了多波段滤镜（session.filter_class = osc_multiband）→ `nebula-multiband`；星系 → `galaxy`；彗星 → `comet`；黑白相机（每个滤镜一个主帧，target.filter_class = mono_lrgb）→ 再加载 `mono-lrgb`。类型是 unknown 时按天体常识判断，第一次 `run_stage` 用 `recipe` 指定。
 3. `get_references`：同目标高赞作品（best = IOTD/Top Pick，peer = 同类器材）与数值指纹；有 notes 就读。参考作品用来校准“应该长什么样”，不是照抄配色。
 4. 读 `read_knowledge('targets/<目标>/agent')`（以前跑这个目标的经验），有就照着避坑。
 
@@ -16,7 +16,7 @@ description: 总流程——任何“处理/重新处理/调整某个目标”�
 - 彗星不走普通 master，见 `comet` 技能。
 
 ## 3. 按配方阶段处理（每个阶段一次 PixInsight 任务）
-顺序：linear → stretch → stars → starless → stars_color → combine（彗星配方没有 stars 阶段，见 `comet`）。
+顺序：linear → stretch → stars → starless → stars_color → combine（彗星配方没有 stars 阶段，见 `comet`；黑白相机是 channels → color → lum → stretch → 之后相同，见 `mono-lrgb`）。
 每跑完一个阶段都检查——加载 `judge-and-tune`：先看返回的数字，再用 `look` 看预览图（可带 `ref:peer_00` 这类参考图一起比较），不满意就带 overrides 重跑这个阶段。
 - 重跑一个阶段会作废它之后的阶段，所以从出问题的最早阶段改起。
 - 每次只改一两个参数，说明理由；同一阶段最多重跑 3 次。

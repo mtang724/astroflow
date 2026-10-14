@@ -33,7 +33,8 @@ def summary(d):
     d = Path(d)
     st = _state(d)
     session = objects.session_info(d)
-    recipe, typ = objects.recipe_for(d.name, filter_class=session.get("filter_class"))
+    mono = pipeline.is_mono(d, st)
+    recipe, typ = pipeline.default_recipe(d)
     combined = multinight.info(d)
     staged = d.parent.parent == config.IN_PROCESSING          # a night's or a multi-night target in In Processing
     in_staging = staged and combined is None
@@ -41,13 +42,14 @@ def summary(d):
     if typ == "comet":
         master = (d / "Post" / "comet_stack.fits").exists()
     else:
-        master = bool(wbpp.masters(d)) or bool(st.get("master"))
+        master = bool(wbpp.masters(d)) or bool(st.get("master")) or bool(st.get("masters"))
     return {"name": d.name, "path": d.as_posix(), "night": d.parent.name if in_staging else "", "nights": nights,
             "staged": staged,
             "lights": _count(d, "Light"), "darks": _count(d, "Dark"), "bias": _count(d, "Bias"),
             "flats": _count(d, "Flat"), "master": master, "registered": _registered(d),
             "type": typ, "recipe": st.get("recipe") or recipe, "stages_done": list((st.get("stages") or {}).keys()),
-            "finished": bool(st.get("finished")), "filter_class": session.get("filter_class")}
+            "finished": bool(st.get("finished")),
+            "filter_class": "mono_lrgb" if mono else session.get("filter_class")}
 
 
 def _registered(d):

@@ -4,12 +4,22 @@
 //   "aux": {"stars": "<path>"},               extra images opened under these names
 //   "linear": true,                           whether "main" is still linear (previews get an AutoSTF)
 //   "bgRect": {x0,y0,x1,y1} | null,           background box carried over from earlier jobs
-//   "steps": [{"op": "...", "optional": false, ...params}],
+//   "object": {cx, cy, semiMajorPx ...},      the object located by an earlier stage (state.json "object")
+//   "steps": [{"op": "...", "optional": false, ...params}],   "each": ["L", "main"] runs a step once per open window
+//                                             (as its target; "{window}" in its strings becomes the window's name)
 //   "save": [{"window": "main", "path": "...", "bits": 32|16|8}],
 //   "previews": [{"window": "main", "path": "...jpg", "size": 1600}],
 //   "metrics": [{"window": "main", "path": "...tif", "size": 2048}],
 //   "result": "<result json>", "log": "<log file>"
 // }
+
+function afForWindow(step, name) {
+   var q = {};
+   for (var k in step) q[k] = typeof step[k] == "string" ? step[k].replace("{window}", name) : step[k];
+   delete q.each;
+   q.target = name;
+   return q;
+}
 
 function astroflowMain(jobPath) {
    var job = JSON.parse(File.readTextFile(jobPath));
@@ -17,6 +27,9 @@ function astroflowMain(jobPath) {
    var result = { ok: false, steps: [], saved: [], previews: [], metrics: [] };
    var ctx = { win: {}, linear: job.linear != false, bgRect: job.bgRect || null, colorCalibrated: !!job.colorCalibrated,
                unscreen: job.unscreen };
+   var o = job.object;      // located by an earlier stage (locate_object's info): object-aware steps use it
+   if (o && o.semiMajorPx) ctx.object = { cx: o.cx, cy: o.cy, a: o.semiMajorPx, b: o.semiMinorPx, angle: o.angleDeg * Math.PI / 180,
+                                          inImage: o.inImage, fillFraction: o.fillFraction };
    var current = null;
    try { console.beginLog(); } catch (e0) {}
    try {
@@ -32,7 +45,13 @@ function astroflowMain(jobPath) {
          var t0 = Date.now();
          AF.log("step " + (i + 1) + "/" + steps.length + ": " + s.op);
          var info = null;
-         try { info = STEPS[s.op](ctx, s); }
+         try {
+            if (s.each) {
+               info = {};
+               for (var wi = 0; wi < s.each.length; ++wi)
+                  if (ctx.win[s.each[wi]]) info[s.each[wi]] = STEPS[s.op](ctx, afForWindow(s, s.each[wi]));
+            } else info = STEPS[s.op](ctx, s);
+         }
          catch (e) {
             if (!s.optional) throw e;
             info = { skipped: true, error: e.toString() };

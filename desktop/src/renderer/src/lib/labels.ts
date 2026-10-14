@@ -2,6 +2,9 @@
 import { mark, tr } from './i18n'
 
 export const STAGE_LABELS: Record<string, string> = {
+  channels: mark('通道对齐与合成'),
+  color: mark('色彩校准'),
+  lum: mark('亮度通道 (L)'),
   linear: mark('线性处理'),
   stretch: mark('拉伸'),
   stars: mark('去星'),
@@ -34,7 +37,12 @@ export const STEP_LABELS: Record<string, string> = {
   pixelmath: 'PixelMath',
   split_stars: mark('分离星点'),
   recombine: mark('星点合并'),
-  crop: mark('裁切')
+  crop: mark('裁切'),
+  plate_solve: mark('板解析'),
+  align_channels: mark('通道对齐'),
+  crop_common: mark('裁到共同区域'),
+  combine_rgb: mark('合成彩色 (RGB)'),
+  lrgb: mark('LRGB 合成')
 }
 
 export const TYPE_LABELS: Record<string, string> = {
@@ -52,7 +60,9 @@ export const RECIPE_LABELS: Record<string, string> = {
   osc_broadband_nebula: mark('宽带星云'),
   osc_galaxy: mark('星系'),
   osc_multiband_nebula: mark('多波段星云'),
-  comet: mark('彗星')
+  comet: mark('彗星'),
+  mono_lrgb_galaxy: mark('黑白 LRGB 星系'),
+  mono_lrgb_nebula: mark('黑白 LRGB 星云')
 }
 
 export const JOB_STATE_LABELS: Record<string, string> = {
